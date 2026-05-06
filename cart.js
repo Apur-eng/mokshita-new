@@ -552,23 +552,8 @@ window.checkoutToOrderFull = async function(addressData, paymentMethod, subtotal
   // Handle RLS hiding the returned row for guest users
   const newOrderId = newOrderData && newOrderData.length > 0 ? newOrderData[0].id : orderNumber;
 
-  // Best-effort: also write to relational order_items table if it exists.
-  // This does NOT block order completion — failure here is non-fatal.
-  try {
-    const relationalItems = orderItemsData.map(item => ({
-        order_id:      newOrderId,
-        product_id:    item.product_id,
-        quantity:      item.quantity,
-        price_at_time: item.price_at_time
-    }));
-    const { error: itemsErr } = await db.from('order_items').insert(relationalItems);
-    if (itemsErr) {
-      // Log but do not block — order is already saved with JSONB items
-      console.warn('[Checkout] Relational order_items insert skipped:', itemsErr.message);
-    }
-  } catch (e) {
-    console.warn('[Checkout] Relational order_items insert error (non-fatal):', e);
-  }
+  // (Redundant relational order_items insert removed to prevent 403 RLS console errors.
+  // The app fully relies on the JSONB 'order_items' column in the 'orders' table above.)
 
   // Update user profile metadata
   if (userId) {
