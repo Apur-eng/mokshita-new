@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.disabled = true;
       btn.textContent = 'Signing in...';
       loginMsg.className = 'auth-message';
+      loginMsg.textContent = '';
       
       try {
         const { data, error } = await supabase.auth.signInWithPassword({
@@ -69,6 +70,8 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => { window.location.replace(redirectUrl); }, 800);
         
       } catch (err) {
+        loginMsg.textContent = err.message;
+        loginMsg.classList.add('error');
         window.App.UI.showError(err.message);
       } finally {
         btn.disabled = false;
@@ -89,6 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.disabled = true;
       btn.textContent = 'Creating account...';
       signupMsg.className = 'auth-message';
+      signupMsg.textContent = '';
       
       try {
         const { data, error } = await supabase.auth.signUp({
@@ -102,11 +106,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         
         if (error) throw error;
-        
+
+        signupMsg.textContent = "Account created! Please check your email to confirm.";
+        signupMsg.classList.add('success');
         window.App.UI.showSuccess("Account created! Please check your email to confirm your account.");
         formSignup.reset();
         
       } catch (err) {
+        signupMsg.textContent = err.message;
+        signupMsg.classList.add('error');
         window.App.UI.showError(err.message);
       } finally {
         btn.disabled = false;
