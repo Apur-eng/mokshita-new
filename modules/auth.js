@@ -4,25 +4,24 @@
 window.App = window.App || {};
 
 window.App.Auth = (function() {
-    // Runtime dependency check
-    if (!window.supabaseClient) {
-        console.error('[App.Auth] ERROR: supabaseClient is missing. Ensure supabaseClient.js is loaded before modules/auth.js.');
-        if (window.App.UI) window.App.UI.showError('Critical Error: Database client missing.');
-    }
-
-    const db = window.supabaseClient;
-
     return {
         /**
-         * Fetch current session/user. Returns { session, user, error }
+         * Fetch current session/user from API. Returns { session, user, error }
          */
         getCurrentUser: async function() {
-            if (!db) return { error: 'Database not initialized' };
+            const token = localStorage.getItem('mokshita_token');
+            if (!token) return { session: null, user: null, error: null };
+            
             try {
-                const { data: { session }, error } = await db.auth.getSession();
-                return { session, user: session ? session.user : null, error };
+                const { data, error } = await window.apiService.auth.getMe();
+                if (error) {
+                    localStorage.removeItem('mokshita_token');
+                    return { session: null, user: null, error };
+                }
+                // Return in format expected by legacy code (simulating session.user)
+                return { session: { user: data }, user: data, error: null };
             } catch (err) {
-                return { error: err };
+                return { session: null, user: null, error: err };
             }
         },
 
@@ -53,10 +52,11 @@ window.App.Auth = (function() {
         },
 
         logout: async function(redirectUrl = 'index.html') {
-            if (!db) return;
-            await db.auth.signOut();
+            localStorage.removeItem('mokshita_token');
             if (redirectUrl) {
                 window.location.replace(redirectUrl);
+            } else {
+                window.location.reload();
             }
         }
     };

@@ -7,9 +7,9 @@
   <meta name="description" content="Get in touch with Mokshita Enterprises. Enquire about handicrafts, custom commissions, or plan your cultural journey through India." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="subpage.css" />
-  <link rel="stylesheet" href="contact.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/subpage.css" />
+  <link rel="stylesheet" href="css/contact.css" />
 </head>
 <body>
 
@@ -324,13 +324,15 @@
   </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabaseClient.js"></script>
+
 <script src="modules/whatsapp.js"></script>
 <script src="modules/ui.js"></script>
 <script src="modules/auth.js"></script>
-<script src="main.js"></script>
-<script src="cart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="src/services/api.js"></script>
+<script src="js/global-search.js"></script>
+<script src="js/main.js"></script>
+<script src="js/cart.js"></script>
 <script>
   /* Auth nav state — upgrade Account button if session active */
   (async function () {
@@ -410,15 +412,15 @@
     }
 
     try {
-      if (!window.supabaseClient) {
-        throw new Error("Supabase client is not initialized.");
+      if (!window.apiService || !window.apiService.leads) {
+        throw new Error("API service is not initialized.");
       }
 
-      // Insert into the 'leads' table
-      const { error } = await window.supabaseClient.from('leads').insert([formData]);
+      // Submit via the new backend endpoint
+      const { data, error } = await window.apiService.leads.submit(formData);
       
-      if (error) {
-        throw error;
+      if (error || !data || !data.success) {
+        throw error || new Error(data?.message || 'Unknown error occurred.');
       }
       
       form.querySelectorAll('input,textarea,select,button,.form-privacy').forEach(el => el.style.display = 'none');
@@ -426,8 +428,8 @@
       localStorage.setItem('mokshita_last_lead', Date.now().toString());
       
     } catch (err) {
-      console.error("Supabase Insert Error:", err);
-      window.App.UI.showError("There was an error sending your message: " + err.message);
+      console.error("Backend Insert Error:", err);
+      window.App.UI.showError("There was an error sending your message: " + (err.message || 'Please try again.'));
       btn.textContent = 'Send Message';
       btn.disabled = false;
     }
@@ -486,3 +488,4 @@
 </script>
 </body>
 </html>
+

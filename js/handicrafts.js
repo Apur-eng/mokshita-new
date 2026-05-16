@@ -22,15 +22,16 @@
 
   /* ─── FILTER STATE ─────────────────────────────────────── */
   const state = {
-    search:     '',
-    categories: new Set(['all']),
-    materials:  new Set(),
-    regions:    new Set(),
-    minPrice:   0,
-    maxPrice:   1000,
-    minRating:  0,
-    sort:       'default',
-    cols:       4
+    search:      '',
+    categories:  new Set(['all']),
+    subcategory: null,   // active subcategory slug (from pill bar)
+    materials:   new Set(),
+    regions:     new Set(),
+    minPrice:    0,
+    maxPrice:    1000,
+    minRating:   0,
+    sort:        'default',
+    cols:        4
   };
 
   /* ─── HELPERS ──────────────────────────────────────────── */
@@ -71,17 +72,27 @@
 
   /* ─── FILTER PRODUCTS ──────────────────────────────────── */
   function getFiltered() {
-    if (typeof products === 'undefined') return [];
+    if (typeof window.products === 'undefined') return [];
 
-    return products.filter(p => {
+    return window.products.filter(p => {
       const price  = parseInt(p.price);
       const rating = parseFloat(p.rating || 0);
       const region = getRegion(p.origin || '');
       const query  = state.search.toLowerCase();
 
-      // Category
+      // Category (uses backend slug or legacy string value)
       if (!state.categories.has('all')) {
-        if (!state.categories.has(p.category)) return false;
+        // Match against product's category field (slug or display value)
+        const prodCat = (p.category || '').toLowerCase();
+        const catSlugs = [...state.categories];
+        const matched = catSlugs.some(slug => {
+          // Direct slug match
+          if (prodCat === slug) return true;
+          // If backend gives us a category object
+          if (p.category && typeof p.category === 'object' && p.category.slug === slug) return true;
+          return false;
+        });
+        if (!matched) return false;
       }
 
       // Materials (maps to category)
@@ -148,7 +159,7 @@
         .replace('Crafted by Women Artisans, ', '');
 
       card.innerHTML = `
-        <div class="hc-card-img-wrap" onclick="window.location.href='product.html?id=${p.id}'" style="cursor:pointer;">
+        <div class="hc-card-img-wrap" onclick="window.location.href='product.html?slug=${p.id}'" style="cursor:pointer;">
           <img src="${p.mainImage}" alt="${p.title}" loading="lazy" />
           <button class="hc-wishlist js-wishlist" aria-label="Add to wishlist" onclick="event.stopPropagation()">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -158,7 +169,7 @@
           ${discountBadge}
         </div>
         <div class="hc-card-body">
-          <h2 class="hc-card-title" onclick="window.location.href='product.html?id=${p.id}'">${p.title}</h2>
+          <h2 class="hc-card-title" onclick="window.location.href='product.html?slug=${p.id}'">${p.title}</h2>
           <span class="hc-card-origin">
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
             ${originShort}
@@ -337,39 +348,116 @@
     });
   });
 
-  /* ─── CATEGORY CHECKBOXES ──────────────────────────────── */
-  document.querySelectorAll('.hc-cat').forEach(cb => {
-    cb.addEventListener('change', () => {
-      if (cb.value === 'all') {
-        state.categories.clear();
+  /* ─── CATEGORY CHECKBOXES (event-delegated — works with dynamically rendered DOM) ── */
+  const catContainer = document.getElementById('fg-body-categories');
+
+  function bindCategoryCheckboxes() {
+    // Bind using delegation on the container so it works after category-nav.js
+    // re-renders the checkboxes from the backend API.
+    if (catContainer) {
+      catContainer.removeEventListener('change', onCatChange);
+      catContainer.addEventListener('change', onCatChange);
+    }
+  }
+
+  function onCatChange(e) {
+    const cb = e.target;
+    if (!cb.matches('.hc-cat')) return;
+
+    if (cb.value === 'all') {
+      state.categories.clear();
+      state.categories.add('all');
+      catContainer.querySelectorAll('.hc-cat:not(#cat-all)').forEach(c => c.checked = false);
+      cb.checked = true;
+    } else {
+      state.categories.delete('all');
+      const allCb = catContainer.querySelector('#cat-all');
+      if (allCb) allCb.checked = false;
+      if (cb.checked) {
+        state.categories.add(cb.value);
+      } else {
+        state.categories.delete(cb.value);
+      }
+      if (state.categories.size === 0) {
         state.categories.add('all');
-        document.querySelectorAll('.hc-cat:not(#cat-all)').forEach(c => c.checked = false);
-        cb.checked = true;
-      } else {
-        state.categories.delete('all');
-        document.getElementById('cat-all').checked = false;
-        if (cb.checked) {
-          state.categories.add(cb.value);
-        } else {
-          state.categories.delete(cb.value);
-        }
-        if (state.categories.size === 0) {
-          state.categories.add('all');
-          document.getElementById('cat-all').checked = true;
-        }
+        if (allCb) allCb.checked = true;
       }
+    }
 
-      // Also sync URL
-      const newUrl = new URL(window.location);
-      if (state.categories.has('all')) {
-        newUrl.searchParams.delete('category');
+    // Show/hide subcategory pill bar for single selected category
+    if (window.App && window.App.Categories) {
+      const activeCats = [...state.categories].filter(c => c !== 'all');
+      if (activeCats.length === 1) {
+        window.App.Categories.showSubcategoriesFor(activeCats[0]);
       } else {
-        newUrl.searchParams.set('category', [...state.categories].join(','));
+        window.App.Categories.showSubcategoriesFor(null);
       }
-      window.history.replaceState({}, '', newUrl);
+    }
 
+    // Sync URL
+    const newUrl = new URL(window.location);
+    if (state.categories.has('all')) {
+      newUrl.searchParams.delete('category');
+    } else {
+      newUrl.searchParams.set('category', [...state.categories].join(','));
+    }
+    window.history.replaceState({}, '', newUrl);
+
+    render();
+  }
+
+  // Bind immediately (for local fallback) and re-bind after dynamic render
+  bindCategoryCheckboxes();
+  document.addEventListener('categorySidebarRendered', bindCategoryCheckboxes);
+
+  /* ─── SUBCATEGORY EVENTS (from category-nav.js pill bar) ── */
+  document.addEventListener('subcategorySelected', (e) => {
+    const { slug } = e.detail;
+    if (!slug || slug === 'all') {
+      // Remove subcategory filter — show all products in the category
+      window.products = window._allProducts || window.products;
       render();
-    });
+      return;
+    }
+
+    // Fetch products for the subcategory from the backend, then update window.products
+    if (window.apiService && window.apiService.subcategories) {
+      // Show a quick loading state on the grid
+      grid.innerHTML = '<div class="hc-loading-state" style="grid-column:1/-1;text-align:center;padding:40px;color:#888;">Loading…</div>';
+
+      window.apiService.subcategories.getProducts(slug).then(({ data, error }) => {
+        if (error || !data) {
+          if (window.App && window.App.UI) window.App.UI.showError('Could not load subcategory products.');
+          render();
+          return;
+        }
+        const products = data.products || data.data || [];
+        // Temporarily replace window.products for rendering
+        if (!window._allProducts) window._allProducts = window.products;
+        window.products = products.map(p => {
+          const base   = window._allProducts.find(lp => lp.dbId == p.id || lp.id === p.slug) || {};
+          let   imgUrl = p.image_url || base.mainImage || '';
+          if (imgUrl && imgUrl.startsWith('/') && window.apiService) imgUrl = window.apiService.getBaseUrl() + imgUrl;
+          return {
+            id:        p.slug || String(p.id),
+            dbId:      p.id,
+            title:     p.name || base.title || 'Untitled',
+            price:     parseFloat(p.price) || base.price || 0,
+            oldPrice:  base.oldPrice || null,
+            discount:  base.discount || null,
+            category:  (p.category?.slug || p.category_name_legacy || base.category || '').toLowerCase(),
+            tag:       p.category?.name || base.tag || 'Craft',
+            shortDesc: p.short_description || p.description || base.shortDesc || '',
+            origin:    base.origin || '',
+            rating:    base.rating || null,
+            reviews:   base.reviews || null,
+            mainImage: imgUrl,
+            thumbnails:imgUrl ? [imgUrl] : (base.thumbnails || []),
+          };
+        });
+        render();
+      });
+    }
   });
 
   /* ─── MATERIAL CHECKBOXES ──────────────────────────────── */
@@ -399,13 +487,157 @@
   });
 
   /* ─── SEARCH ────────────────────────────────────────────── */
+  /* Phase 4: API-first search with local fallback.
+     - query < 2 chars → local getFiltered() (instant)
+     - query >= 2 chars → apiService.products.search() if available
+         → normalise results → replace grid
+     - on API error → silently fall back to local getFiltered()  */
+
   let searchTimer;
+  let searchController = null; // tracks the latest request
+
+  /* Normalise a raw backend search result into the window.products shape */
+  function normaliseSearchResult(p) {
+    const api = window.apiService;
+    let imgUrl = p.image_url || '';
+    if (imgUrl && imgUrl.startsWith('/') && api && api.getBaseUrl) {
+      imgUrl = api.getBaseUrl() + imgUrl;
+    }
+    const catObj    = p.category    && typeof p.category    === 'object' ? p.category    : null;
+    const subCatObj = p.subcategory && typeof p.subcategory === 'object' ? p.subcategory : null;
+    const catName   = catObj ? catObj.name : (p.category || '');
+    const subCatName = subCatObj ? subCatObj.name : '';
+    return {
+      id:         p.slug || String(p.id),
+      dbId:       p.id,
+      title:      p.name || 'Untitled',
+      price:      parseFloat(p.price) || 0,
+      oldPrice:   p.compare_price ? parseFloat(p.compare_price) : null,
+      discount:   p.compare_price
+                    ? Math.round((1 - p.price / p.compare_price) * 100) + '% OFF'
+                    : null,
+      category:   catName.toLowerCase(),
+      tag:        subCatName || catName,
+      shortDesc:  p.short_description || p.description || '',
+      origin:     p.region || 'India',
+      stock:      typeof p.stock === 'number' ? p.stock : 0,
+      rating:     p.rating  || null,
+      reviews:    p.reviews || null,
+      mainImage:  imgUrl,
+      material:   p.material || '',
+      sku:        p.sku || '',
+    };
+  }
+
+  /* Render backend search results directly (bypasses local getFiltered) */
+  function renderSearchResults(products, query, total) {
+    const sorted = applySort(products);
+    const count  = total || sorted.length;
+
+    countEl.textContent = `${count} result${count !== 1 ? 's' : ''} for "${query}"`;
+    emptyEl.style.display = sorted.length === 0 ? 'block' : 'none';
+    grid.style.display    = sorted.length === 0 ? 'none'  : 'grid';
+    grid.innerHTML = '';
+
+    sorted.forEach((p, i) => {
+      const card = document.createElement('article');
+      card.className = 'hc-card reveal';
+      card.setAttribute('data-cat', p.category);
+      card.style.animationDelay = Math.min(i * 0.04, 0.4) + 's';
+
+      const discountBadge = p.discount
+        ? `<span class="hc-discount-badge" style="position:absolute;top:10px;left:10px;z-index:2;">${p.discount}</span>`
+        : '';
+      const oldPrice = p.oldPrice
+        ? `<span class="hc-card-old-price">&#8377;${p.oldPrice}</span>` : '';
+      const ratingVal   = p.rating  ? parseFloat(p.rating).toFixed(1)  : '';
+      const reviewCount = p.reviews ? `(${p.reviews})`                  : '';
+      const originShort = (p.origin || 'India')
+        .replace('Crafted in ', '')
+        .replace('Crafted by Women Artisans, ', '');
+
+      card.innerHTML = `
+        <div class="hc-card-img-wrap" onclick="window.location.href='product.html?slug=${p.id}'" style="cursor:pointer;">
+          <img src="${p.mainImage}" alt="${p.title}" loading="lazy" />
+          <button class="hc-wishlist js-wishlist" aria-label="Add to wishlist" onclick="event.stopPropagation()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+          </button>
+          ${discountBadge}
+        </div>
+        <div class="hc-card-body">
+          <h2 class="hc-card-title" onclick="window.location.href='product.html?slug=${p.id}'">${p.title}</h2>
+          <span class="hc-card-origin">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            ${originShort}
+          </span>
+          <div class="hc-card-bottom-row">
+            <div class="hc-card-price-row">
+              <span class="hc-card-price">&#8377;${p.price}</span>${oldPrice}
+            </div>
+            ${ratingVal ? `<span class="hc-card-rating">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              ${ratingVal} ${reviewCount}
+            </span>` : ''}
+          </div>
+          <button class="hc-fab-cart" title="Quick add to cart"
+            onclick="event.stopPropagation(); addToCart('${p.dbId || p.id}', 1); this.classList.add('added'); var b=this; setTimeout(function(){ b.classList.remove('added'); }, 1100);">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+
+    updateActiveTags();
+  }
+
+  /* Main search handler */
+  async function doHCSearch(query) {
+    state.search = query;
+
+    // Short query → instant local filter
+    if (!query || query.length < 2) {
+      render();
+      return;
+    }
+
+    // Show loading hint in count bar
+    if (countEl) countEl.textContent = 'Searching…';
+
+    const api = window.apiService;
+    if (api && api.products && api.products.search) {
+      try {
+        const { data, error } = await api.products.search(query, {
+          limit:      40,
+          in_stock:   'false',  // include out-of-stock in browse results
+        });
+
+        if (!error && data) {
+          const raw      = data.products || data.data || [];
+          const total    = data.total    || raw.length;
+          const products = raw.map(normaliseSearchResult);
+          renderSearchResults(products, query, total);
+          console.log(`[HC Search] Backend: ${total} results for "${query}"`);
+          return;
+        }
+      } catch (err) {
+        console.warn('[HC Search] API call failed, using local fallback.', err.message);
+      }
+    }
+
+    // Local fallback
+    render();
+  }
+
   if (searchInput) {
     searchInput.addEventListener('input', e => {
-      state.search = e.target.value.trim();
-      searchClear.style.display = state.search ? 'flex' : 'none';
+      const val = e.target.value.trim();
+      state.search = val;
+      searchClear.style.display = val ? 'flex' : 'none';
       clearTimeout(searchTimer);
-      searchTimer = setTimeout(render, 180);
+      searchTimer = setTimeout(() => doHCSearch(val), 300);
     });
   }
   if (searchClear) {
@@ -417,6 +649,7 @@
       searchInput.focus();
     });
   }
+
 
   /* ─── SORT ──────────────────────────────────────────────── */
   if (sortSel) {
@@ -472,6 +705,12 @@
     state.categories = new Set(['all']);
     state.materials.clear(); state.regions.clear();
 
+    // Restore full product catalogue if a subcategory fetch replaced it
+    if (window._allProducts) {
+      window.products  = window._allProducts;
+      window._allProducts = null;
+    }
+
     if (searchInput) searchInput.value = '';
     if (searchClear) searchClear.style.display = 'none';
     if (sortSel) sortSel.value = 'default';
@@ -481,14 +720,24 @@
     if (lblMax) lblMax.textContent = 1000;
     updateSliderFill();
 
-    document.querySelectorAll('.hc-cb').forEach(cb => cb.checked = false);
-    const catAll = document.getElementById('cat-all');
-    if (catAll) catAll.checked = true;
+    // Reset dynamically-rendered category checkboxes
+    if (catContainer) {
+      catContainer.querySelectorAll('.hc-cb').forEach(cb => cb.checked = false);
+      const catAll = catContainer.querySelector('#cat-all');
+      if (catAll) catAll.checked = true;
+    } else {
+      document.querySelectorAll('.hc-cb').forEach(cb => cb.checked = false);
+      const catAll = document.getElementById('cat-all');
+      if (catAll) catAll.checked = true;
+    }
     const ratAny = document.getElementById('rat-any');
     if (ratAny) ratAny.checked = true;
     document.querySelectorAll('.hc-preset').forEach(b => b.classList.remove('active'));
     const preAll = document.getElementById('preset-all');
     if (preAll) preAll.classList.add('active');
+
+    // Hide subcategory bar
+    if (window.App && window.App.Categories) window.App.Categories.showSubcategoriesFor(null);
 
     window.history.replaceState({}, '', window.location.pathname);
     render();
@@ -498,13 +747,41 @@
   if (resetBtn) resetBtn.addEventListener('click', clearAll);
 
   /* ─── URL PARAMS (initial category) ────────────────────── */
-  const urlParams   = new URLSearchParams(window.location.search);
-  const initCat     = urlParams.get('category');
+  const urlParams = new URLSearchParams(window.location.search);
+  const initCat   = urlParams.get('category');
   if (initCat && initCat !== 'all') {
     const cats = initCat.split(',').filter(Boolean);
     state.categories.clear();
     cats.forEach(c => state.categories.add(c));
-    syncCategoryCheckboxes();
+    // Sync checkboxes once the sidebar is rendered (may not exist yet)
+    function applyCatFromURL() {
+      if (!catContainer) return;
+      catContainer.querySelectorAll('.hc-cat').forEach(cb => {
+        cb.checked = (cb.value === 'all')
+          ? false
+          : state.categories.has(cb.value);
+      });
+      const allCb = catContainer.querySelector('#cat-all');
+      if (allCb) allCb.checked = state.categories.has('all');
+    }
+    // Try immediately (local fallback may already be rendered)
+    applyCatFromURL();
+    // Also handle when category-nav.js re-renders from backend
+    document.addEventListener('categorySidebarRendered', applyCatFromURL);
+  }
+
+  /* ─── URL PARAM: ?q= (from global search "View all results") */
+  const initQ = urlParams.get('q');
+  if (initQ && searchInput) {
+    searchInput.value = initQ;
+    if (searchClear) searchClear.style.display = 'flex';
+    // Trigger backend search after products are loaded, or immediately
+    const triggerQ = () => doHCSearch(initQ.trim());
+    if (window.products && window.products.length) {
+      triggerQ();
+    } else {
+      document.addEventListener('productsLoaded', triggerQ, { once: true });
+    }
   }
 
   /* ─── WISHLIST TOGGLE (local UI only) ───────────────────── */
@@ -526,10 +803,16 @@
   // Render immediately with whatever is in window.products (local data)
   render();
 
-  // Re-render when Supabase products finish loading
+  // Re-render when backend products finish loading
   document.addEventListener('productsLoaded', () => {
-    console.log('[Handicrafts] Re-rendering with Supabase products.');
+    console.log('[Handicrafts] Re-rendering with backend products.');
     render();
+  });
+
+  // Re-render when category-nav.js finishes (re-wires checkboxes)
+  document.addEventListener('categoriesLoaded', () => {
+    console.log('[Handicrafts] Categories loaded — re-binding checkbox listeners.');
+    bindCategoryCheckboxes();
   });
 
 })();

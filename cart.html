@@ -11,8 +11,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   
   <!-- Core Styles -->
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="product.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/product.css" />
   <style>
     .cart-container {
       max-width: 1200px;
@@ -359,14 +359,16 @@
 </main>
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabaseClient.js"></script>
+
 <script src="modules/ui.js"></script>
 <script src="modules/auth.js"></script>
-<script src="products.js"></script>
-<script src="supabase-products.js"></script>
-<script src="main.js"></script>
-<script src="cart.js"></script>
+<script src="js/products.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="src/services/api.js"></script>
+<script src="js/backend-products.js"></script>
+<script src="js/global-search.js"></script>
+<script src="js/main.js"></script>
+<script src="js/cart.js"></script>
 <script>
   /* Auth nav state — upgrade Account button if session active */
   (async function () {
@@ -406,51 +408,45 @@ async function renderCart() {
   const title = document.getElementById('page-title');
 
   let cartItems = [];
-  const db = window.supabaseClient;
 
-  if (db) {
-    try {
-      const { session } = await window.App.Auth.getCurrentUser();
-      if (session) {
-        // Pre-fill email and name if logged in
-        document.getElementById('ship-email').value = session.user.email || '';
-        document.getElementById('ship-name').value = session.user.user_metadata?.full_name || '';
-        if (session.user.user_metadata) {
-          const m = session.user.user_metadata;
-          if (m.address_line) document.getElementById('ship-address').value = m.address_line;
-          if (m.phone) document.getElementById('ship-phone').value = m.phone;
-          if (m.city) document.getElementById('ship-city').value = m.city;
-          if (m.state) document.getElementById('ship-state').value = m.state;
-          if (m.pincode) document.getElementById('ship-pincode').value = m.pincode;
-        }
-
-        const { data: cartRow } = await db.from('carts').select('id').eq('user_id', session.user.id).maybeSingle();
-        if (cartRow) {
-          const { data: items } = await db.from('cart_items').select('product_id, quantity').eq('cart_id', cartRow.id);
-          if (items && items.length > 0) {
-            const productIds = items.map(i => i.product_id);
-            const { data: dbProducts } = await db.from('products').select('*').in('id', productIds);
-            const dbProdMap = {};
-            (dbProducts || []).forEach(p => { dbProdMap[p.id] = p; });
-
-            items.forEach(item => {
-              const dbProd = dbProdMap[item.product_id];
-              const localProd = (window.products || []).find(p => String(p.dbId) === String(item.product_id) || p.id === item.product_id);
-              const name = (dbProd && dbProd.name) || (localProd && localProd.title) || 'Unknown Item';
-              const price = (dbProd && dbProd.price) || (localProd && localProd.price) || 0;
-              const image = (dbProd && dbProd.image_url) || (localProd && localProd.mainImage) || '';
-              cartItems.push({ productId: item.product_id, quantity: item.quantity, price, name, image });
-            });
-          }
-        }
-      } else {
-        loadLocalCart(cartItems);
+  try {
+    const { session } = await window.App.Auth.getCurrentUser();
+    if (session) {
+      // Pre-fill email and name if logged in
+      document.getElementById('ship-email').value = session.user.email || '';
+      document.getElementById('ship-name').value = session.user.full_name || session.user.user_metadata?.full_name || '';
+      if (session.user.profile) {
+        const m = session.user.profile;
+        if (m.address_line) document.getElementById('ship-address').value = m.address_line;
+        if (m.phone) document.getElementById('ship-phone').value = m.phone;
+        if (m.city) document.getElementById('ship-city').value = m.city;
+        if (m.state) document.getElementById('ship-state').value = m.state;
+        if (m.pincode) document.getElementById('ship-pincode').value = m.pincode;
       }
-    } catch (err) {
-      console.error(err);
+
+      // Fetch cart from backend API
+      const { data: apiCart } = await window.apiService.cart.getCart();
+      if (apiCart && apiCart.items && apiCart.items.length > 0) {
+        apiCart.items.forEach(item => {
+          // Backend returns product details nested or via product_id
+          const localProd = (window.products || []).find(p =>
+            String(p.dbId) === String(item.product_id) || p.id === item.product_id
+          );
+          const name  = item.product_name  || (localProd && localProd.title) || 'Unknown Item';
+          const price = item.product_price || item.price || (localProd && localProd.price) || 0;
+          let   image = item.product_image || item.image_url || (localProd && localProd.mainImage) || '';
+          // Resolve relative backend image URLs to absolute
+          if (image && image.startsWith('/') && window.apiService) {
+            image = window.apiService.getBaseUrl() + image;
+          }
+          cartItems.push({ productId: item.product_id, quantity: item.quantity, price, name, image });
+        });
+      }
+    } else {
       loadLocalCart(cartItems);
     }
-  } else {
+  } catch (err) {
+    console.error('[Cart] renderCart error:', err);
     loadLocalCart(cartItems);
   }
 
@@ -601,14 +597,9 @@ function updateStepperUI() {
 
 async function goToStep(step) {
     if (step === 2) {
-        const db = window.supabaseClient;
-        if (db) {
-            const { session } = await window.App.Auth.getCurrentUser();
-            if (!session) {
-                window.location.href = 'login.html?redirect=cart.html';
-                return;
-            }
-        } else {
+        // Require login to proceed to address step
+        const { session } = await window.App.Auth.getCurrentUser();
+        if (!session) {
             window.location.href = 'login.html?redirect=cart.html';
             return;
         }
@@ -679,7 +670,7 @@ async function placeOrderFinal() {
             // Called on successful payment
             handler: async function (response) {
                 btn.textContent = 'Saving Order...';
-                // Save order to Supabase with Razorpay payment reference
+                // Save order to the backend with Razorpay payment reference
                 const paymentRef = 'Razorpay:' + response.razorpay_payment_id;
                 const result = await checkoutToOrderFull(
                     addressData, paymentRef, cartSubtotal, cartShipping, cartTotal
@@ -772,4 +763,5 @@ document.addEventListener('DOMContentLoaded', async () => {
 </script>
 </body>
 </html>
+
 

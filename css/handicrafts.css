@@ -1277,3 +1277,94 @@ html, body {
   }
 }
 
+/* ─── DYNAMIC CATEGORY SYSTEM — category-nav.js ──────────── */
+
+/* Skeleton loading bars (while categories fetch from backend) */
+.hc-cat-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 4px 0;
+}
+.hc-skel-bar {
+  display: block;
+  height: 12px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #ede9e3 25%, #f5f2ee 50%, #ede9e3 75%);
+  background-size: 200% 100%;
+  animation: hc-shimmer 1.4s infinite;
+  width: 90%;
+}
+.hc-skel-bar--short { width: 60%; }
+@keyframes hc-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Category product count badge */
+.hc-cat-count {
+  font-size: 0.7rem;
+  color: var(--hc-text-secondary);
+  margin-left: auto;
+}
+
+/* Subcategory indented checkbox */
+.hc-subcat-check {
+  padding-left: 12px;
+  opacity: 0.82;
+}
+.hc-subcat-check:hover { opacity: 1; }
+.hc-box--sub {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+}
+.hc-subcat-name {
+  font-size: 0.75rem;
+  color: var(--hc-text-secondary);
+}
+
+/* ─── SUBCATEGORY PILL BAR ────────────────────────────────── */
+.hc-subcategory-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+  padding: 10px 14px;
+  background: #fff;
+  border: 1px solid var(--hc-border);
+  border-radius: 10px;
+  align-items: center;
+}
+.hc-subcat-pill {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 5px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--hc-border);
+  background: #faf8f5;
+  color: var(--hc-text-secondary);
+  cursor: pointer;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+}
+.hc-subcat-pill:hover {
+  border-color: var(--hc-accent);
+  color: var(--hc-accent);
+}
+.hc-subcat-pill.active {
+  background: var(--hc-accent);
+  border-color: var(--hc-accent);
+  color: #fff;
+}
+
+/* Loading state inside grid */
+.hc-loading-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--hc-text-secondary);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+}

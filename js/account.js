@@ -1,19 +1,11 @@
 /* ============================================================
-   ACCOUNT DASHBOARD — JavaScript
+   ACCOUNT DASHBOARD — JavaScript (API Version)
    Mokshita Enterprises — Customer Portal
-   ============================================================
-   FLOW:
-     1. On DOMContentLoaded, check for a live Supabase session.
-     2. If no session → redirect to login.html (protected route).
-     3. If session  → hide loading overlay, render profile, 
-                      fetch & display this user's orders via RLS.
    ============================================================ */
 
 'use strict';
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const supabase = window.supabaseClient;
-
   /* ── Auth Guard ───────────────────────────────────────────── */
   const user = await window.App.Auth.requireAuth('login.html?redirect=account');
   if (!user) return; // requireAuth handles the redirect
@@ -22,7 +14,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const overlay = document.getElementById('auth-redirect-overlay');
   if (overlay) overlay.classList.add('hidden');
 
-  const fullName  = user.user_metadata?.full_name || '';
+  const fullName  = user.full_name || '';
   const email     = user.email || '';
   const firstLetter = (fullName || email).charAt(0).toUpperCase();
 
@@ -45,8 +37,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   /* ── Populate Addresses Panel ─────────────────────────────── */
   const addressPanel = document.getElementById('panel-addresses');
   if (addressPanel) {
-    const meta = user.user_metadata || {};
-    if (meta.address_line) {
+    if (user.address_line) {
       addressPanel.innerHTML = `
         <h2 class="panel-title">Saved Addresses</h2>
         <p class="panel-subtitle">Manage your delivery addresses for faster checkout.</p>
@@ -55,12 +46,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
             Default
           </div>
-          <h3 style="font-family: 'Lora', serif; font-size: 1.3rem; margin-bottom: 12px; color: #1F1F1F;">${meta.full_name || fullName || 'Saved Address'}</h3>
+          <h3 style="font-family: 'Lora', serif; font-size: 1.3rem; margin-bottom: 12px; color: #1F1F1F;">${user.full_name || fullName || 'Saved Address'}</h3>
           <p style="font-family: 'Inter', sans-serif; font-size: 0.95rem; line-height: 1.6; color: #4a544e;">
-            ${meta.address_line}<br>
-            ${meta.city || ''}${meta.state ? ', ' + meta.state : ''} ${meta.pincode ? ' - ' + meta.pincode : ''}<br>
-            ${meta.country || ''}<br><br>
-            <strong>Phone:</strong> ${meta.phone || '—'}
+            ${user.address_line}<br>
+            ${user.city || ''}${user.state ? ', ' + user.state : ''} ${user.pincode ? ' - ' + user.pincode : ''}<br>
+            ${user.country || 'India'}<br><br>
+            <strong>Phone:</strong> ${user.phone || '—'}
           </p>
         </div>
       `;
@@ -92,7 +83,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   /* ── Load Orders ──────────────────────────────────────────── */
-  await loadOrders(supabase, user);
+  await loadOrders(user);
 });
 
 /* ─── Helpers ─────────────────────────────────────────────── */
@@ -117,7 +108,7 @@ function statusBadge(status) {
 }
 
 /* ─── Order Fetching & Rendering ──────────────────────────── */
-async function loadOrders(supabase, user) {
+async function loadOrders(user) {
   const container = document.getElementById('orders-container');
   if (!container) return;
 
@@ -135,18 +126,9 @@ async function loadOrders(supabase, user) {
     </div>`;
 
   try {
-    /* RLS on the orders table ensures only the logged-in user's
-       rows are returned — we filter by email as the match key,
-       since orders are recorded with the customer's email.
-       If your orders table has a user_id FK, also add:
-         .eq('user_id', user.id)  */
-    const { data: orders, error } = await supabase
-      .from('orders')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false });
+    const { data: orders, error } = await window.apiService.orders.getMyOrders();
 
-    if (error) throw error;
+    if (error) throw new Error(error);
 
     if (!orders || orders.length === 0) {
       container.innerHTML = `
@@ -167,9 +149,8 @@ async function loadOrders(supabase, user) {
 
     container.innerHTML = `<div class="orders-list">${orders.map(order => renderOrderCard(order)).join('')}</div>`;
 
-    // Fallback: if user_metadata is empty but they have orders, populate from the latest order
-    const meta = user.user_metadata || {};
-    if (!meta.address_line && orders.length > 0) {
+    // Fallback: if user doesn't have an address, populate from the latest order
+    if (!user.address_line && orders.length > 0) {
       const latestOrder = orders[0];
       const addressPanel = document.getElementById('panel-addresses');
       if (addressPanel && latestOrder.address_line) {
@@ -185,7 +166,7 @@ async function loadOrders(supabase, user) {
             <p style="font-family: 'Inter', sans-serif; font-size: 0.95rem; line-height: 1.6; color: #4a544e;">
               ${latestOrder.address_line}<br>
               ${latestOrder.city || ''}${latestOrder.state ? ', ' + latestOrder.state : ''} ${latestOrder.pincode ? ' - ' + latestOrder.pincode : ''}<br>
-              ${latestOrder.country || ''}<br><br>
+              ${latestOrder.country || 'India'}<br><br>
               <strong>Phone:</strong> ${latestOrder.phone || '—'}
             </p>
           </div>
@@ -205,11 +186,6 @@ async function loadOrders(supabase, user) {
     console.error('[Account] Order fetch error:', err);
     let errorMessage = err.message || 'Please try refreshing the page.';
     
-    // Check for RLS permission error (code 42501 or message containing policy/permission)
-    if (err.code === '42501' || errorMessage.toLowerCase().includes('permission') || errorMessage.toLowerCase().includes('policy')) {
-      errorMessage = 'Order access policy misconfigured';
-    }
-
     container.innerHTML = `
       <div class="orders-empty">
         <div class="orders-empty-icon" style="background:var(--terra-pale);color:var(--terra);">
@@ -262,11 +238,10 @@ function renderOrderCard(order) {
     </div>`;
 }
 
-/* ─── Order Tracking Timeline (Parts 1 & 3) ────────────────── */
+/* ─── Order Tracking Timeline ────────────────── */
 function renderTrackingTimeline(order) {
   const status = (order.status || 'pending').toLowerCase();
 
-  // Cancelled — special badge
   if (status === 'cancelled') {
     return `
       <div class="tracking-timeline">
@@ -278,7 +253,6 @@ function renderTrackingTimeline(order) {
       </div>`;
   }
 
-  // Map legacy statuses to progress stages
   const isReceived  = ['pending', 'received', 'confirmed', 'shipped', 'delivered'].includes(status);
   const isShipped   = ['shipped', 'delivered'].includes(status);
   const isDelivered = status === 'delivered';
@@ -305,13 +279,10 @@ function renderTrackingTimeline(order) {
     </div>`;
 }
 
-/* ─── WhatsApp Order Query Button ──────────────────────────── */
 function renderWhatsAppQueryBtn(order, orderId, itemsPreview) {
-  // Build automated message with order details
   const status = (order.status || 'received').charAt(0).toUpperCase() + (order.status || 'received').slice(1);
   const msg = `I have a query about my order #${orderId}.\n\nItems: ${itemsPreview}\nTotal: ${formatCurrency(order.total)}\nStatus: ${status}\n\nPlease update me on this order.`;
 
-  // Use App.WA.buildUrl — it will be personalised with user info when called from the click handler
   return `
     <div class="order-wa-query">
       <a href="#"

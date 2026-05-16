@@ -14,7 +14,7 @@ window.App.WA = (function () {
     /**
      * Build a wa.me URL with the message personalised with user info if logged in.
      * @param {string} baseMessage  – plain-text message (not encoded)
-     * @param {object|null} user    – Supabase user object or null for guests
+     * @param {object|null} user    – Backend user object or null for guests
      * @returns {string} Full wa.me URL
      */
     function buildUrl(baseMessage, user) {

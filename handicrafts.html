@@ -7,9 +7,9 @@
   <meta name="description" content="Shop authentic Indian handicrafts — Pichwai art, marble inlay, watercolour paintings, crochet, and traditional pottery crafted by master artisans." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="subpage.css" />
-  <link rel="stylesheet" href="handicrafts.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/subpage.css" />
+  <link rel="stylesheet" href="css/handicrafts.css" />
 </head>
 <body>
 
@@ -75,20 +75,20 @@
       <button class="hc-clear-all" id="hc-clear-all" aria-label="Clear all filters">Clear all</button>
     </div>
 
-    <!-- CATEGORIES -->
+    <!-- CATEGORIES (dynamically populated by js/category-nav.js) -->
     <div class="hc-fg" id="fg-categories">
       <button class="hc-fg-toggle" data-fg="categories" aria-expanded="true">
         <span>Categories</span>
         <svg class="hc-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
       </button>
       <div class="hc-fg-body" id="fg-body-categories">
-        <label class="hc-check"><input type="checkbox" class="hc-cb hc-cat" value="all" id="cat-all" checked /><span class="hc-box"></span>All Crafts</label>
-        <label class="hc-check"><input type="checkbox" class="hc-cb hc-cat" value="painting" id="cat-painting" /><span class="hc-box"></span>Paintings</label>
-        <label class="hc-check"><input type="checkbox" class="hc-cb hc-cat" value="marble" id="cat-marble" /><span class="hc-box"></span>Marble &amp; Decor</label>
-        <label class="hc-check"><input type="checkbox" class="hc-cb hc-cat" value="wooden" id="cat-wooden" /><span class="hc-box"></span>Wooden Items</label>
-        <label class="hc-check"><input type="checkbox" class="hc-cb hc-cat" value="crochet" id="cat-crochet" /><span class="hc-box"></span>Crochet</label>
-        <label class="hc-check"><input type="checkbox" class="hc-cb hc-cat" value="textile" id="cat-textile" /><span class="hc-box"></span>Textile &amp; Pouches</label>
-        <label class="hc-check"><input type="checkbox" class="hc-cb hc-cat" value="zardozi" id="cat-zardozi" /><span class="hc-box"></span>Zardozi</label>
+        <!-- Skeleton shown while categories load -->
+        <div class="hc-cat-skeleton" id="hc-cat-skeleton">
+          <span class="hc-skel-bar"></span>
+          <span class="hc-skel-bar"></span>
+          <span class="hc-skel-bar"></span>
+          <span class="hc-skel-bar hc-skel-bar--short"></span>
+        </div>
       </div>
     </div>
 
@@ -202,6 +202,9 @@
     <!-- ACTIVE FILTER TAGS -->
     <div class="hc-active-tags" id="hc-active-tags"></div>
 
+    <!-- SUBCATEGORY PILL BAR (shown when a single category is active) -->
+    <div class="hc-subcategory-bar" id="hc-subcategory-bar" style="display:none;"></div>
+
     <!-- PRODUCTS GRID -->
     <div class="hc-grid cols-4" id="products-grid"></div>
 
@@ -304,16 +307,19 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabaseClient.js"></script>
+
 <script src="modules/whatsapp.js"></script>
 <script src="modules/ui.js"></script>
 <script src="modules/auth.js"></script>
-<script src="main.js"></script>
-<script src="products.js"></script>
-<script src="cart.js"></script>
-<script src="supabase-products.js"></script>
-<script src="handicrafts.js"></script>
+<script src="js/main.js"></script>
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="src/services/api.js"></script>
+<script src="js/backend-products.js"></script>
+<script src="js/global-search.js"></script>
+<script src="js/category-nav.js"></script>
+<script src="js/handicrafts.js"></script>
 <script>
   /* Auth nav state — upgrade Account button if session active */
   (async function () {
@@ -379,3 +385,4 @@
 </script>
 </body>
 </html>
+

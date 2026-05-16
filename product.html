@@ -12,8 +12,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   
   <!-- Core Styles -->
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="product.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/product.css" />
 </head>
 <body>
 
@@ -296,67 +296,272 @@
   </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabaseClient.js"></script>
+
 <script src="modules/ui.js"></script>
 <script src="modules/auth.js"></script>
-<script src="main.js"></script>
-<script src="products.js"></script>
-<script src="cart.js"></script>
-<script src="supabase-products.js"></script>
+<script src="js/main.js"></script>
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="src/services/api.js"></script>
+<script src="js/backend-products.js"></script>
+<script src="js/global-search.js"></script>
 <script>
-  /* Product Detail Page - dynamic load from Supabase or local fallback */
+  /* ============================================================
+     PRODUCT DETAIL PAGE — Phase 2: Rich Backend Consumption
+     ============================================================
+     Priority chain:
+       1. Extract slug from ?slug= (or legacy ?id=)
+       2. getDetail(slug)  → GET /api/products/detail/:slug  [RICH]
+             returns: images[], stock_status, category obj,
+                      subcategory obj, seo, related_products[]
+       3. getBySlug(slug)  → GET /api/products/slug/:slug  [BASIC fallback]
+       4. window.products local search  [offline fallback]
+       5. Not-found state
+     ============================================================ */
   'use strict';
 
-  function findProduct(productId) {
-    const all = window.products || [];
-    return all.find(p =>
-      p.id === productId ||
-      String(p.dbId) === productId ||
-      (p.title && p.title.toLowerCase() === productId.toLowerCase().trim())
-    );
+  /* ─── URL PARSING ─────────────────────────────────────────── */
+  /**
+   * Safely extract the product slug from the current URL.
+   * Supports both ?slug=marble-tortoise (new) and ?id=marble-tortoise (legacy).
+   * Returns null if neither is present.
+   */
+  function getSlugFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    const slug = (params.get('slug') || params.get('id') || '').trim();
+    if (!slug) return null;
+    // Basic slug validation — only allow alphanumeric + hyphens
+    if (!/^[a-z0-9-]+$/i.test(slug)) {
+      console.warn('[PDP] Invalid slug format in URL:', slug);
+      return null;
+    }
+    return slug;
   }
 
-  function renderPDP(product) {
-    if (!product) {
-      document.getElementById('pdp-title').innerText = 'Product not found.';
-      return;
+  /* ─── LOCAL PRODUCT LOOKUP (fallback) ─────────────────────── */
+  /**
+   * Search window.products by slug/id match.
+   * Used as fallback when API is unreachable.
+   */
+  function findProductLocal(slug) {
+    const all = window.products || [];
+    return all.find(p =>
+      p.id        === slug ||
+      p.slug      === slug ||
+      String(p.dbId) === slug
+    ) || null;
+  }
+
+  /* ─── NORMALISE PRODUCT SHAPE ─────────────────────────────── */
+  /**
+   * Converts a raw backend API product row into the shape
+   * expected by renderPDP(). Handles both the legacy flat shape
+   * (from window.products) and the new relational shape (from API).
+   */
+  function normaliseProduct(raw, richRelated) {
+    if (!raw) return null;
+
+    // Already normalised by backend-products.js mapping — only patch missing rich fields
+    if (raw.mainImage !== undefined) {
+      raw._relatedProducts = richRelated || null;
+      return raw;
     }
+
+    // Build main image URL
+    const api = window.apiService;
+    let imgUrl = raw.image_url || '';
+    if (imgUrl && imgUrl.startsWith('/') && api && api.getBaseUrl) {
+      imgUrl = api.getBaseUrl() + imgUrl;
+    }
+
+    // ── Category / subcategory objects (present in detail endpoint) ──
+    const catObj    = (raw.category    && typeof raw.category    === 'object') ? raw.category    : null;
+    const subCatObj = (raw.subcategory && typeof raw.subcategory === 'object') ? raw.subcategory : null;
+    const catName   = catObj ? catObj.name : (raw.category_name_legacy || raw.category || '');
+    const subCatName = subCatObj ? subCatObj.name : '';
+
+    // ── Gallery images (from product_images table via detail endpoint) ──
+    let thumbnails = [];
+    if (Array.isArray(raw.images) && raw.images.length) {
+      thumbnails = raw.images.map(img => {
+        let url = img.image_url || '';
+        if (url && url.startsWith('/') && api && api.getBaseUrl) url = api.getBaseUrl() + url;
+        return url;
+      }).filter(Boolean);
+    }
+    if (!thumbnails.length && imgUrl) thumbnails = [imgUrl];
+    const mainImage = thumbnails[0] || imgUrl;
+
+    // ── Stock status (computed by backend) ──
+    const stockStatus = raw.stock_status || (
+      raw.stock >= 10 ? 'in_stock' : (raw.stock > 0 ? 'low_stock' : 'out_of_stock')
+    );
+
+    return {
+      id:           raw.slug || String(raw.id),
+      dbId:         raw.id,
+      title:        raw.name  || 'Untitled',
+      price:        parseFloat(raw.price) || 0,
+      compare_price: raw.compare_price ? parseFloat(raw.compare_price) : null,
+      oldPrice:     raw.compare_price ? parseFloat(raw.compare_price) : null,
+      discount:     raw.compare_price
+                      ? Math.round((1 - raw.price / raw.compare_price) * 100) + '% OFF'
+                      : null,
+      category:     catName.toLowerCase(),
+      tag:          subCatName || catName,
+      categoryObj:  catObj,
+      subcategoryObj: subCatObj,
+      shortDesc:    raw.short_description || raw.description || '',
+      description:  raw.description || raw.short_description || '',
+      origin:       raw.region || 'India',
+      stock:        typeof raw.stock === 'number' ? raw.stock : 0,
+      stockStatus,
+      rating:       raw.rating  || null,
+      reviews:      raw.reviews || null,
+      mainImage,
+      thumbnails,
+      material:     raw.material || '',
+      sku:          raw.sku     || '',
+      tags:         raw.tags    || '',
+      seo:          raw.seo     || null,
+      _relatedProducts: richRelated || null,
+    };
+  }
+
+  /* ─── LOADING STATE ──────────────────────────────────────── */
+  function showLoadingState() {
+    const title = document.getElementById('pdp-title');
+    const desc  = document.getElementById('pdp-desc');
+    if (title) title.textContent = 'Loading…';
+    if (desc)  desc.textContent  = 'Fetching product details…';
+    const mainImg = document.getElementById('main-product-img');
+    if (mainImg) { mainImg.src = ''; mainImg.style.opacity = '0.4'; }
+  }
+
+  /* ─── NOT FOUND STATE ─────────────────────────────────────── */
+  function showNotFound(slug) {
+    document.title = 'Product Not Found — Mokshita Enterprises';
+    const title = document.getElementById('pdp-title');
+    const desc  = document.getElementById('pdp-desc');
+    const cat   = document.getElementById('pdp-category');
+    const price = document.getElementById('pdp-price');
+    const bc    = document.getElementById('breadcrumb-title');
+    if (title) title.textContent = 'Product Not Found';
+    if (desc)  desc.textContent  = slug
+      ? `We couldn't find a product matching "${slug}". It may have been removed or the link may be incorrect.`
+      : 'No product was specified. Please browse our collection.';
+    if (cat)   cat.textContent   = '';
+    if (price) price.textContent = '';
+    if (bc)    bc.textContent    = 'Not Found';
+    // Hide rating row
+    const ratingRow = document.querySelector('.product-rating-row');
+    if (ratingRow) ratingRow.style.display = 'none';
+    // Show error via App.UI if available
+    if (window.App && window.App.UI) {
+      window.App.UI.showError('Product not found. Showing the full collection instead.');
+    }
+    const mainImg = document.getElementById('main-product-img');
+    if (mainImg) { mainImg.src = ''; mainImg.style.opacity = '0'; }
+  }
+
+  /* ─── RENDER PDP ─────────────────────────────────────────── */
+  function renderPDP(product) {
+    if (!product) return;
+
+    const mainImg = document.getElementById('main-product-img');
+    if (mainImg) mainImg.style.opacity = '1';
 
     document.title = product.title + ' — Mokshita Enterprises';
-    document.getElementById('breadcrumb-title').innerText = product.title;
-    document.getElementById('pdp-title').innerText = product.title;
-    document.getElementById('pdp-category').innerText = product.tag || product.category || '';
-    document.getElementById('pdp-price').innerText = '₹' + product.price;
 
-    if (product.oldPrice) {
-      document.getElementById('pdp-old-price').innerText = '₹' + product.oldPrice;
-      document.getElementById('pdp-old-price').style.display = 'inline-block';
+    const bc = document.getElementById('breadcrumb-title');
+    if (bc) bc.textContent = product.title;
+
+    const titleEl = document.getElementById('pdp-title');
+    if (titleEl) titleEl.textContent = product.title;
+
+    const catEl = document.getElementById('pdp-category');
+    if (catEl) catEl.textContent = product.tag || product.category || '';
+
+    const priceEl = document.getElementById('pdp-price');
+    if (priceEl) priceEl.textContent = '₹' + product.price;
+
+    const oldPriceEl = document.getElementById('pdp-old-price');
+    if (oldPriceEl) {
+      if (product.oldPrice || product.compare_price) {
+        oldPriceEl.textContent = '₹' + (product.oldPrice || product.compare_price);
+        oldPriceEl.style.display = 'inline-block';
+      } else {
+        oldPriceEl.style.display = 'none';
+      }
     }
-    if (product.discount) {
-      document.getElementById('pdp-discount').innerText = product.discount;
-      document.getElementById('pdp-discount').style.display = 'inline-block';
+
+    const discEl = document.getElementById('pdp-discount');
+    if (discEl) {
+      if (product.discount) {
+        discEl.textContent = product.discount;
+        discEl.style.display = 'inline-block';
+      } else {
+        discEl.style.display = 'none';
+      }
     }
 
-    document.getElementById('pdp-desc').innerText = product.shortDesc || product.description || '';
-    document.getElementById('pdp-tab-desc').innerText = product.shortDesc || product.description || '';
-    document.getElementById('pdp-origin').innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> <span>' + (product.origin || 'India') + '</span>';
+    const descEl = document.getElementById('pdp-desc');
+    if (descEl) descEl.textContent = product.shortDesc || product.description || '';
 
+    const tabDescEl = document.getElementById('pdp-tab-desc');
+    if (tabDescEl) tabDescEl.textContent = product.shortDesc || product.description || '';
+
+    // Material in Materials tab
+    const tabMat = document.getElementById('tab-materials');
+    if (tabMat && product.material) {
+      tabMat.innerHTML = `<p><strong>Material:</strong> ${product.material}</p>`;
+    }
+
+    const originEl = document.getElementById('pdp-origin');
+    if (originEl) {
+      originEl.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> <span>${product.origin || 'India'}</span>`;
+    }
+
+    // Stock badge — prefer backend stock_status string over raw stock count
+    const stockBadge = document.querySelector('.stock-badge');
+    if (stockBadge) {
+      const status = product.stockStatus || (product.stock === 0 ? 'out_of_stock' : product.stock < 10 ? 'low_stock' : 'in_stock');
+      if (status === 'out_of_stock') {
+        stockBadge.innerHTML = '⚠ Out of Stock';
+        stockBadge.style.background = '#e8524a22';
+        stockBadge.style.color = '#e8524a';
+        const addCartBtn = document.getElementById('btn-add-cart');
+        if (addCartBtn) { addCartBtn.disabled = true; addCartBtn.style.opacity = '0.5'; }
+      } else if (status === 'low_stock') {
+        stockBadge.innerHTML = '⚡ Only a few left';
+        stockBadge.style.background = '#E8B03122';
+        stockBadge.style.color = '#c78f10';
+      } else {
+        stockBadge.innerHTML = '✔ In Stock';
+        stockBadge.style.background = '#2f5d5022';
+        stockBadge.style.color = '#2f5d50';
+      }
+    }
+
+    // Rating
     const pRating  = (product.rating  != null && !isNaN(Number(product.rating)))  ? Number(product.rating)  : null;
     const pReviews = (product.reviews != null && !isNaN(Number(product.reviews))) ? Math.round(Number(product.reviews)) : null;
     const ratingEl  = document.getElementById('pdp-reviews');
     const scoreEl   = document.getElementById('review-score');
     const countEl   = document.getElementById('review-count');
     const ratingRow = ratingEl ? ratingEl.closest('.product-rating-row') : null;
+
     if (pRating !== null && pRating > 0) {
       const ratingStr = pRating.toFixed(1);
-      if (scoreEl) scoreEl.innerText = ratingStr;
-      if (ratingEl) ratingEl.innerText = ratingStr + (pReviews ? ' (' + pReviews + ' Reviews)' : '');
-      if (countEl)  countEl.innerText  = pReviews ? '(' + pReviews + ' Reviews)' : '';
+      if (scoreEl) scoreEl.textContent = ratingStr;
+      if (ratingEl) ratingEl.textContent = ratingStr + (pReviews ? ' (' + pReviews + ' Reviews)' : '');
+      if (countEl)  countEl.textContent  = pReviews ? '(' + pReviews + ' Reviews)' : '';
     } else {
       if (ratingRow) ratingRow.style.display = 'none';
     }
 
+    // Stars
     const starsEl = document.getElementById('pdp-stars');
     if (starsEl) {
       if (pRating !== null && pRating > 0) {
@@ -371,81 +576,243 @@
       }
     }
 
-    const mainImg = document.getElementById('main-product-img');
-    mainImg.src = product.mainImage || '';
+    // Gallery
+    if (mainImg) {
+      mainImg.src = product.mainImage || '';
+      mainImg.alt = product.title;
+    }
     const thumbsContainer = document.getElementById('gallery-thumbs');
-    thumbsContainer.innerHTML = '';
-    (product.thumbnails || (product.mainImage ? [product.mainImage] : [])).forEach(function(thumb, idx) {
-      thumbsContainer.innerHTML += '<button class="thumb-btn ' + (idx === 0 ? 'active' : '') + '" data-src="' + thumb + '"><img src="' + thumb + '" alt="Thumbnail ' + (idx+1) + '" /></button>';
-    });
-    document.querySelectorAll('.thumb-btn').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        document.querySelectorAll('.thumb-btn').forEach(function(t) { t.classList.remove('active'); });
-        btn.classList.add('active');
-        mainImg.style.opacity = '0.5';
-        setTimeout(function() { mainImg.src = btn.dataset.src; mainImg.style.opacity = '1'; }, 150);
+    if (thumbsContainer) {
+      thumbsContainer.innerHTML = '';
+      const thumbs = product.thumbnails && product.thumbnails.length
+        ? product.thumbnails
+        : (product.mainImage ? [product.mainImage] : []);
+      thumbs.forEach(function(thumb, idx) {
+        thumbsContainer.innerHTML += `<button class="thumb-btn ${idx === 0 ? 'active' : ''}" data-src="${thumb}"><img src="${thumb}" alt="Thumbnail ${idx+1}" /></button>`;
       });
-    });
+      document.querySelectorAll('.thumb-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.thumb-btn').forEach(function(t) { t.classList.remove('active'); });
+          btn.classList.add('active');
+          if (mainImg) {
+            mainImg.style.opacity = '0.5';
+            setTimeout(function() { mainImg.src = btn.dataset.src; mainImg.style.opacity = '1'; }, 150);
+          }
+        });
+      });
+    }
 
+    // Related products — prefer rich backend data, fall back to window.products
     const relatedGrid = document.getElementById('related-grid');
-    relatedGrid.innerHTML = '';
-    const allProds = window.products || [];
-    allProds.filter(function(p) { return p.id !== product.id; }).sort(function() { return 0.5 - Math.random(); }).slice(0, 4).forEach(function(rel) {
-      relatedGrid.innerHTML += '<article class="premium-market-card" onclick="window.location.href=\'product.html?id=' + rel.id + '\'" style="cursor:pointer;"><div class="market-card-img-wrap"><img src="' + rel.mainImage + '" alt="' + rel.title + '" loading="lazy" /></div><div class="market-card-body"><span class="market-card-tag">' + (rel.tag || rel.category || '') + '</span><h2 class="market-card-title">' + rel.title + '</h2><div class="market-card-price">₹' + rel.price + '</div></div></article>';
-    });
+    if (relatedGrid) {
+      relatedGrid.innerHTML = '';
+      // _relatedProducts comes from the detail endpoint's related_products[]
+      const backendRelated = product._relatedProducts;
+      if (Array.isArray(backendRelated) && backendRelated.length) {
+        backendRelated.slice(0, 4).forEach(function(rel) {
+          const relSlug  = rel.slug || '';
+          const relImg   = rel.image_url || '';
+          const relTitle = rel.name || 'Product';
+          const relPrice = rel.price || 0;
+          const relTag   = (rel.subcategory && rel.subcategory.name) || (rel.category && rel.category.name) || '';
+          relatedGrid.innerHTML += `<article class="premium-market-card" onclick="window.location.href='product.html?slug=${relSlug}'" style="cursor:pointer;"><div class="market-card-img-wrap"><img src="${relImg}" alt="${relTitle}" loading="lazy" /></div><div class="market-card-body"><span class="market-card-tag">${relTag}</span><h2 class="market-card-title">${relTitle}</h2><div class="market-card-price">₹${relPrice}</div></div></article>`;
+        });
+      } else {
+        // Fallback: random products from window.products
+        const allProds = window.products || [];
+        allProds
+          .filter(function(p) { return p.id !== product.id; })
+          .sort(function() { return 0.5 - Math.random(); })
+          .slice(0, 4)
+          .forEach(function(rel) {
+            const relSlug = rel.id || rel.slug || '';
+            relatedGrid.innerHTML += `<article class="premium-market-card" onclick="window.location.href='product.html?slug=${relSlug}'" style="cursor:pointer;"><div class="market-card-img-wrap"><img src="${rel.mainImage}" alt="${rel.title}" loading="lazy" /></div><div class="market-card-body"><span class="market-card-tag">${rel.tag || rel.category || ''}</span><h2 class="market-card-title">${rel.title}</h2><div class="market-card-price">₹${rel.price}</div></div></article>`;
+          });
+      }
+    }
 
-    const qtyInput = document.getElementById('qty-input');
+    // Cart + WhatsApp actions
+    const qtyInput   = document.getElementById('qty-input');
     const addCartBtn = document.getElementById('btn-add-cart');
     const cartProductId = product.dbId || product.id;
-    addCartBtn.onclick = function() {
-      const qty = parseInt(qtyInput.value) || 1;
-      addToCart(cartProductId, qty);
-    };
-    document.getElementById('btn-qty-minus').onclick = function() {
-      const val = parseInt(qtyInput.value) || 1;
-      if (val > 1) qtyInput.value = val - 1;
-    };
-    document.getElementById('btn-qty-plus').onclick = function() {
-      qtyInput.value = (parseInt(qtyInput.value) || 1) + 1;
-    };
+
+    if (addCartBtn && qtyInput) {
+      addCartBtn.onclick = function() {
+        const qty = parseInt(qtyInput.value) || 1;
+        if (typeof addToCart === 'function') addToCart(cartProductId, qty);
+      };
+    }
+
+    const btnMinus = document.getElementById('btn-qty-minus');
+    const btnPlus  = document.getElementById('btn-qty-plus');
+    if (btnMinus && qtyInput) btnMinus.onclick = function() { const v = parseInt(qtyInput.value) || 1; if (v > 1) qtyInput.value = v - 1; };
+    if (btnPlus  && qtyInput) btnPlus.onclick  = function() { qtyInput.value = (parseInt(qtyInput.value) || 1) + 1; };
 
     const waBuy = document.getElementById('btn-buy-whatsapp');
-    if (waBuy) {
+    if (waBuy && qtyInput) {
       waBuy.href = '#';
       waBuy.removeAttribute('target');
       waBuy.onclick = function(e) {
         e.preventDefault();
         const qty = parseInt(qtyInput.value) || 1;
-        addToCart(cartProductId, qty);
+        if (typeof addToCart === 'function') addToCart(cartProductId, qty);
         window.location.href = 'cart.html';
       };
     }
+
+    // ── SEO meta injection — prefer backend seo object ──────────────
+    if (product.seo) {
+      if (product.seo.title)       document.title = product.seo.title;
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc && product.seo.description) metaDesc.content = product.seo.description;
+      // og:image for social sharing
+      let ogImg = document.querySelector('meta[property="og:image"]');
+      if (!ogImg) { ogImg = document.createElement('meta'); ogImg.setAttribute('property', 'og:image'); document.head.appendChild(ogImg); }
+      if (product.seo.og_image) ogImg.content = product.seo.og_image;
+    } else {
+      // Basic fallback SEO
+      document.title = product.title + ' — Mokshita Enterprises';
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) metaDesc.content = product.shortDesc || product.description || product.title;
+    }
+
+    // ── Category breadcrumb enrichment ───────────────────────────────
+    const catBreadcrumb = document.getElementById('breadcrumb-category');
+    if (catBreadcrumb && product.categoryObj) {
+      catBreadcrumb.textContent = product.categoryObj.name;
+      catBreadcrumb.href = `handicrafts.html?category=${product.categoryObj.slug}`;
+    }
+
+    // ── SKU in product meta if element exists ─────────────────────────
+    const skuEl = document.getElementById('pdp-sku');
+    if (skuEl && product.sku) skuEl.textContent = 'SKU: ' + product.sku;
   }
 
-  function initPDP() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const productId = urlParams.get('id') || 'taj-mahal-watercolour';
-    const product = findProduct(productId);
-    renderPDP(product);
+  /* ─── MAIN INIT ─────────────────────────────────────────── */
+  /**
+   * Full slug-first PDP bootstrap:
+   * 1. Parse slug from URL
+   * 2. Try backend API first (GET /api/products/slug/:slug)
+   * 3. Fall back to window.products local array
+   * 4. Handle all error cases gracefully
+   */
+  async function initPDP() {
+    const slug = getSlugFromURL();
 
+    // Show loading state immediately
+    showLoadingState();
+
+    if (!slug) {
+      console.warn('[PDP] No slug in URL, showing not-found state.');
+      showNotFound(null);
+      initTabs();
+      return;
+    }
+
+    let product = null;
+    const api   = window.apiService;
+
+    // ── Step 1: Rich detail endpoint (Phase 2 primary) ───────
+    if (api && api.products && api.products.getDetail) {
+      try {
+        const { data, error } = await api.products.getDetail(slug);
+        if (!error && data && (data.product || data.data)) {
+          const raw     = data.product || data.data;
+          const related = data.related_products || null;
+          product = normaliseProduct(raw, related);
+          console.log(`[PDP] Loaded "${product.title}" from /detail endpoint (rich).`);
+        } else if (error) {
+          console.warn('[PDP] getDetail returned error:', error);
+        }
+      } catch (err) {
+        console.warn('[PDP] getDetail failed:', err.message);
+      }
+    }
+
+    // ── Step 2: Basic slug endpoint (fallback) ────────────────
+    if (!product && api && api.products && api.products.getBySlug) {
+      try {
+        const { data, error } = await api.products.getBySlug(slug);
+        if (!error && data) {
+          const raw = data.data || data.product || data;
+          product = normaliseProduct(raw, null);
+          console.log(`[PDP] Loaded "${product.title}" from /slug endpoint (basic).`);
+        }
+      } catch (err) {
+        console.warn('[PDP] getBySlug failed, falling back to local data.', err.message);
+      }
+    } else if (!product && !api) {
+      console.warn('[PDP] apiService not ready, falling back to local data.');
+    }
+
+    // ── Step 3: Local window.products fallback ────────────────
+    if (!product) {
+      const local = findProductLocal(slug);
+      if (local) {
+        product = local;
+        console.log(`[PDP] Loaded "${product.title}" from local window.products.`);
+      }
+    }
+
+    // ── Step 3: Handle not found ─────────────────────────────
+    if (!product) {
+      console.warn('[PDP] Product not found for slug:', slug);
+      showNotFound(slug);
+      initTabs();
+      return;
+    }
+
+    // ── Render ────────────────────────────────────────────────
+    renderPDP(product);
+    initTabs();
+  }
+
+  function initTabs() {
     document.querySelectorAll('.tab-btn').forEach(function(btn) {
       btn.addEventListener('click', function() {
         document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
         document.querySelectorAll('.tab-pane').forEach(function(p) { p.classList.remove('active'); });
         btn.classList.add('active');
-        document.getElementById(btn.dataset.target).classList.add('active');
+        const target = document.getElementById(btn.dataset.target);
+        if (target) target.classList.add('active');
       });
     });
   }
 
-  document.addEventListener('DOMContentLoaded', initPDP);
+  // Re-render related products when backend products fully load
+  // (the main product is already rendered from the API at this point)
   document.addEventListener('productsLoaded', function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const productId = urlParams.get('id') || 'taj-mahal-watercolour';
-    const product = findProduct(productId);
-    if (product) renderPDP(product);
+    const slug = getSlugFromURL();
+    if (!slug) return;
+    // Only re-render related grid — the main product came from API already
+    const relatedGrid = document.getElementById('related-grid');
+    const titleEl     = document.getElementById('pdp-title');
+    if (relatedGrid && titleEl && titleEl.textContent !== 'Product Not Found' && titleEl.textContent !== 'Loading…') {
+      // Re-render related products with updated window.products
+      const currentTitle = titleEl.textContent;
+      const allProds = window.products || [];
+      relatedGrid.innerHTML = '';
+      allProds
+        .filter(function(p) { return p.id !== slug; })
+        .sort(function() { return 0.5 - Math.random(); })
+        .slice(0, 4)
+        .forEach(function(rel) {
+          const relSlug = rel.id || rel.slug || '';
+          relatedGrid.innerHTML += `<article class="premium-market-card" onclick="window.location.href='product.html?slug=${relSlug}'" style="cursor:pointer;"><div class="market-card-img-wrap"><img src="${rel.mainImage}" alt="${rel.title}" loading="lazy" /></div><div class="market-card-body"><span class="market-card-tag">${rel.tag || rel.category || ''}</span><h2 class="market-card-title">${rel.title}</h2><div class="market-card-price">₹${rel.price}</div></div></article>`;
+        });
+    }
   });
+
+  // Bootstrap: wait for DOM then run
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPDP);
+  } else {
+    initPDP();
+  }
 </script>
+
+
 
 </body>
 </html>
+

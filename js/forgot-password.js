@@ -9,14 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   formForgot.addEventListener('submit', async (e) => {
     e.preventDefault();
-    if (!window.supabaseClient) {
-      window.App.UI.showError('Supabase client not loaded.');
-      return;
-    }
 
     const email = document.getElementById('reset-email').value.trim();
     if (!email) {
-      window.App.UI.showError('Please enter your email.');
+      if (window.App && window.App.UI) window.App.UI.showError('Please enter your email.');
       return;
     }
 
@@ -25,18 +21,16 @@ document.addEventListener('DOMContentLoaded', () => {
     btnReset.disabled = true;
 
     try {
-      const { error } = await window.supabaseClient.auth.resetPasswordForEmail(email, {
-        redirectTo: window.location.origin + '/reset-password.html'
-      });
+      const { error } = await window.apiService.auth.forgotPassword(email);
 
       if (error) {
-        window.App.UI.showError(error.message);
+        if (window.App && window.App.UI) window.App.UI.showError(error);
       } else {
-        window.App.UI.showSuccess('Check your email for reset instructions.');
+        if (window.App && window.App.UI) window.App.UI.showSuccess('Check your email for reset instructions.');
       }
     } catch (err) {
       console.error(err);
-      window.App.UI.showError('An unexpected error occurred.');
+      if (window.App && window.App.UI) window.App.UI.showError('An unexpected error occurred.');
     } finally {
       btnReset.innerText = originalText;
       btnReset.disabled = false;

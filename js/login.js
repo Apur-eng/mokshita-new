@@ -1,14 +1,8 @@
 /* ============================================================
-   SUPABASE AUTHENTICATION LOGIC
+   API AUTHENTICATION LOGIC
    ============================================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
-  const supabase = window.supabaseClient;
-  if (!supabase) {
-    console.error("Supabase client is not loaded.");
-    return;
-  }
-
   // UI Elements
   const tabLogin = document.getElementById('tab-login');
   const tabSignup = document.getElementById('tab-signup');
@@ -50,12 +44,14 @@ document.addEventListener('DOMContentLoaded', () => {
       loginMsg.textContent = '';
       
       try {
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email,
-          password
-        });
+        const { data, error } = await window.apiService.auth.login(email, password);
         
-        if (error) throw error;
+        if (error) throw new Error(error);
+        
+        // Save token
+        if (data && data.token) {
+          localStorage.setItem('mokshita_token', data.token);
+        }
         
         if (typeof window.syncGuestCart === 'function') {
           await window.syncGuestCart();
@@ -66,13 +62,13 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const urlParams = new URLSearchParams(window.location.search);
         const redirectUrl = urlParams.get('redirect') || 'account.html';
-        window.App.UI.showSuccess("Welcome back!");
+        if (window.App && window.App.UI) window.App.UI.showSuccess("Welcome back!");
         setTimeout(() => { window.location.replace(redirectUrl); }, 800);
         
       } catch (err) {
-        loginMsg.textContent = err.message;
+        loginMsg.textContent = err.message || 'Login failed';
         loginMsg.classList.add('error');
-        window.App.UI.showError(err.message);
+        if (window.App && window.App.UI) window.App.UI.showError(err.message || 'Login failed');
       } finally {
         btn.disabled = false;
         btn.textContent = 'Sign In';
@@ -95,27 +91,25 @@ document.addEventListener('DOMContentLoaded', () => {
       signupMsg.textContent = '';
       
       try {
-        const { data, error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: {
-              full_name: name,
-            }
-          }
-        });
+        const { data, error } = await window.apiService.auth.register(email, password, name);
         
-        if (error) throw error;
+        if (error) throw new Error(error);
 
-        signupMsg.textContent = "Account created! Please check your email to confirm.";
+        // Auto login on successful registration
+        if (data && data.token) {
+           localStorage.setItem('mokshita_token', data.token);
+        }
+
+        signupMsg.textContent = "Account created! Redirecting...";
         signupMsg.classList.add('success');
-        window.App.UI.showSuccess("Account created! Please check your email to confirm your account.");
-        formSignup.reset();
+        if (window.App && window.App.UI) window.App.UI.showSuccess("Account created successfully.");
+        
+        setTimeout(() => { window.location.replace('account.html'); }, 800);
         
       } catch (err) {
-        signupMsg.textContent = err.message;
+        signupMsg.textContent = err.message || 'Signup failed';
         signupMsg.classList.add('error');
-        window.App.UI.showError(err.message);
+        if (window.App && window.App.UI) window.App.UI.showError(err.message || 'Signup failed');
       } finally {
         btn.disabled = false;
         btn.textContent = 'Create Account';
@@ -131,11 +125,6 @@ document.addEventListener('DOMContentLoaded', () => {
       window.location.reload();
     });
   }
-
-  // Listen to Auth State Changes to update UI
-  supabase.auth.onAuthStateChange((event, session) => {
-    updateAuthUI(session);
-  });
   
   // Check initial session — redirect to account if already logged in
   const urlParams = new URLSearchParams(window.location.search);
@@ -144,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (isGuest) updateAuthUI(null);
   });
 
-  function updateAuthUI(session) {
+  async function updateAuthUI(session) {
     if (!formLogin || !formSignup || !authLoggedIn) return;
     
     const tabsContainer = document.querySelector('.auth-tabs');
@@ -161,8 +150,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const nameDisplay = document.getElementById('account-name-display');
       
       if (emailDisplay) emailDisplay.textContent = session.user.email;
-      if (nameDisplay && session.user.user_metadata?.full_name) {
-        nameDisplay.textContent = `Welcome, ${session.user.user_metadata.full_name}`;
+      if (nameDisplay && session.user.full_name) {
+        nameDisplay.textContent = `Welcome, ${session.user.full_name}`;
       }
     } else {
       // User is logged out
