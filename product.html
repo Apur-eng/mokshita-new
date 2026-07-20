@@ -302,6 +302,7 @@
 <script src="js/main.js"></script>
 <script src="js/products.js"></script>
 <script src="js/cart.js"></script>
+<script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="src/services/api.js"></script>
 <script src="js/backend-products.js"></script>
@@ -374,6 +375,9 @@
     if (imgUrl && imgUrl.startsWith('/') && api && api.getBaseUrl) {
       imgUrl = api.getBaseUrl() + imgUrl;
     }
+    if (window.resolveProductImage) {
+      imgUrl = window.resolveProductImage(imgUrl, raw.name || raw.slug);
+    }
 
     // ── Category / subcategory objects (present in detail endpoint) ──
     const catObj    = (raw.category    && typeof raw.category    === 'object') ? raw.category    : null;
@@ -387,6 +391,7 @@
       thumbnails = raw.images.map(img => {
         let url = img.image_url || '';
         if (url && url.startsWith('/') && api && api.getBaseUrl) url = api.getBaseUrl() + url;
+        if (window.resolveProductImage) url = window.resolveProductImage(url, raw.name || raw.slug);
         return url;
       }).filter(Boolean);
     }

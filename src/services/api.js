@@ -1,6 +1,8 @@
 // src/services/api.js
+// NOTE: window.BACKEND_URL is set in /config.js — update that file after deploying the backend.
 
-const API_URL = (window.process && window.process.env && window.process.env.VITE_API_URL) 
+const API_URL = (window.BACKEND_URL ? window.BACKEND_URL + '/api' : null)
+  || (window.process && window.process.env && window.process.env.VITE_API_URL)
   || 'http://localhost:3000/api';
 
 // Create an Axios instance

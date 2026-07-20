@@ -33,6 +33,7 @@ const mobileMenu = document.getElementById('mobile-menu');
 
 hamburger?.addEventListener('click', () => {
   mobileMenu?.classList.toggle('open');
+  nav?.classList.toggle('mobile-menu-open');
   // Animate hamburger
   const spans = hamburger.querySelectorAll('span');
   if (mobileMenu?.classList.contains('open')) {
@@ -48,6 +49,7 @@ hamburger?.addEventListener('click', () => {
 document.querySelectorAll('.mobile-menu .nav-link').forEach(link => {
   link.addEventListener('click', () => {
     mobileMenu?.classList.remove('open');
+    nav?.classList.remove('mobile-menu-open');
     const spans = hamburger?.querySelectorAll('span');
     spans?.forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
   });

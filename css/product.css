@@ -5,32 +5,32 @@
 /* Brand Palette & Variables — Warm Artisan Edition */
 :root {
   /* Page & Section Backgrounds */
-  --pdp-ivory:           #FAF7F2; /* page bg */
-  --pdp-sand:            #F3EDE2; /* info panel, tabs block */
-  --pdp-sand-deep:       #E9E0D2; /* dividers, borders */
-  --pdp-panel:           #FFFCF8; /* gallery card */
+  --pdp-ivory:           #F6F1E8; /* page bg */
+  --pdp-sand:            #EFE6D8; /* info panel, tabs block */
+  --pdp-sand-deep:       rgba(176, 141, 87, 0.2); /* dividers, borders */
+  --pdp-panel:           #FFFFFF; /* gallery card */
 
   /* Accent Colors */
-  --pdp-terracotta:       #C9794A;
-  --pdp-terracotta-hover: #B5663B;
-  --pdp-terracotta-light: rgba(201, 121, 74, 0.10);
-  --pdp-sage:             #A8B89A;
-  --pdp-sage-dark:        #7A9068;
-  --pdp-sage-light:       rgba(168, 184, 154, 0.15);
-  --pdp-gold:             #C8A84B;  /* ratings, star fill */
-  --pdp-gold-light:       rgba(200, 168, 75, 0.12);
+  --pdp-terracotta:       #B08D57;
+  --pdp-terracotta-hover: #8F7041;
+  --pdp-terracotta-light: rgba(176, 141, 87, 0.10);
+  --pdp-sage:             #B08D57;
+  --pdp-sage-dark:        #6E6257;
+  --pdp-sage-light:       rgba(176, 141, 87, 0.10);
+  --pdp-gold:             #B08D57;  /* ratings, star fill */
+  --pdp-gold-light:       rgba(176, 141, 87, 0.12);
 
   /* Typography */
-  --pdp-text-main:   #2E2A24;
-  --pdp-text-muted:  #6B6358;
-  --pdp-text-light:  #A09080;
+  --pdp-text-main:   #2E241B;
+  --pdp-text-muted:  #6E6257;
+  --pdp-text-light:  #B5AB9F;
 
   /* Structure */
-  --pdp-border:       #DDD5C8;
+  --pdp-border:       rgba(176, 141, 87, 0.15);
   --pdp-radius:       18px;
   --pdp-radius-sm:    10px;
-  --pdp-shadow:       0 8px 32px rgba(46, 42, 36, 0.08);
-  --pdp-shadow-soft:  0 2px 12px rgba(46, 42, 36, 0.05);
+  --pdp-shadow:       0 8px 32px rgba(74, 52, 38, 0.08);
+  --pdp-shadow-soft:  0 2px 12px rgba(74, 52, 38, 0.05);
 
   /* Legacy aliases so existing markup still resolves */
   --pdp-bg-solid:         var(--pdp-ivory);

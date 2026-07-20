@@ -184,9 +184,9 @@ const products = [
     tag: "Textile",
     shortDesc: "A premium fabric pouch featuring delicate hand-painted elephant motifs and fine stitching.",
     origin: "Crafted in Rajasthan",
-    mainImage: "images/items/Vibrant folk-art elephant pouch design.png",
+    mainImage: "images/items/Vibrant folk-art elephant pouch design.jpg",
     thumbnails: [
-      "images/items/Vibrant folk-art elephant pouch design.png"
+      "images/items/Vibrant folk-art elephant pouch design.jpg"
     ]
   },
   {
@@ -201,9 +201,9 @@ const products = [
     tag: "Zardozi",
     shortDesc: "Mehroon Zardozi elephant ornament with traditional metallic embroidery on both sides.",
     origin: "Crafted in Bareilly, Uttar Pradesh",
-    mainImage: "images/items/Intricate Zardozi elephant ornament on velvet.png",
+    mainImage: "images/items/Intricate Zardozi elephant ornament on velvet.jpg",
     thumbnails: [
-      "images/items/Intricate Zardozi elephant ornament on velvet.png"
+      "images/items/Intricate Zardozi elephant ornament on velvet.jpg"
     ]
   },
   {
@@ -269,9 +269,9 @@ const products = [
     tag: "Zardozi",
     shortDesc: "Detailed elephant with raised trunk, heavily embroidered with authentic gold threads.",
     origin: "Crafted in Bareilly, Uttar Pradesh",
-    mainImage: "images/items/Green and gold elephant ornament.png",
+    mainImage: "images/items/Green and gold elephant ornament.jpg",
     thumbnails: [
-      "images/items/Green and gold elephant ornament.png"
+      "images/items/Green and gold elephant ornament.jpg"
     ]
   },
   {
@@ -286,9 +286,9 @@ const products = [
     tag: "Zardozi",
     shortDesc: "A fierce orange tiger motif, capturing the spirit of India's wildlife in Zardozi.",
     origin: "Crafted in Bareilly, Uttar Pradesh",
-    mainImage: "images/items/Intricate Zardozi embroidered elephant pouches.png",
+    mainImage: "images/items/ChatGPT Image Apr 13, 2026, 06_11_51 PM.jpg",
     thumbnails: [
-      "images/items/Intricate Zardozi embroidered elephant pouches.png"
+      "images/items/ChatGPT Image Apr 13, 2026, 06_11_51 PM.jpg"
     ]
   },
   {
@@ -303,9 +303,9 @@ const products = [
     tag: "Zardozi",
     shortDesc: "A charming Indian auto rickshaw (Tuk-tuk) in yellow or sky blue, hand-embroidered.",
     origin: "Crafted in Bareilly, Uttar Pradesh",
-    mainImage: "images/items/Beaded auto-rickshaw ornaments in vibrant colours.png",
+    mainImage: "images/items/Beaded auto-rickshaw ornaments in vibrant colours.jpg",
     thumbnails: [
-      "images/items/Beaded auto-rickshaw ornaments in vibrant colours.png"
+      "images/items/Beaded auto-rickshaw ornaments in vibrant colours.jpg"
     ]
   },
   {
@@ -320,9 +320,9 @@ const products = [
     tag: "Zardozi",
     shortDesc: "Premium Zardozi coin purse adorned with majestic elephant embroidery.",
     origin: "Crafted in Bareilly, Uttar Pradesh",
-    mainImage: "images/items/Intricate Zardozi embroidered elephant pouches.png",
+    mainImage: "images/items/Intricate Zardozi embroidered elephant pouches.jpg",
     thumbnails: [
-      "images/items/Intricate Zardozi embroidered elephant pouches.png"
+      "images/items/Intricate Zardozi embroidered elephant pouches.jpg"
     ]
   },
   {
@@ -345,3 +345,42 @@ const products = [
 ];
 
 window.products = products;
+
+// Helper to resolve/correct product images (handling extension mismatches and missing references from backend/API)
+window.resolveProductImage = function(imgUrl, productTitleOrId) {
+  const placeholderSvg = "data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22100%22%20height%3D%22100%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23eaeaea%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-size%3D%2212%22%20text-anchor%3D%22middle%22%20alignment-baseline%3D%22middle%22%20font-family%3D%22sans-serif%22%20fill%3D%22%23999%22%3ENo%20Image%3C%2Ftext%3E%3C%2Fsvg%3E";
+  if (!imgUrl) return placeholderSvg;
+  
+  let url = imgUrl.replace(/\\/g, '/');
+
+  // Check for Tiger (Orange)
+  const isTiger = 
+    (productTitleOrId && String(productTitleOrId).toLowerCase().includes('tiger')) ||
+    url.toLowerCase().includes('tiger') ||
+    url.toLowerCase().includes('zardozi-tiger');
+
+  if (isTiger) {
+    return 'images/items/ChatGPT Image Apr 13, 2026, 06_11_51 PM.jpg';
+  }
+
+  // Extension mappings
+  const mapping = {
+    'vibrant folk-art elephant pouch design.png': 'Vibrant folk-art elephant pouch design.jpg',
+    'beaded auto-rickshaw ornaments in vibrant colours.png': 'Beaded auto-rickshaw ornaments in vibrant colours.jpg',
+    'intricate zardozi elephant ornament on velvet.png': 'Intricate Zardozi elephant ornament on velvet.jpg',
+    'green and gold elephant ornament.png': 'Green and gold elephant ornament.jpg',
+    'intricate zardozi embroidered elephant pouches.png': 'Intricate Zardozi embroidered elephant pouches.jpg',
+    'sunflower.jpg.jpeg': 'Sunflower.jpg.jpeg',
+    'wooden dice and wooden die holder.jpg.jpeg': 'Wooden dice and wooden die holder.jpg.jpeg'
+  };
+
+  const urlLower = url.toLowerCase();
+  for (const [pngFile, jpgFile] of Object.entries(mapping)) {
+    if (urlLower.endsWith(pngFile)) {
+      return url.substring(0, url.length - pngFile.length) + jpgFile;
+    }
+  }
+
+  return url;
+};
+

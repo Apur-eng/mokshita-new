@@ -2,14 +2,14 @@
    HANDICRAFTS PAGE — Premium Layout & Product Cards
    ============================================================ */
 :root {
-  --hc-bg: #f8f6f3;
-  --hc-card-bg: #ffffff;
-  --hc-accent: #c26a3d;
-  --hc-accent-hover: #a5552c;
-  --hc-secondary: #2f5d50;
-  --hc-text-primary: #2b2b2b;
-  --hc-text-secondary: #7a7a7a;
-  --hc-border: #e8e5e0;
+  --hc-bg: #F6F1E8;
+  --hc-card-bg: #FFFFFF;
+  --hc-accent: #B08D57;
+  --hc-accent-hover: #8F7041;
+  --hc-secondary: #6E6257;
+  --hc-text-primary: #2E241B;
+  --hc-text-secondary: #6E6257;
+  --hc-border: rgba(176,141,87,0.15);
 }
 
 body {
@@ -408,7 +408,7 @@ body {
   position: absolute;
   inset: 24px;
   border-radius: 20px;
-  background: #fdf8f0;
+  background: var(--surface);
   display: grid;
   grid-template-columns: 60% 40%;
   overflow: hidden;
@@ -474,7 +474,7 @@ body {
 /* Category badge overlaid on image */
 .modal-category-badge {
   position: absolute; top: 20px; left: 20px;
-  background: rgba(201,168,76,0.92);
+  background: rgba(176,141,87,0.92);
   color: #1a1008;
   font-size: 0.62rem; font-weight: 700;
   letter-spacing: 0.18em; text-transform: uppercase;
@@ -488,7 +488,7 @@ body {
   position: absolute; top: 20px; right: 20px;
   background: rgba(15,12,8,0.65);
   backdrop-filter: blur(8px);
-  border: 1px solid rgba(201,168,76,0.3);
+  border: 1px solid rgba(176,141,87,0.3);
   color: var(--gold-light, #e8c96c);
   font-size: 0.65rem; font-weight: 600;
   letter-spacing: 0.12em; text-transform: uppercase;
@@ -526,7 +526,7 @@ body {
   object-fit: cover;
 }
 .modal-thumb:hover { transform: scale(1.05); }
-.modal-thumb.active { border-color: var(--gold, #c9a84c); }
+.modal-thumb.active { border-color: var(--gold); }
 
 /* Arrow navigation for multi-image */
 .modal-gallery-arrow {
@@ -544,7 +544,7 @@ body {
   cursor: pointer; z-index: 5;
   transition: background 0.2s ease, transform 0.2s ease;
 }
-.modal-gallery-arrow:hover { background: rgba(201,168,76,0.85); }
+.modal-gallery-arrow:hover { background: var(--gold-hover); }
 .modal-gallery-arrow.visible { display: flex; }
 .modal-gallery-prev { left: 16px; }
 .modal-gallery-next { right: 16px; }
@@ -557,7 +557,7 @@ body {
   gap: 0;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: rgba(201,168,76,0.3) transparent;
+  scrollbar-color: rgba(176,141,87,0.3) transparent;
 
   /* Staggered fade-in */
   opacity: 0;
@@ -586,7 +586,7 @@ body {
 }
 .modal-divider {
   width: 44px; height: 2px;
-  background: linear-gradient(to right, var(--gold), var(--amber));
+  background: linear-gradient(to right, var(--gold), var(--gold-light));
   border-radius: 2px;
   margin: 20px 0;
 }
@@ -601,8 +601,8 @@ body {
 /* Price row */
 .modal-meta-row {
   display: flex; align-items: center; justify-content: space-between;
-  background: rgba(201,168,76,0.07);
-  border: 1px solid rgba(201,168,76,0.2);
+  background: rgba(176,141,87,0.07);
+  border: 1px solid rgba(176,141,87,0.2);
   border-radius: var(--radius-lg);
   padding: 18px 22px;
   margin-bottom: 28px;
@@ -643,7 +643,7 @@ body {
 .modal-trust-row {
   display: flex; flex-direction: column; gap: 12px;
   padding-top: 24px;
-  border-top: 1px solid rgba(201,168,76,0.15);
+  border-top: 1px solid rgba(176,141,87,0.15);
   margin-top: auto;
 }
 .modal-trust-item {

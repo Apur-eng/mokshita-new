@@ -50,6 +50,13 @@
   <a href="cart.html"        class="nav-link">Cart</a>
   <a href="login.html"       class="nav-link" id="mobile-account-btn">Account</a>
   <a href="contact.html"     class="nav-link active">Contact Us</a>
+  <div style="border-top:1px solid rgba(0,0,0,0.07);margin:8px 0;padding-top:8px;display:flex;flex-direction:column;gap:10px;">
+    <span style="font-size:0.58rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--text-muted);font-weight:600;">Policies</span>
+    <a href="privacy-policy.html"       class="nav-link" style="font-size:0.78rem;">Privacy Policy</a>
+    <a href="terms-and-conditions.html" class="nav-link" style="font-size:0.78rem;">Terms &amp; Conditions</a>
+    <a href="refund-policy.html"        class="nav-link" style="font-size:0.78rem;">Refund &amp; Cancellation</a>
+    <a href="shipping-policy.html"      class="nav-link" style="font-size:0.78rem;">Shipping Policy</a>
+  </div>
   <a href="contact.html" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:8px;">Plan Your Journey</a>
 </div>
 
@@ -190,7 +197,7 @@
         <div class="form-privacy">
           <input type="checkbox" id="contact-privacy" name="privacy" required class="form-checkbox" />
           <label for="contact-privacy" class="form-privacy-label">
-            I agree to Mokshita Enterprises's <a href="#" class="form-link">Privacy Policy</a> and consent to being contacted.
+            I agree to Mokshita Enterprises's <a href="privacy-policy.html" class="form-link">Privacy Policy</a> and consent to being contacted.
           </label>
         </div>
 
@@ -293,18 +300,19 @@
     <div>
       <p class="footer-col-title">Explore</p>
       <ul class="footer-links">
-        <li><a href="index.html" class="footer-link">Home</a></li>
+        <li><a href="index.html"       class="footer-link">Home</a></li>
         <li><a href="handicrafts.html" class="footer-link">Handicrafts</a></li>
-        <li><a href="travel.html" class="footer-link">Travel</a></li>
-        <li><a href="contact.html" class="footer-link">Contact</a></li>
+        <li><a href="travel.html"      class="footer-link">Travel</a></li>
+        <li><a href="contact.html"     class="footer-link">Contact</a></li>
       </ul>
     </div>
     <div>
-      <p class="footer-col-title">Travel</p>
+      <p class="footer-col-title">Policies</p>
       <ul class="footer-links">
-        <li><a href="travel.html#pkg-agra" class="footer-link">Agra Package</a></li>
-        <li><a href="travel.html#pkg-delhi" class="footer-link">Delhi - Imperial Legacy</a></li>
-        <li><a href="travel.html#pkg-jaipur" class="footer-link">Jaipur Royal City</a></li>
+        <li><a href="privacy-policy.html"       class="footer-link">Privacy Policy</a></li>
+        <li><a href="terms-and-conditions.html" class="footer-link">Terms &amp; Conditions</a></li>
+        <li><a href="refund-policy.html"        class="footer-link">Refund &amp; Cancellation</a></li>
+        <li><a href="shipping-policy.html"      class="footer-link">Shipping Policy</a></li>
       </ul>
     </div>
     <div>
@@ -312,14 +320,17 @@
       <ul class="footer-links">
         <li><a href="mailto:mokshitaenterprises2024@gmail.com" class="footer-link">mokshitaenterprises2024@gmail.com</a></li>
         <li><a href="tel:+918871872924" class="footer-link">+91-8871872924</a></li>
+        <li><span class="footer-link" style="pointer-events:none;opacity:0.7;">Artisan Quarter, Near Taj East Gate<br/>Agra – 282001, India</span></li>
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
     <p class="footer-copy">© 2025 Mokshita Enterprises. All rights reserved.</p>
     <ul class="footer-bottom-links" role="list">
-      <li><a href="#" class="footer-bottom-link">Privacy Policy</a></li>
-      <li><a href="#" class="footer-bottom-link">Terms of Use</a></li>
+      <li><a href="privacy-policy.html"       class="footer-bottom-link">Privacy Policy</a></li>
+      <li><a href="terms-and-conditions.html" class="footer-bottom-link">Terms &amp; Conditions</a></li>
+      <li><a href="refund-policy.html"        class="footer-bottom-link">Refund Policy</a></li>
+      <li><a href="shipping-policy.html"      class="footer-bottom-link">Shipping Policy</a></li>
     </ul>
   </div>
 </footer>
@@ -328,6 +339,7 @@
 <script src="modules/whatsapp.js"></script>
 <script src="modules/ui.js"></script>
 <script src="modules/auth.js"></script>
+<script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="src/services/api.js"></script>
 <script src="js/global-search.js"></script>

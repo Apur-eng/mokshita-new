@@ -363,6 +363,7 @@
 <script src="modules/ui.js"></script>
 <script src="modules/auth.js"></script>
 <script src="js/products.js"></script>
+<script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="src/services/api.js"></script>
 <script src="js/backend-products.js"></script>
@@ -482,15 +483,15 @@ async function renderCart() {
       "Crochet Doll (Multicolour)": "images/items/Handmade crochet doll with vibrant yarn details.png",
       "Crochet Turtle (Multicolour)": "images/items/Crochet turtles side by side.png",
       "Crochet Sunflower Keyring": "images/items/Sunflower.jpg.jpeg",
-      "Hand-painted Elephant Pouch": "images/items/Vibrant folk-art elephant pouch design.png",
-      "Double Side Elephant (Mehroon)": "images/items/Intricate Zardozi elephant ornament on velvet.png",
+      "Hand-painted Elephant Pouch": "images/items/Vibrant folk-art elephant pouch design.jpg",
+      "Double Side Elephant (Mehroon)": "images/items/Intricate Zardozi elephant ornament on velvet.jpg",
       "Single Side Elephant": "images/items/Red Elephant( Zardozi).png",
       "Single Side Camel": "images/items/Green and gold camel ornament.png",
       "Single Side Carrot": "images/items/Beaded carrot ornament close-up.png",
-      "Elephant with Trunk": "images/items/Green and gold elephant ornament.png",
-      "Tiger (Orange)": "images/items/Intricate Zardozi embroidered elephant pouches.png",
-      "Tuk-tuk": "images/items/Beaded auto-rickshaw ornaments in vibrant colours.png",
-      "Coin Purse": "images/items/Intricate Zardozi embroidered elephant pouches.png",
+      "Elephant with Trunk": "images/items/Green and gold elephant ornament.jpg",
+      "Tiger (Orange)": "images/items/ChatGPT Image Apr 13, 2026, 06_11_51 PM.jpg",
+      "Tuk-tuk": "images/items/Beaded auto-rickshaw ornaments in vibrant colours.jpg",
+      "Coin Purse": "images/items/Intricate Zardozi embroidered elephant pouches.jpg",
       "Halloween Design": "images/items/halloween pumpkin.png"
     };
 
@@ -505,6 +506,10 @@ async function renderCart() {
             key.toLowerCase().includes(item.name.toLowerCase())
         );
         imageSrc = matchedKey ? imageMapFallback[matchedKey] : placeholderSvg;
+    }
+
+    if (window.resolveProductImage) {
+        imageSrc = window.resolveProductImage(imageSrc, item.name);
     }
 
     // Main cart view

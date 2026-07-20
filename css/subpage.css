@@ -95,7 +95,7 @@
   background: var(--gold);
   color: var(--charcoal);
   border-color: var(--gold);
-  box-shadow: 0 2px 10px rgba(201,168,76,0.3);
+  box-shadow: 0 2px 10px rgba(176,141,87,0.3);
 }
 
 /* ─── ARTISAN BAND ───────────────────────────────────────── */
@@ -120,7 +120,7 @@
 .artisan-img-frame {
   position: absolute;
   inset: -12px;
-  border: 1px solid rgba(201,168,76,0.35);
+  border: 1px solid rgba(176,141,87,0.35);
   border-radius: calc(var(--radius-lg) + 8px);
   pointer-events: none;
 }

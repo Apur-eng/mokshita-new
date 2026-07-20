@@ -39,7 +39,7 @@
 }
 .contact-detail-icon {
   width: 40px; height: 40px; flex-shrink: 0;
-  background: rgba(201,168,76,0.1);
+  background: rgba(176,141,87,0.1);
   border-radius: 10px;
   display: flex; align-items: center; justify-content: center;
   color: var(--gold-dark);
@@ -120,7 +120,7 @@ a.contact-detail-value:hover { color: var(--gold-dark); }
 }
 .form-input:focus {
   border-color: var(--gold);
-  box-shadow: 0 0 0 3px rgba(201,168,76,0.15);
+  box-shadow: 0 0 0 3px rgba(176,141,87,0.15);
   background: var(--white);
 }
 .form-input::placeholder { color: var(--beige-dark); }
@@ -195,7 +195,7 @@ a.contact-detail-value:hover { color: var(--gold-dark); }
 }
 .faq-item.open {
   border-color: var(--gold);
-  box-shadow: 0 0 0 2px rgba(201,168,76,0.15);
+  box-shadow: 0 0 0 2px rgba(176,141,87,0.15);
 }
 .faq-question {
   width: 100%;

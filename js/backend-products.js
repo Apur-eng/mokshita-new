@@ -47,6 +47,10 @@
         const baseUrl = api.getBaseUrl();
         imgUrl = `${baseUrl}${imgUrl}`;
       }
+      
+      if (window.resolveProductImage) {
+        imgUrl = window.resolveProductImage(imgUrl, p.name || slugId);
+      }
 
       return {
         id:          slugId,

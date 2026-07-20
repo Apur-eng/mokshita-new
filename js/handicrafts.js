@@ -438,6 +438,7 @@
           const base   = window._allProducts.find(lp => lp.dbId == p.id || lp.id === p.slug) || {};
           let   imgUrl = p.image_url || base.mainImage || '';
           if (imgUrl && imgUrl.startsWith('/') && window.apiService) imgUrl = window.apiService.getBaseUrl() + imgUrl;
+          if (window.resolveProductImage) imgUrl = window.resolveProductImage(imgUrl, p.name || p.slug);
           return {
             id:        p.slug || String(p.id),
             dbId:      p.id,
@@ -502,6 +503,9 @@
     let imgUrl = p.image_url || '';
     if (imgUrl && imgUrl.startsWith('/') && api && api.getBaseUrl) {
       imgUrl = api.getBaseUrl() + imgUrl;
+    }
+    if (window.resolveProductImage) {
+      imgUrl = window.resolveProductImage(imgUrl, p.name || p.slug);
     }
     const catObj    = p.category    && typeof p.category    === 'object' ? p.category    : null;
     const subCatObj = p.subcategory && typeof p.subcategory === 'object' ? p.subcategory : null;

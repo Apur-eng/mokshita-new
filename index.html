@@ -1,844 +1,920 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mokshita Enterprises — Art &amp; Experiences from India</title>
-  <meta name="description" content="Discover the soul of India through authentic handcrafted art and curated cultural experiences. Premium Indian art and journey packages from Mokshita Enterprises." />
+  <meta name="description"
+    content="Discover the soul of India through authentic handcrafted art and curated cultural experiences. Premium Indian art and journey packages from Mokshita Enterprises." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="css/index.css" />
 </head>
+
 <body>
 
-<!-- ── PAGE LOADER ──────────────────────────────────────── -->
-<div class="page-loader" id="page-loader">
-  <div class="loader-emblem"></div>
-  <p class="loader-text">Mokshita</p>
-</div>
+  <!-- ── PAGE LOADER ──────────────────────────────────────── -->
+  <div class="page-loader" id="page-loader">
+    <div class="loader-emblem"></div>
+    <p class="loader-text">Mokshita</p>
+  </div>
 
-<!-- ── NAVIGATION ───────────────────────────────────────── -->
-<nav class="nav" id="main-nav" aria-label="Main navigation">
-  <a href="index.html" class="nav-logo" aria-label="Mokshita Enterprises Home">
-    <span class="nav-logo-title">Mokshita Enterprises</span>
-    <span class="nav-logo-sub">Art &amp; Experiences</span>
-  </a>
-  <ul class="nav-links" role="list">
-    <li><a href="index.html"       class="nav-link active">Home</a></li>
-    <li><a href="travel.html"      class="nav-link">Experiences</a></li>
-    <li><a href="handicrafts.html" class="nav-link">Art &amp; Collection</a></li>
-    <li><a href="contact.html"     class="nav-link">Contact</a></li>
-  </ul>
-  <div style="display:flex;align-items:center;gap:16px;">
-    <a href="cart.html" class="nav-cart-icon" aria-label="View cart">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-      <span class="cart-badge" id="cart-badge" style="display:none;">0</span>
+  <!-- ── NAVIGATION ───────────────────────────────────────── -->
+  <nav class="nav" id="main-nav" aria-label="Main navigation">
+    <a href="index.html" class="nav-logo" aria-label="Mokshita Enterprises Home">
+      <span class="nav-logo-title">Mokshita Enterprises</span>
+      <span class="nav-logo-sub">Art &amp; Experiences</span>
     </a>
-    <a href="login.html" class="nav-cart-icon" id="nav-account-btn" aria-label="Account" title="Account">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-    </a>
-    <a href="contact.html" class="nav-cta">Plan Your Journey</a>
-  </div>
-  <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">
-    <span></span><span></span><span></span>
-  </button>
-</nav>
-
-<div class="mobile-menu" id="mobile-menu" role="navigation">
-  <a href="index.html"       class="nav-link">Home</a>
-  <a href="travel.html"      class="nav-link">Experiences</a>
-  <a href="handicrafts.html" class="nav-link">Art &amp; Shop</a>
-  <a href="contact.html"     class="nav-link">Contact</a>
-  <a href="login.html"       class="nav-link" id="mobile-account-btn">Account</a>
-  <a href="contact.html" class="btn btn-primary">Plan Your Visit</a>
-</div>
-
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-     1 · HERO
-     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
-<main id="homepage-main">
-<section class="hero" id="hero" aria-label="Hero">
-
-  <div class="hero-media">
-    <img src="new images/Gemini_Generated_Image_kagniykagniykagn.png" alt="Master artisan hand-painting an intricate Pichwai miniature" />
-  </div>
-  <div class="hero-overlay" aria-hidden="true"></div>
-
-  <div class="hero-content">
-    <div class="hero-eyebrow" id="hero-eyebrow">
-      <span class="hero-eyebrow-line"></span>
-      Real artisans &bull; Real craftsmanship &bull; Real heritage
-    </div>
-    <h1 class="hero-title" id="hero-title">
-      Crafted by Hands.<br/>
-      <em>Preserved Through<br/>Generations.</em>
-    </h1>
-    <p class="hero-subtitle" id="hero-subtitle">
-      Every purchase directly supports local artisans and keeps traditional Indian craftsmanship alive.
-    </p>
-    <div class="hero-actions" id="hero-actions">
-      <a href="handicrafts.html" class="btn btn-primary">Explore Collection</a>
-      <a href="#artisan-shop" class="btn btn-ghost">Meet The Artisans</a>
-    </div>
-  </div>
-
-  <div class="hero-scroll" aria-hidden="true">
-    <div class="hero-scroll-line"></div>
-    <span>Scroll</span>
-  </div>
-
-</section>
-
-
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-     2 · EXPLORE — HORIZONTAL CARDS
-     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
-<!-- ── ARTISAN TRUST STRIP ────────────────────────────────── -->
-<section class="artisan-trust-strip" id="trust-strip" aria-label="Our values">
-  <div class="artisan-trust-strip-inner">
-    <div class="ats-item">
-      <div class="ats-icon" aria-hidden="true">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-      </div>
-      <div class="ats-text">
-        <p class="ats-title">Support Artisans</p>
-        <p class="ats-desc">Empowering local communities and preserving livelihoods.</p>
-      </div>
-    </div>
-    <div class="ats-divider" aria-hidden="true"></div>
-    <div class="ats-item">
-      <div class="ats-icon" aria-hidden="true">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M12 2a9 9 0 0 1 9 9c0 4-2.5 7.5-6 9l-3 1-3-1c-3.5-1.5-6-5-6-9a9 9 0 0 1 9-9z"/><path d="M8 13s1 2 4 2 4-2 4-2" stroke-linecap="round"/><circle cx="9" cy="10" r=".6" fill="currentColor"/><circle cx="15" cy="10" r=".6" fill="currentColor"/></svg>
-      </div>
-      <div class="ats-text">
-        <p class="ats-title">Sustainable Craft</p>
-        <p class="ats-desc">Eco-friendly materials and responsible practices.</p>
-      </div>
-    </div>
-    <div class="ats-divider" aria-hidden="true"></div>
-    <div class="ats-item">
-      <div class="ats-icon" aria-hidden="true">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="ats-text">
-        <p class="ats-title">Secure &amp; Trusted</p>
-        <p class="ats-desc">Safe payments, easy returns and 100% secure shopping.</p>
-      </div>
-    </div>
-    <div class="ats-divider" aria-hidden="true"></div>
-    <div class="ats-item">
-      <div class="ats-icon" aria-hidden="true">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3" stroke-linecap="round"/></svg>
-      </div>
-      <div class="ats-text">
-        <p class="ats-title">Cultural Heritage</p>
-        <p class="ats-desc">Honouring India's rich traditions through timeless art.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="explore-cards-section" id="explore-cards" aria-label="Explore our offerings">
-  <div class="explore-cards-track">
-    
-    <!-- Card 1: Travel -->
-    <a href="travel.html" class="explore-card explore-card--travel">
-      <div class="explore-card-content">
-        <h2 class="explore-card-title">Travel<br/>Experiences</h2>
-        <p class="explore-card-desc">Immersive cultural journeys across iconic destinations.</p>
-        <div class="explore-card-cta">
-          Explore
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </div>
-      </div>
-    </a>
-
-    <!-- Card 2: Shop -->
-    <a href="handicrafts.html" class="explore-card explore-card--shop">
-      <div class="explore-card-content">
-        <h2 class="explore-card-title">Shop<br/>Handcrafted Art</h2>
-        <p class="explore-card-desc">Discover authentic handmade pieces from skilled artisans.</p>
-        <div class="explore-card-cta">
-          Explore
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </div>
-      </div>
-    </a>
-
-    <!-- Card 3: Connect -->
-    <a href="contact.html" class="explore-card explore-card--connect">
-      <div class="explore-card-content">
-        <h2 class="explore-card-title">Connect<br/>With Us</h2>
-        <p class="explore-card-desc">Get in touch to plan your experience or ask anything.</p>
-        <div class="explore-card-cta">
-          Get Started
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </div>
-      </div>
-    </a>
-
-  </div>
-</section>
-     3 · ARTISAN COLLECTION — DUAL ROW HORIZONTAL
-<section class="artisan-shop-section" id="artisan-shop" aria-label="Handcrafted art collection">
-
-  <!-- Decorative leaf SVGs -->
-  <div class="artisan-leaf artisan-leaf--tl" aria-hidden="true">
-    <svg width="180" height="180" viewBox="0 0 180 180" fill="none"><path d="M10 170 Q20 80 100 20 Q160 60 160 160 Q90 140 10 170Z" fill="#2f5d50" opacity="0.07"/><path d="M30 160 Q50 90 120 40" stroke="#2f5d50" stroke-width="1.5" fill="none" opacity="0.1"/></svg>
-  </div>
-  <div class="artisan-leaf artisan-leaf--br" aria-hidden="true">
-    <svg width="160" height="160" viewBox="0 0 160 160" fill="none"><path d="M150 10 Q140 90 60 150 Q10 110 10 20 Q80 30 150 10Z" fill="#c26a3d" opacity="0.06"/></svg>
-  </div>
-
-  <!-- SECTION HEADER -->
-  <div class="artisan-shop-header">
-    <div class="artisan-shop-header-left">
-      <span class="artisan-shop-label">ARTISAN COLLECTION</span>
-      <h2 class="artisan-shop-heading">Discover Handcrafted <em>Art</em> by Local Artisans</h2>
-    </div>
-    <a href="handicrafts.html" class="artisan-shop-viewall">View All &#8594;</a>
-  </div>
-
-  <!-- TRUST BAR -->
-  <div class="artisan-shop-trustbar">
-    <div class="artisan-trust-item"><span class="artisan-trust-icon">&#11088;</span><span>4.8 Average Rating</span></div>
-    <div class="artisan-trust-item"><span class="artisan-trust-icon">&#128666;</span><span>Free Shipping above &#8377;499</span></div>
-    <div class="artisan-trust-item"><span class="artisan-trust-icon">&#128274;</span><span>Secure Checkout</span></div>
-  </div>
-
-  <!-- ─── ROW 1: BEST SELLERS ──────────────────────────── -->
-  <div class="artisan-row artisan-row--sage">
-    <div class="artisan-row-header">
-      <div class="artisan-row-header-left">
-        <div class="artisan-row-icon artisan-row-icon--green">&#127942;</div>
-        <div>
-          <h3 class="artisan-row-title">Best Sellers</h3>
-          <p class="artisan-row-sub">Loved by thousands</p>
-        </div>
-      </div>
-    </div>
-    <div class="artisan-scroll-wrap">
-      <div class="artisan-scroll-track" id="bs-track">
-        <article class="artisan-card" onclick="window.location.href='product.html?slug=pichwai-art'" style="cursor: pointer;">
-          <div class="artisan-card-img-wrap">
-            <span class="artisan-badge artisan-badge--best">BEST SELLER</span>
-            <button class="artisan-wishlist" aria-label="Wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-            <img src="images/items/pichwai art3.jpeg" alt="Pichwai Devotional Painting" loading="lazy" />
-          </div>
-          <div class="artisan-card-body">
-            <p class="artisan-card-origin">Nathdwara, Rajasthan</p>
-            <h4 class="artisan-card-name">Pichwai Devotional Painting</h4>
-            <div class="artisan-card-rating"><span class="artisan-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="artisan-rating-count">(128)</span></div>
-            <div class="artisan-card-price-row">
-              <span class="artisan-price">&#8377;520</span><span class="artisan-orig">&#8377;689</span>
-              <button class="artisan-atc" aria-label="Explore"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
-            </div>
-          </div>
-        </article>
-
-        <article class="artisan-card" onclick="window.location.href='product.html?slug=coaster-plates'" style="cursor: pointer;">
-          <div class="artisan-card-img-wrap">
-            <span class="artisan-badge artisan-badge--handmade">HANDMADE</span>
-            <button class="artisan-wishlist" aria-label="Wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-            <img src="images/items/Handcrafted marble plates with floral design (1).png" alt="Marble Inlay Floral Plate" loading="lazy" />
-          </div>
-          <div class="artisan-card-body">
-            <p class="artisan-card-origin">Agra, Uttar Pradesh</p>
-            <h4 class="artisan-card-name">Marble Inlay Floral Plate</h4>
-            <div class="artisan-card-rating"><span class="artisan-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="artisan-rating-count">(84)</span></div>
-            <div class="artisan-card-price-row">
-              <span class="artisan-price">&#8377;600</span><span class="artisan-orig">&#8377;750</span>
-              <button class="artisan-atc" aria-label="Explore"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
-            </div>
-          </div>
-        </article>
-
-        <article class="artisan-card" onclick="window.location.href='product.html?slug=crochet-doll'" style="cursor: pointer;">
-          <div class="artisan-card-img-wrap">
-            <span class="artisan-badge artisan-badge--handmade">HANDMADE</span>
-            <button class="artisan-wishlist" aria-label="Wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-            <img src="images/items/Handmade crochet doll with vibrant yarn details.png" alt="Handmade Crochet Doll" loading="lazy" />
-          </div>
-          <div class="artisan-card-body">
-            <p class="artisan-card-origin">By Local Artisans</p>
-            <h4 class="artisan-card-name">Handmade Crochet Doll</h4>
-            <div class="artisan-card-rating"><span class="artisan-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="artisan-rating-count">(56)</span></div>
-            <div class="artisan-card-price-row">
-              <span class="artisan-price">&#8377;208</span>
-              <button class="artisan-atc" aria-label="Explore"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
-            </div>
-          </div>
-        </article>
-
-        <article class="artisan-card" onclick="window.location.href='product.html?slug=wooden-ganesha'" style="cursor: pointer;">
-          <div class="artisan-card-img-wrap">
-            <span class="artisan-badge artisan-badge--trending">TRENDING</span>
-            <button class="artisan-wishlist" aria-label="Wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-            <img src="images/items/Handcrafted Ganesha idol on white background.png" alt="Ganesha Idol" loading="lazy" />
-          </div>
-          <div class="artisan-card-body">
-            <p class="artisan-card-origin">Brass Finish, Jaipur</p>
-            <h4 class="artisan-card-name">Ganesha Idol</h4>
-            <div class="artisan-card-rating"><span class="artisan-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="artisan-rating-count">(96)</span></div>
-            <div class="artisan-card-price-row">
-              <span class="artisan-price">&#8377;450</span>
-              <button class="artisan-atc" aria-label="Explore"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
-            </div>
-          </div>
-        </article>
-        
-        <!-- Duplicated products for desktop horizontal scroll -->
-        <article class="artisan-card" onclick="window.location.href='product.html?slug=crochet-turtles'" style="cursor: pointer;">
-          <div class="artisan-card-img-wrap">
-            <span class="artisan-badge artisan-badge--trending">TRENDING</span>
-            <button class="artisan-wishlist" aria-label="Wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-            <img src="images/items/Crochet turtles side by side.png" alt="Handmade Crochet Turtles" loading="lazy" />
-          </div>
-          <div class="artisan-card-body">
-            <p class="artisan-card-origin">By Local Artisans</p>
-            <h4 class="artisan-card-name">Handmade Crochet Turtles</h4>
-            <div class="artisan-card-rating"><span class="artisan-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="artisan-rating-count">(42)</span></div>
-            <div class="artisan-card-price-row">
-              <span class="artisan-price">&#8377;180</span>
-              <button class="artisan-atc" aria-label="Explore"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
-            </div>
-          </div>
-        </article>
-        
-        <article class="artisan-card" onclick="window.location.href='product.html?slug=camel-ornament'" style="cursor: pointer;">
-          <div class="artisan-card-img-wrap">
-            <button class="artisan-wishlist" aria-label="Wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-            <img src="images/items/Green and gold camel ornament.png" alt="Zardozi Camel Ornament" loading="lazy" />
-          </div>
-          <div class="artisan-card-body">
-            <p class="artisan-card-origin">Agra, UP</p>
-            <h4 class="artisan-card-name">Zardozi Camel Ornament</h4>
-            <div class="artisan-card-rating"><span class="artisan-stars">&#9733;&#9733;&#9733;&#9733;&#9734;</span><span class="artisan-rating-count">(21)</span></div>
-            <div class="artisan-card-price-row">
-              <span class="artisan-price">&#8377;250</span>
-              <button class="artisan-atc" aria-label="Explore"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
-            </div>
-          </div>
-        </article>
-        
-        <article class="artisan-card" onclick="window.location.href='product.html?slug=tajmahal-blue'" style="cursor: pointer;">
-          <div class="artisan-card-img-wrap">
-            <button class="artisan-wishlist" aria-label="Wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-            <img src="images/items/tajmahalblue.jpeg" alt="Blue Taj Mahal Miniature" loading="lazy" />
-          </div>
-          <div class="artisan-card-body">
-            <p class="artisan-card-origin">Agra, UP</p>
-            <h4 class="artisan-card-name">Blue Taj Mahal Miniature</h4>
-            <div class="artisan-card-rating"><span class="artisan-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="artisan-rating-count">(104)</span></div>
-            <div class="artisan-card-price-row">
-              <span class="artisan-price">&#8377;400</span><span class="artisan-orig">&#8377;500</span>
-              <button class="artisan-atc" aria-label="Explore"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
-            </div>
-          </div>
-        </article>
-
-        <article class="artisan-card artisan-card--cta" onclick="window.location.href='handicrafts.html'">
-          <div class="artisan-card-cta-content">
-            <h3>View Full Collection &#8594;</h3>
-          </div>
-        </article>
-      </div>
-      <button class="artisan-arrow artisan-arrow--prev" id="bs-prev">&#8592;</button>
-      <button class="artisan-arrow artisan-arrow--next" id="bs-next">&#8594;</button>
-    </div>
-    <div class="artisan-row-footer">
-      <a href="handicrafts.html" class="artisan-row-viewall artisan-row-viewall--green">View All Best Sellers &#8594;</a>
-    </div>
-  </div>
-
-  <!-- ─── ROW 2: NEW ARRIVALS ──────────────────────────── -->
-  <div class="artisan-row artisan-row--peach">
-    <div class="artisan-row-header">
-      <div class="artisan-row-header-left">
-        <div class="artisan-row-icon artisan-row-icon--peach">&#10024;</div>
-        <div>
-          <h3 class="artisan-row-title">New Arrivals</h3>
-          <p class="artisan-row-sub">Freshly crafted, just for you</p>
-        </div>
-      </div>
-    </div>
-    <div class="artisan-scroll-wrap">
-      <div class="artisan-scroll-track" id="na-track">
-        <article class="artisan-card" onclick="window.location.href='product.html?slug=zardozi-elephant'" style="cursor: pointer;">
-          <div class="artisan-card-img-wrap">
-            <span class="artisan-badge artisan-badge--new">NEW</span>
-            <button class="artisan-wishlist" aria-label="Wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-            <img src="images/items/Intricate Zardozi embroidered elephant pouches.png" alt="Bright Zardozi Elephant Pouch" loading="lazy" />
-          </div>
-          <div class="artisan-card-body">
-            <p class="artisan-card-origin">Agra, Uttar Pradesh</p>
-            <h4 class="artisan-card-name">Bright Zardozi Elephant Pouch</h4>
-            <div class="artisan-card-rating"><span class="artisan-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="artisan-rating-count">(50)</span></div>
-            <div class="artisan-card-price-row">
-              <span class="artisan-price">&#8377;306</span><span class="artisan-orig">&#8377;450</span>
-              <button class="artisan-atc" aria-label="Explore"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
-            </div>
-          </div>
-        </article>
-
-        <article class="artisan-card" onclick="window.location.href='product.html?slug=pichwai-art'" style="cursor: pointer;">
-          <div class="artisan-card-img-wrap">
-            <button class="artisan-wishlist" aria-label="Wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-            <img src="images/items/watercolourtajmahal1.jpeg" alt="Watercolor Mini Taj Mahal" loading="lazy" />
-          </div>
-          <div class="artisan-card-body">
-            <p class="artisan-card-origin">Hand-painted Artwork</p>
-            <h4 class="artisan-card-name">Watercolor Mini Taj Mahal</h4>
-            <div class="artisan-card-rating"><span class="artisan-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="artisan-rating-count">(186)</span></div>
-            <div class="artisan-card-price-row">
-              <span class="artisan-price">&#8377;300</span><span class="artisan-orig">&#8377;380</span>
-              <button class="artisan-atc" aria-label="Explore"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
-            </div>
-          </div>
-        </article>
-
-        <article class="artisan-card" onclick="window.location.href='product.html?slug=pichwai-art'" style="cursor: pointer;">
-          <div class="artisan-card-img-wrap">
-            <span class="artisan-badge artisan-badge--new">NEW</span>
-            <button class="artisan-wishlist" aria-label="Wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-            <img src="images/items/ceramic_vase.png" alt="Hand-painted Ceramic Vase" loading="lazy" />
-          </div>
-          <div class="artisan-card-body">
-            <p class="artisan-card-origin">Kutch, Gujarat</p>
-            <h4 class="artisan-card-name">Hand-painted Ceramic Vase</h4>
-            <div class="artisan-card-rating"><span class="artisan-stars">&#9733;&#9733;&#9733;&#9733;&#9734;</span><span class="artisan-rating-count">(32)</span></div>
-            <div class="artisan-card-price-row">
-              <span class="artisan-price">&#8377;480</span>
-              <button class="artisan-atc" aria-label="Explore"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
-            </div>
-          </div>
-        </article>
-
-        <article class="artisan-card" onclick="window.location.href='product.html?slug=pichwai-art'" style="cursor: pointer;">
-          <div class="artisan-card-img-wrap">
-            <button class="artisan-wishlist" aria-label="Wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-            <img src="images/items/Wooden dice and wooden die holder.jpg.jpeg" alt="Wooden Elephant Figurine" loading="lazy" />
-          </div>
-          <div class="artisan-card-body">
-            <p class="artisan-card-origin">Saharanpur, UP</p>
-            <h4 class="artisan-card-name">Wooden Elephant Figurine</h4>
-            <div class="artisan-card-rating"><span class="artisan-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="artisan-rating-count">(41)</span></div>
-            <div class="artisan-card-price-row">
-              <span class="artisan-price">&#8377;380</span><span class="artisan-orig">&#8377;550</span>
-              <button class="artisan-atc" aria-label="Explore"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
-            </div>
-          </div>
-        </article>
-
-        <!-- Duplicated products for desktop horizontal scroll -->
-        <article class="artisan-card" onclick="window.location.href='product.html?slug=rickshaw-ornament'" style="cursor: pointer;">
-          <div class="artisan-card-img-wrap">
-            <span class="artisan-badge artisan-badge--new">NEW</span>
-            <button class="artisan-wishlist" aria-label="Wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-            <img src="images/items/Beaded auto-rickshaw ornaments in vibrant colours.png" alt="Beaded Auto Rickshaw" loading="lazy" />
-          </div>
-          <div class="artisan-card-body">
-            <p class="artisan-card-origin">Rajasthan</p>
-            <h4 class="artisan-card-name">Beaded Auto Rickshaw</h4>
-            <div class="artisan-card-rating"><span class="artisan-stars">&#9733;&#9733;&#9733;&#9733;&#9734;</span><span class="artisan-rating-count">(15)</span></div>
-            <div class="artisan-card-price-row">
-              <span class="artisan-price">&#8377;300</span>
-              <button class="artisan-atc" aria-label="Explore"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
-            </div>
-          </div>
-        </article>
-
-        <article class="artisan-card" onclick="window.location.href='product.html?slug=elephant-pouch-2'" style="cursor: pointer;">
-          <div class="artisan-card-img-wrap">
-            <button class="artisan-wishlist" aria-label="Wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-            <img src="images/items/Vibrant folk-art elephant pouch design.png" alt="Folk Art Elephant Pouch" loading="lazy" />
-          </div>
-          <div class="artisan-card-body">
-            <p class="artisan-card-origin">Jaipur, Rajasthan</p>
-            <h4 class="artisan-card-name">Folk Art Elephant Pouch</h4>
-            <div class="artisan-card-rating"><span class="artisan-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="artisan-rating-count">(89)</span></div>
-            <div class="artisan-card-price-row">
-              <span class="artisan-price">&#8377;280</span>
-              <button class="artisan-atc" aria-label="Explore"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
-            </div>
-          </div>
-        </article>
-
-        <article class="artisan-card" onclick="window.location.href='product.html?slug=watercolor-paint'" style="cursor: pointer;">
-          <div class="artisan-card-img-wrap">
-            <button class="artisan-wishlist" aria-label="Wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-            <img src="images/items/watercolourpaint3.jpeg" alt="Watercolor Painting" loading="lazy" />
-          </div>
-          <div class="artisan-card-body">
-            <p class="artisan-card-origin">Agra, UP</p>
-            <h4 class="artisan-card-name">Artisan Watercolor Painting</h4>
-            <div class="artisan-card-rating"><span class="artisan-stars">&#9733;&#9733;&#9733;&#9733;&#9734;</span><span class="artisan-rating-count">(34)</span></div>
-            <div class="artisan-card-price-row">
-              <span class="artisan-price">&#8377;550</span><span class="artisan-orig">&#8377;700</span>
-              <button class="artisan-atc" aria-label="Explore"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
-            </div>
-          </div>
-        </article>
-
-        <article class="artisan-card artisan-card--cta" onclick="window.location.href='handicrafts.html'">
-          <div class="artisan-card-cta-content">
-            <h3>View Full Collection &#8594;</h3>
-          </div>
-        </article>
-      </div>
-      <button class="artisan-arrow artisan-arrow--prev artisan-arrow--peach" id="na-prev">&#8592;</button>
-      <button class="artisan-arrow artisan-arrow--next artisan-arrow--peach" id="na-next">&#8594;</button>
-    </div>
-    <div class="artisan-row-footer">
-      <a href="handicrafts.html" class="artisan-row-viewall artisan-row-viewall--peach">View All New Arrivals &#8594;</a>
-    </div>
-  </div>
-
-  <!-- FOOTER TEXT -->
-  <p class="artisan-footer-text">&#127807; Each piece is handcrafted with love, preserving tradition and supporting local artisans. &#127807;</p>
-
-  <div style="text-align: center; margin-top: 36px; padding-bottom: 20px;">
-    <a href="handicrafts.html" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 8px;">
-      Explore Full Collection
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-    </a>
-  </div>
-
-</section>
-
-
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-     4 · JOURNEY — FEATURED EXPERIENCES
-     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
-<section class="section section--white" id="experiences" aria-label="Featured experiences">
-  <div class="section-header section-header--center reveal">
-    <span class="section-tag">Curated Escapes</span>
-    <h2 class="section-title">Journeys That <em>Stay With You</em></h2>
-    <p class="section-body">Handpicked cultural experiences that take you beyond the tourist trail and into the living heart of India.</p>
-  </div>
-
-  <div class="experience-grid">
-
-    <article class="experience-card reveal reveal-delay-1">
-      <div class="experience-card-img">
-        <img src="images/travel-experince-1.jpg" alt="Agra — Taj Mahal and Agra Fort" loading="lazy" />
-      </div>
-      <div class="experience-card-body">
-        <div class="experience-card-meta">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          Agra, Uttar Pradesh
-        </div>
-        <h3 class="experience-card-name">Mughal Splendour</h3>
-        <p class="experience-card-desc">Witness the Taj Mahal at dawn and trace the rise of empires through the red sandstone walls of Agra Fort. Culminate with a private artisan workshop.</p>
-        <div class="experience-card-footer">
-          <div class="experience-card-price">
-            ₹4,999 <span>/ person</span>
-          </div>
-          <a href="travel.html#pkg-agra" class="btn-text">
-            Book Now <span class="arrow">→</span>
-          </a>
-        </div>
-      </div>
-    </article>
-
-    <article class="experience-card reveal reveal-delay-2">
-      <div class="experience-card-img">
-        <img src="images/travel-experince-2.jpg" alt="Delhi — Red Fort and heritage streets" loading="lazy" />
-      </div>
-      <div class="experience-card-body">
-        <div class="experience-card-meta">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          New Delhi
-        </div>
-        <h3 class="experience-card-name">Delhi Through Time</h3>
-        <p class="experience-card-desc">From the winding alleyways of Chandni Chowk fragrant with spices, to the sovereign walls of the Red Fort. Eight capitals folded into one city.</p>
-        <div class="experience-card-footer">
-          <div class="experience-card-price">
-            ₹3,499 <span>/ person</span>
-          </div>
-          <a href="travel.html#pkg-delhi" class="btn-text">
-            Book Now <span class="arrow">→</span>
-          </a>
-        </div>
-      </div>
-    </article>
-
-    <article class="experience-card reveal reveal-delay-3">
-      <div class="experience-card-img">
-        <img src="images/travel-experince-3.jpg" alt="Jaipur — Amber Fort and pink city bazaars" loading="lazy" />
-      </div>
-      <div class="experience-card-body">
-        <div class="experience-card-meta">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          Jaipur, Rajasthan
-        </div>
-        <h3 class="experience-card-name">The Pink City</h3>
-        <p class="experience-card-desc">Ascend to Amber Fort, wander vibrant bazaars of block-printed textiles and raw gemstones, steeped in the royal heritage of Rajasthan.</p>
-        <div class="experience-card-footer">
-          <div class="experience-card-price">
-            ₹5,499 <span>/ person</span>
-          </div>
-          <a href="travel.html#pkg-jaipur" class="btn-text">
-            Book Now <span class="arrow">→</span>
-          </a>
-        </div>
-      </div>
-    </article>
-
-  </div>
-
-  <div class="section-cta-row reveal">
-    <a href="travel.html" class="btn btn-outline">View All Experiences</a>
-  </div>
-</section>
-
-
-
-
-
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-     5 · STORY SECTION
-     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
-<section class="story-section" id="our-story" aria-label="Our story">
-
-  <div class="story-img-wrap">
-    <img src="images/travel-experince-4.jpg" alt="Artisan at work — handcrafted Indian art" loading="lazy"
-         onerror="this.src='images/travel-experince-1.jpg'" />
-  </div>
-
-  <div class="story-text-panel">
-    <div class="reveal">
-      <span class="section-tag">Our Philosophy</span>
-      <h2 class="section-title" style="font-size:clamp(1.8rem,3.5vw,2.8rem);">
-        Where Every Piece<br/><em>Carries a Journey</em>
-      </h2>
-      <span class="divider divider--left"></span>
-
-      <p class="section-body" style="max-width:440px;margin-bottom:20px;">
-        India's greatest artworks were never born in factories. They were woven into the dust of ancient cities, fired in village kilns, and painted in pure devotion.
-      </p>
-
-      <blockquote>
-        "India does not lack talent — it lacks the world's gaze turned toward her <em>makers.</em>"
-        <footer style="margin-top:12px;font-family:var(--font-body);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);font-style:normal;">— Riya Mehta, Founder</footer>
-      </blockquote>
-
-      <a href="contact.html" class="btn btn-primary" style="display:inline-flex;">Meet the Team</a>
-
-      <div class="story-stats">
-        <div>
-          <div class="story-stat-num" data-target="120" data-suffix="+">120+</div>
-          <div class="story-stat-label">Master Artisans</div>
-        </div>
-        <div>
-          <div class="story-stat-num" data-target="18" data-suffix="">18</div>
-          <div class="story-stat-label">States Covered</div>
-        </div>
-        <div>
-          <div class="story-stat-num" data-target="2400" data-suffix="+">2400+</div>
-          <div class="story-stat-label">Happy Travellers</div>
-        </div>
-        <div>
-          <div class="story-stat-num" data-target="8" data-suffix="">8</div>
-          <div class="story-stat-label">Years of Craft</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-</section>
-
-
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-     6 · TESTIMONIALS
-     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
-<section class="section section--white" id="testimonials" aria-label="Customer testimonials">
-  <div class="section-header section-header--center reveal">
-    <span class="section-tag">What Travellers Say</span>
-    <h2 class="section-title">Real Stories, <em>Real Journeys</em></h2>
-  </div>
-
-  <div class="testimonial-grid">
-
-    <div class="testimonial-card reveal reveal-delay-1">
-      <div class="testimonial-stars">★★★★★</div>
-      <p class="testimonial-quote">
-        "The Agra experience was beyond anything I'd imagined. The Taj at dawn, empty and glowing — and then the private workshop with the marble artisan. An experience I'll tell my grandchildren about."
-      </p>
-      <div class="testimonial-author">
-        <div class="testimonial-avatar">P</div>
-        <div>
-          <div class="testimonial-name">Priya Sharma</div>
-          <div class="testimonial-location">Mumbai, India</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="testimonial-card reveal reveal-delay-2">
-      <div class="testimonial-stars">★★★★★</div>
-      <p class="testimonial-quote">
-        "I ordered a Pichwai painting and it arrived beautifully packed with a handwritten note about the artisan who made it. That personal touch made it so much more meaningful as a gift."
-      </p>
-      <div class="testimonial-author">
-        <div class="testimonial-avatar">L</div>
-        <div>
-          <div class="testimonial-name">Laura M.</div>
-          <div class="testimonial-location">London, United Kingdom</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="testimonial-card reveal reveal-delay-3">
-      <div class="testimonial-stars">★★★★★</div>
-      <p class="testimonial-quote">
-        "The Golden Triangle tour was perfectly curated — not rushed, deeply immersive. The connections they've built with local artisans made it feel like an insider's view of India few tourists ever get."
-      </p>
-      <div class="testimonial-author">
-        <div class="testimonial-avatar">A</div>
-        <div>
-          <div class="testimonial-name">Arnav Kapoor</div>
-          <div class="testimonial-location">Bengaluru, India</div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-     7 · NEWSLETTER / CTA BAND
-     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
-<section class="cta-band" id="newsletter" aria-label="Newsletter signup">
-  <div class="cta-band-inner reveal">
-    <span class="section-tag" style="justify-content:center;display:flex;">Stay in the Loop</span>
-    <h2 class="section-title" style="font-size:clamp(1.8rem,3vw,2.6rem);">Stories Worth<br/><em>Subscribing To</em></h2>
-    <p class="section-body" style="max-width:440px;margin:0 auto 0;">Monthly letters on new artisans, curated experience stories, and early access to collections.</p>
-    <form class="newsletter-form" id="newsletter-form" onsubmit="handleNewsletter(event)" novalidate>
-      <input type="email" id="newsletter-email" class="newsletter-input"
-             placeholder="Your email address" required aria-label="Email address" />
-      <button type="submit" class="btn btn-primary btn-sm">Subscribe</button>
-    </form>
-    <p class="newsletter-note">No spam. Unsubscribe anytime.</p>
-  </div>
-</section>
-</main>
-
-
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-     FOOTER
-     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
-<footer class="footer" role="contentinfo">
-  <div class="footer-top">
-
-    <div>
-      <p class="footer-brand-name">Mokshita Enterprises</p>
-      <p class="footer-brand-sub">Art &amp; Experiences</p>
-      <p class="footer-brand-desc">
-        Connecting the world to India's living artisan traditions and curating experiences that transform the way you see this ancient civilisation.
-      </p>
-      <div class="footer-social">
-        <a href="#" class="footer-social-btn" aria-label="Instagram">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-        </a>
-        <a href="#" class="footer-social-btn" aria-label="WhatsApp">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-        </a>
-        <a href="#" class="footer-social-btn" aria-label="Pinterest">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.236 2.636 7.855 6.356 9.312-.088-.791-.167-2.005.035-2.868.181-.78 1.172-4.97 1.172-4.97s-.299-.598-.299-1.482c0-1.388.806-2.428 1.808-2.428.853 0 1.267.641 1.267 1.408 0 .858-.546 2.14-.828 3.33-.236.995.499 1.806 1.476 1.806 1.771 0 3.132-1.867 3.132-4.563 0-2.387-1.716-4.057-4.165-4.057-2.836 0-4.498 2.127-4.498 4.326 0 .856.33 1.774.741 2.277a.3.3 0 0 1 .069.286c-.075.314-.243.995-.276 1.134-.044.183-.146.222-.337.134-1.249-.581-2.03-2.407-2.03-3.874 0-3.154 2.292-6.052 6.608-6.052 3.469 0 6.165 2.473 6.165 5.776 0 3.447-2.173 6.22-5.19 6.22-1.013 0-1.966-.527-2.292-1.148l-.623 2.378c-.226.869-.835 1.958-1.244 2.621.937.29 1.931.446 2.962.446 5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg>
-        </a>
-      </div>
-    </div>
-
-    <div>
-      <p class="footer-col-title">Experiences</p>
-      <ul class="footer-links">
-        <li><a href="travel.html"           class="footer-link">All Experiences</a></li>
-        <li><a href="travel.html#pkg-agra"  class="footer-link">Agra &amp; Taj Mahal</a></li>
-        <li><a href="travel.html#pkg-delhi" class="footer-link">Delhi Heritage</a></li>
-        <li><a href="travel.html#pkg-jaipur"class="footer-link">Jaipur Royal</a></li>
-        <li><a href="contact.html"          class="footer-link">Custom Packages</a></li>
-      </ul>
-    </div>
-
-    <div>
-      <p class="footer-col-title">Art &amp; Shop</p>
-      <ul class="footer-links">
-        <li><a href="handicrafts.html" class="footer-link">All Products</a></li>
-        <li><a href="handicrafts.html" class="footer-link">Pichwai Art</a></li>
-        <li><a href="handicrafts.html" class="footer-link">Marble Inlay</a></li>
-        <li><a href="handicrafts.html" class="footer-link">Zardozi Craft</a></li>
-        <li><a href="handicrafts.html" class="footer-link">Watercolour</a></li>
-      </ul>
-    </div>
-
-    <div>
-      <p class="footer-col-title">Support</p>
-      <ul class="footer-links">
-        <li><a href="mailto:mokshitaenterprises2024@gmail.com" class="footer-link">Email Us</a></li>
-        <li><a href="tel:+918871872924"                        class="footer-link">+91 88718 72924</a></li>
-        <li class="footer-link" style="cursor:default;">Agra, Uttar Pradesh</li>
-        <li><a href="#"                                        class="footer-link">Shipping Policy</a></li>
-        <li><a href="#"                                        class="footer-link">Return Policy</a></li>
-      </ul>
-    </div>
-
-  </div>
-  <div class="footer-bottom">
-    <p class="footer-copy">© 2025 Mokshita Enterprises. All rights reserved.</p>
-    <ul class="footer-bottom-links" role="list">
-      <li><a href="#" class="footer-bottom-link">Privacy Policy</a></li>
-      <li><a href="#" class="footer-bottom-link">Terms of Use</a></li>
+    <ul class="nav-links" role="list">
+      <li><a href="index.html" class="nav-link active">Home</a></li>
+      <li><a href="travel.html" class="nav-link">Experiences</a></li>
+      <li><a href="handicrafts.html" class="nav-link">Art &amp; Collection</a></li>
+      <li><a href="artisan-stories.html" class="nav-link">Artisan Stories</a></li>
+      <li><a href="contact.html" class="nav-link">Contact</a></li>
     </ul>
-  </div>
-</footer>
-
-
-<!-- ── PRODUCT MODAL ─────────────────────────────────────── -->
-<div id="product-modal" class="product-modal" role="dialog" aria-modal="true" aria-label="Product detail">
-  <div class="modal-close" id="modal-close" role="button" tabindex="0">&times;</div>
-  <div class="modal-content">
-    <img id="modal-img" src="" alt="Product image" />
-    <div class="modal-info">
-      <h2 id="modal-title" class="modal-title"></h2>
-      <p  id="modal-desc"  class="modal-desc"></p>
-      <div id="modal-price" class="modal-price"></div>
-      <a id="modal-buy-btn" href="#" target="_blank" rel="noopener" class="btn btn-whatsapp">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
-        Order on WhatsApp
+    <div style="display:flex;align-items:center;gap:16px;">
+      <a href="cart.html" class="nav-cart-icon" aria-label="View cart">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <circle cx="9" cy="21" r="1" />
+          <circle cx="20" cy="21" r="1" />
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+        </svg>
+        <span class="cart-badge" id="cart-badge" style="display:none;">0</span>
       </a>
+      <a href="login.html" class="nav-cart-icon" id="nav-account-btn" aria-label="Account" title="Account">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+          <circle cx="12" cy="7" r="4" />
+        </svg>
+      </a>
+      <a href="contact.html" class="nav-cta">Plan Your Journey</a>
+    </div>
+    <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="mobile-menu" id="mobile-menu" role="navigation">
+    <a href="index.html"          class="nav-link">Home</a>
+    <a href="travel.html"         class="nav-link">Experiences</a>
+    <a href="handicrafts.html"    class="nav-link">Art &amp; Shop</a>
+    <a href="artisan-stories.html" class="nav-link">Artisan Stories</a>
+    <a href="contact.html"        class="nav-link">Contact</a>
+    <a href="login.html"          class="nav-link" id="mobile-account-btn">Account</a>
+    <div style="border-top:1px solid rgba(0,0,0,0.07);margin:8px 0;padding-top:8px;display:flex;flex-direction:column;gap:10px;">
+      <span style="font-size:0.58rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--text-muted);font-weight:600;">Policies</span>
+      <a href="privacy-policy.html"       class="nav-link" style="font-size:0.78rem;">Privacy Policy</a>
+      <a href="terms-and-conditions.html" class="nav-link" style="font-size:0.78rem;">Terms &amp; Conditions</a>
+      <a href="refund-policy.html"        class="nav-link" style="font-size:0.78rem;">Refund &amp; Cancellation</a>
+      <a href="shipping-policy.html"      class="nav-link" style="font-size:0.78rem;">Shipping Policy</a>
+    </div>
+    <a href="contact.html" class="btn btn-primary">Plan Your Visit</a>
+  </div>
+
+  <!-- ── 1 · HERO ────────────────────────────────────────── -->
+  <main id="homepage-main" style="background:#F8F5EF;">
+    <section class="hero" id="hero" aria-label="Hero">
+
+      <!-- ── CINEMATIC VIDEO LAYER ────────────────────────── -->
+      <div class="hero-media">
+        <!-- Fallback: static artisan image for mobile / no-video devices -->
+        <img class="hero-fallback-img" src="images/artisan_working.png"
+          alt="India's living heritage — artisan craftsmanship" />
+
+        <!-- INTRO VIDEO: plays once, then freezes on final frame -->
+        <video class="hero-intro-video" id="hero-intro-video"
+               autoplay muted playsinline preload="auto">
+          <source src="images/last_tweek_use_the_final_sec.mp4" type="video/mp4" />
+        </video>
+
+        <!-- FINAL FRAME VIDEO: frozen permanently as hero background -->
+        <video class="hero-final-video" id="hero-final-video"
+               muted playsinline preload="auto">
+          <source src="images/last_tweek_use_the_final_sec.mp4" type="video/mp4" />
+        </video>
+      </div>
+
+      <div class="hero-overlay" aria-hidden="true"></div>
+
+      <!-- ── HERO CONTENT (fades in after intro) ─────────── -->
+      <div class="hero-content" id="hero-content">
+
+        <!-- Label -->
+        <div class="hero-eyebrow" id="hero-eyebrow">
+          ART &nbsp;&bull;&nbsp; HERITAGE &nbsp;&bull;&nbsp; EXPERIENCES
+        </div>
+
+        <!-- Headline -->
+        <h1 class="hero-title" id="hero-title">
+          India's Living<br /><em>Heritage</em>
+        </h1>
+
+        <!-- Subheadline -->
+        <p class="hero-subtitle" id="hero-subtitle">
+          Discover authentic craftsmanship, artisan stories, and immersive cultural journeys across India.
+        </p>
+
+        <!-- CTAs -->
+        <div class="hero-actions" id="hero-actions">
+          <a href="handicrafts.html" class="hero-btn-primary" id="hero-cta-art">Explore Collection</a>
+          <a href="travel.html" class="hero-btn-ghost" id="hero-cta-exp">Discover Experiences</a>
+        </div>
+
+      </div>
+
+      <div class="hero-scroll" id="hero-scroll" aria-hidden="true">
+        <div class="hero-scroll-line"></div>
+        <span>Scroll</span>
+      </div>
+
+    </section>
+
+    <div class="content-stack" id="content-stack">
+
+      <!-- ══════════════════════════════════════════════════════════
+           THE HANDS BEHIND THE HERITAGE — Luxury Heritage Cards
+           ══════════════════════════════════════════════════════════ -->
+      <section class="hbh-section" id="hands-behind-heritage" aria-label="The Hands Behind The Heritage">
+        <div class="hbh-inner">
+
+          <!-- Decorative top ornament -->
+          <div class="hbh-header reveal">
+            <div class="hbh-ornament" aria-hidden="true">
+              <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18 2 L20.5 15.5 L34 18 L20.5 20.5 L18 34 L15.5 20.5 L2 18 L15.5 15.5 Z" stroke="#C9A86A" stroke-width="0.8" fill="none"/>
+                <circle cx="18" cy="18" r="3.5" stroke="#C9A86A" stroke-width="0.8" fill="none"/>
+                <circle cx="18" cy="18" r="1.2" fill="#C9A86A" opacity="0.6"/>
+                <path d="M18 6 L18 12 M18 24 L18 30 M6 18 L12 18 M24 18 L30 18" stroke="#C9A86A" stroke-width="0.6" opacity="0.5"/>
+              </svg>
+            </div>
+            <h2 class="hbh-title">The Hands Behind The Heritage</h2>
+            <div class="hbh-rule" aria-hidden="true">
+              <svg width="120" height="8" viewBox="0 0 120 8" fill="none">
+                <line x1="0" y1="4" x2="48" y2="4" stroke="#C9A86A" stroke-width="0.6" opacity="0.5"/>
+                <circle cx="60" cy="4" r="2.5" fill="none" stroke="#C9A86A" stroke-width="0.8"/>
+                <circle cx="60" cy="4" r="1" fill="#C9A86A" opacity="0.6"/>
+                <line x1="72" y1="4" x2="120" y2="4" stroke="#C9A86A" stroke-width="0.6" opacity="0.5"/>
+              </svg>
+            </div>
+            <p class="hbh-subtitle">Discover the traditions, communities, and craftsmanship preserving India's living heritage.</p>
+          </div>
+
+          <!-- Four heritage cards -->
+          <div class="hbh-grid">
+
+            <!-- Card 1: Pichwai Painting -->
+            <article class="hbh-card reveal reveal-delay-1" id="hbh-pichwai">
+              <div class="hbh-card-photo">
+                <img src="images/heritage_pichwai.png"
+                     alt="Artisan painting intricate Pichwai artwork by hand — Nathdwara, Rajasthan"
+                     loading="lazy" />
+                <div class="hbh-card-photo-overlay" aria-hidden="true"></div>
+                <!-- Heritage icon medallion -->
+                <div class="hbh-card-medallion" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9A86A" stroke-width="1.2">
+                    <!-- Paintbrush icon -->
+                    <path d="M18.37 2.63 14 7l-1.59-1.59-2 2.01L12 9l-7 7 1.5 2.5L9 20l7-7 1.58 1.58 2.01-2L18 11l4.37-4.37a2.12 2.12 0 0 0-3-3z"/>
+                    <path d="M2 22l4-4"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="hbh-card-body">
+                <span class="hbh-card-badge">30+ Years of Tradition</span>
+                <h3 class="hbh-card-title">Pichwai Painting</h3>
+                <p class="hbh-card-location">
+                  <span class="hbh-card-location-dot" aria-hidden="true"></span>
+                  Nathdwara, Rajasthan
+                </p>
+                <div class="hbh-card-rule" aria-hidden="true"></div>
+                <p class="hbh-card-desc">A sacred art form known for intricate devotional paintings, created with natural pigments and timeless detailing passed down through generations.</p>
+              </div>
+            </article>
+
+            <!-- Card 2: Handwoven Textiles -->
+            <article class="hbh-card reveal reveal-delay-2" id="hbh-textiles">
+              <div class="hbh-card-photo">
+                <img src="images/heritage_textiles.png"
+                     alt="Traditional loom in action — Handwoven Textiles, Bagru, Rajasthan"
+                     loading="lazy" />
+                <div class="hbh-card-photo-overlay" aria-hidden="true"></div>
+                <div class="hbh-card-medallion" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9A86A" stroke-width="1.2">
+                    <!-- Weave / grid icon -->
+                    <rect x="3" y="3" width="7" height="7" rx="1"/>
+                    <rect x="14" y="3" width="7" height="7" rx="1"/>
+                    <rect x="3" y="14" width="7" height="7" rx="1"/>
+                    <rect x="14" y="14" width="7" height="7" rx="1"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="hbh-card-body">
+                <span class="hbh-card-badge">4 Generations of Weaving</span>
+                <h3 class="hbh-card-title">Handwoven Textiles</h3>
+                <p class="hbh-card-location">
+                  <span class="hbh-card-location-dot" aria-hidden="true"></span>
+                  Bagru, Rajasthan
+                </p>
+                <div class="hbh-card-rule" aria-hidden="true"></div>
+                <p class="hbh-card-desc">Handcrafted fabrics woven on traditional looms using natural dyes and age-old techniques passed down for generations.</p>
+              </div>
+            </article>
+
+            <!-- Card 3: Wood Carving -->
+            <article class="hbh-card reveal reveal-delay-3" id="hbh-woodcarving">
+              <div class="hbh-card-photo">
+                <img src="images/heritage_woodcarving.png"
+                     alt="Master artisan carving intricate floral patterns into wood — Saharanpur, Uttar Pradesh"
+                     loading="lazy" />
+                <div class="hbh-card-photo-overlay" aria-hidden="true"></div>
+                <div class="hbh-card-medallion" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9A86A" stroke-width="1.2">
+                    <!-- Lotus / flower icon -->
+                    <path d="M12 22V12"/>
+                    <path d="M12 12C12 12 7 9 7 5a5 5 0 0 1 10 0c0 4-5 7-5 7z"/>
+                    <path d="M12 12C12 12 7 15 5 18.5a6 6 0 0 0 7 1.5"/>
+                    <path d="M12 12C12 12 17 15 19 18.5a6 6 0 0 1-7 1.5"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="hbh-card-body">
+                <span class="hbh-card-badge">Master Craft Heritage</span>
+                <h3 class="hbh-card-title">Wood Carving</h3>
+                <p class="hbh-card-location">
+                  <span class="hbh-card-location-dot" aria-hidden="true"></span>
+                  Saharanpur, Uttar Pradesh
+                </p>
+                <div class="hbh-card-rule" aria-hidden="true"></div>
+                <p class="hbh-card-desc">Intricate woodwork shaped by centuries of craftsmanship, transforming wood into timeless works of art.</p>
+              </div>
+            </article>
+
+            <!-- Card 4: Brass Craft -->
+            <article class="hbh-card reveal reveal-delay-4" id="hbh-brass">
+              <div class="hbh-card-photo">
+                <img src="images/heritage_brass.png"
+                     alt="Artisan polishing handcrafted brass vessel — Moradabad, Uttar Pradesh"
+                     loading="lazy" />
+                <div class="hbh-card-photo-overlay" aria-hidden="true"></div>
+                <div class="hbh-card-medallion" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C9A86A" stroke-width="1.2">
+                    <!-- Star / asterisk ornament -->
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="hbh-card-body">
+                <span class="hbh-card-badge">Centuries of Craftsmanship</span>
+                <h3 class="hbh-card-title">Brass Craft</h3>
+                <p class="hbh-card-location">
+                  <span class="hbh-card-location-dot" aria-hidden="true"></span>
+                  Moradabad, Uttar Pradesh
+                </p>
+                <div class="hbh-card-rule" aria-hidden="true"></div>
+                <p class="hbh-card-desc">Traditional metalwork created with precision and patience, known for its intricate patterns and enduring quality.</p>
+              </div>
+            </article>
+
+          </div><!-- /.hbh-grid -->
+
+          <!-- Artisan tribute text -->
+          <div class="hbh-tribute reveal">
+            <div class="hbh-tribute-ornament" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M14 2 L15.8 12.2 L26 14 L15.8 15.8 L14 26 L12.2 15.8 L2 14 L12.2 12.2 Z" stroke="#C9A86A" stroke-width="0.7" fill="none" opacity="0.7"/>
+                <circle cx="14" cy="14" r="2.5" stroke="#C9A86A" stroke-width="0.7" fill="none" opacity="0.7"/>
+              </svg>
+            </div>
+            <p class="hbh-tribute-text">
+              Behind every piece you hold lies a story rarely told — of artisans who rise before dawn, whose fingers bear the marks of a thousand patient hours, and whose income remains as fragile as the delicate patterns they weave. Many of these craft traditions survive by a thread, kept alive by families who chose heritage over convenience, and devotion over profit.
+            </p>
+            <p class="hbh-tribute-text">
+              You don't need to do anything extraordinary to make a difference. Simply pausing to truly see the craftsmanship in a hand-painted motif, recognising the years of mastery in a carved line, or choosing one handmade piece over a mass-produced one — these are acts of contribution. When you admire their art, you tell an artisan that their life's work matters. When you bring their creation into your home, you become part of a story centuries in the making.
+            </p>
+          </div>
+
+          <!-- CTA -->
+          <div class="hbh-cta reveal">
+            <a href="handicrafts.html" class="hbh-cta-btn" id="hbh-explore-btn">
+              Explore All Craft Traditions
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
+
+        </div><!-- /.hbh-inner -->
+      </section>
+
+      <section class="craft-discovery" id="craft-showcase" aria-label="Explore India's living crafts">
+      <div class="craft-discovery-inner">
+
+        <!-- Section header -->
+        <div class="cd-header reveal">
+          <p class="cd-label">Explore India's Living Crafts</p>
+          <h2 class="cd-heading">Choose A Tradition<br />To <em>Explore</em></h2>
+          <p class="cd-sub">Discover India's most celebrated craft traditions and the communities preserving them.</p>
+        </div>
+
+        <!-- Horizontal card strip -->
+        <div class="cd-strip reveal">
+
+          <a href="handicrafts.html?category=pichwai" class="cd-dest-card" id="cd-pichwai"
+            aria-label="Explore Pichwai Paintings">
+            <div class="cd-dest-img">
+              <img src="images/craft_pichwai_workshop.png" alt="Pichwai Paintings — Nathdwara, Rajasthan" loading="lazy"
+                onerror="this.src='images/items/pichwai art3.jpeg'" />
+            </div>
+            <div class="cd-dest-body">
+              <h3 class="cd-dest-name">Pichwai Paintings</h3>
+              <p class="cd-dest-loc">Nathdwara, Rajasthan</p>
+            </div>
+          </a>
+
+          <a href="handicrafts.html?category=marble" class="cd-dest-card" id="cd-marble"
+            aria-label="Explore Marble Inlay">
+            <div class="cd-dest-img">
+              <img src="images/heritage_marble.png" alt="Marble Inlay — Agra, Uttar Pradesh"
+                loading="lazy" />
+            </div>
+            <div class="cd-dest-body">
+              <h3 class="cd-dest-name">Marble Inlay</h3>
+              <p class="cd-dest-loc">Agra, Uttar Pradesh</p>
+            </div>
+          </a>
+
+          <a href="handicrafts.html?category=bluepottery" class="cd-dest-card" id="cd-pottery"
+            aria-label="Explore Blue Pottery">
+            <div class="cd-dest-img">
+              <img src="images/craft_blue_pottery.png" alt="Blue Pottery — Jaipur, Rajasthan" loading="lazy"
+                onerror="this.src='images/travel-experince-3.jpg'" />
+            </div>
+            <div class="cd-dest-body">
+              <h3 class="cd-dest-name">Blue Pottery</h3>
+              <p class="cd-dest-loc">Jaipur, Rajasthan</p>
+            </div>
+          </a>
+
+          <a href="handicrafts.html?category=zardozi" class="cd-dest-card" id="cd-zardozi"
+            aria-label="Explore Zardozi Embroidery">
+            <div class="cd-dest-img">
+              <img src="images/craft_zardozi_silk.png" alt="Zardozi Embroidery — Agra, Uttar Pradesh" loading="lazy"
+                onerror="this.src='images/artisan_working.png'" />
+            </div>
+            <div class="cd-dest-body">
+              <h3 class="cd-dest-name">Zardozi Embroidery</h3>
+              <p class="cd-dest-loc">Agra, Uttar Pradesh</p>
+            </div>
+          </a>
+
+          <a href="handicrafts.html?category=woodcarving" class="cd-dest-card" id="cd-wood"
+            aria-label="Explore Wood Carving">
+            <div class="cd-dest-img">
+              <img src="images/artisan_wood_carving.png" alt="Wood Carving — Saharanpur, Uttar Pradesh" loading="lazy"
+                onerror="this.src='images/travel-experince-4.jpg'" />
+            </div>
+            <div class="cd-dest-body">
+              <h3 class="cd-dest-name">Wood Carving</h3>
+              <p class="cd-dest-loc">Saharanpur, Uttar Pradesh</p>
+            </div>
+          </a>
+
+          <a href="handicrafts.html?category=textiles" class="cd-dest-card" id="cd-textiles"
+            aria-label="Explore Handwoven Textiles">
+            <div class="cd-dest-img">
+              <img src="images/artisan_working.png" alt="Handwoven Textiles — Bagru, Rajasthan" loading="lazy" />
+            </div>
+            <div class="cd-dest-body">
+              <h3 class="cd-dest-name">Handwoven Textiles</h3>
+              <p class="cd-dest-loc">Bagru, Rajasthan</p>
+            </div>
+          </a>
+
+        </div>
+
+        <!-- CTA below strip -->
+        <div class="cd-cta-row reveal">
+          <a href="handicrafts.html" class="cd-cta-btn" id="cd-explore-all">Explore All Collections →</a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════
+
+     SECTION 3 · THE HANDS BEHIND THE CRAFT — MAKERS GRID
+     ══════════════════════════════════════════════════════════ -->
+    <section class="makers-section" id="artisan-story" aria-label="Meet the Makers">
+      <div class="makers-inner">
+
+        <!-- Header -->
+        <div class="makers-header reveal">
+          <span class="makers-eyebrow">Meet The Makers</span>
+          <h2 class="makers-title">The Hands Behind The Craft</h2>
+          <p class="makers-sub">Across India's villages and workshops, thousands of artisans carry forward traditions older than memory — each piece they create, a lifetime distilled into craft.</p>
+        </div>
+
+        <!-- Stats ribbon -->
+        <div class="makers-stats reveal">
+          <div class="makers-stat">
+            <span class="makers-stat-num">2,400+</span>
+            <span class="makers-stat-label">Artisan Families</span>
+          </div>
+          <div class="makers-stat-divider" aria-hidden="true"></div>
+          <div class="makers-stat">
+            <span class="makers-stat-num">18</span>
+            <span class="makers-stat-label">Craft Traditions</span>
+          </div>
+          <div class="makers-stat-divider" aria-hidden="true"></div>
+          <div class="makers-stat">
+            <span class="makers-stat-num">12</span>
+            <span class="makers-stat-label">States of India</span>
+          </div>
+          <div class="makers-stat-divider" aria-hidden="true"></div>
+          <div class="makers-stat">
+            <span class="makers-stat-num">100%</span>
+            <span class="makers-stat-label">Handcrafted</span>
+          </div>
+        </div>
+
+        <!-- 3×2 Maker cards grid: 5 craft cards + 1 CTA tile -->
+        <div class="makers-grid">
+
+          <!-- Card 1: Pichwai Painters — saffron accent -->
+          <article class="maker-card maker-card--saffron reveal reveal-delay-1" id="maker-pichwai">
+            <div class="maker-card-img">
+              <img src="images/craft_pichwai_workshop.png"
+                   alt="Pichwai painter at work — Nathdwara, Rajasthan"
+                   loading="lazy"
+                   onerror="this.src='images/artisan_hero_opt.jpg'" />
+              <div class="maker-card-img-overlay"></div>
+              <span class="maker-card-craft-badge">Pichwai Painting</span>
+            </div>
+            <div class="maker-card-body">
+              <div class="maker-card-location">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                Nathdwara, Rajasthan
+              </div>
+              <h3 class="maker-card-name">Pichwai Painters</h3>
+              <p class="maker-card-desc">Families who have spent generations rendering devotional scenes with mineral pigments and hair-thin brushes — each painting a weeks-long act of reverence.</p>
+              <div class="maker-card-footer">
+                <span class="maker-card-years">30+ Years</span>
+                <span class="maker-card-accent-dot"></span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 2: Blue Pottery — cobalt accent -->
+          <article class="maker-card maker-card--cobalt reveal reveal-delay-2" id="maker-bluepottery">
+            <div class="maker-card-img">
+              <img src="images/craft_blue_pottery.png"
+                   alt="Blue pottery artisan — Jaipur, Rajasthan"
+                   loading="lazy"
+                   onerror="this.src='images/artisan_story_opt.jpg'" />
+              <div class="maker-card-img-overlay"></div>
+              <span class="maker-card-craft-badge">Blue Pottery</span>
+            </div>
+            <div class="maker-card-body">
+              <div class="maker-card-location">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                Jaipur, Rajasthan
+              </div>
+              <h3 class="maker-card-name">Blue Pottery Artisans</h3>
+              <p class="maker-card-desc">Craftspeople who blend Persian and Mughal traditions into vivid quartz-paste ceramics — a craft so delicate that every kiln-firing is an act of faith.</p>
+              <div class="maker-card-footer">
+                <span class="maker-card-years">4 Generations</span>
+                <span class="maker-card-accent-dot"></span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 3: Zardozi — gold accent (structured, equal height) -->
+          <article class="maker-card maker-card--gold reveal reveal-delay-3" id="maker-zardozi">
+            <div class="maker-card-img">
+              <img src="images/craft_zardozi_silk.png"
+                   alt="Zardozi embroiderer — Lucknow, Uttar Pradesh"
+                   loading="lazy"
+                   onerror="this.src='images/artisan_working.png'" />
+              <div class="maker-card-img-overlay"></div>
+              <span class="maker-card-craft-badge maker-card-craft-badge--gold">Zardozi &amp; Silk</span>
+            </div>
+            <div class="maker-card-body">
+              <div class="maker-card-location">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                Lucknow, Uttar Pradesh
+              </div>
+              <h3 class="maker-card-name">Zardozi Embroiderers</h3>
+              <p class="maker-card-desc">Master needleworkers who stitch threads of gold and silver into silk by candlelight — following Mughal court patterns never written down, only remembered.</p>
+              <div class="maker-card-footer">
+                <span class="maker-card-years">Mughal Heritage</span>
+                <span class="maker-card-accent-dot"></span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 4: Wood Carvers — terracotta accent -->
+          <article class="maker-card maker-card--terra reveal reveal-delay-4" id="maker-woodcarving">
+            <div class="maker-card-img">
+              <img src="images/artisan_wood_carving.png"
+                   alt="Wood carver — Saharanpur, Uttar Pradesh"
+                   loading="lazy"
+                   onerror="this.src='images/artisan_hero_opt.jpg'" />
+              <div class="maker-card-img-overlay"></div>
+              <span class="maker-card-craft-badge">Wood Carving</span>
+            </div>
+            <div class="maker-card-body">
+              <div class="maker-card-location">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                Saharanpur, Uttar Pradesh
+              </div>
+              <h3 class="maker-card-name">Wood Carvers</h3>
+              <p class="maker-card-desc">Craftsmen who transform raw sheesham into intricate lattices and motifs, guided only by a chisel, an inherited eye, and centuries of accumulated memory.</p>
+              <div class="maker-card-footer">
+                <span class="maker-card-years">Master Craft</span>
+                <span class="maker-card-accent-dot"></span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 5: Handloom Weavers — sage accent -->
+          <article class="maker-card maker-card--sage reveal reveal-delay-5" id="maker-artisan">
+            <div class="maker-card-img">
+              <img src="images/artisan_working.png"
+                   alt="Artisan at work — India"
+                   loading="lazy"
+                   onerror="this.src='images/artisan_story_opt.jpg'" />
+              <div class="maker-card-img-overlay"></div>
+              <span class="maker-card-craft-badge">Handloom Weaving</span>
+            </div>
+            <div class="maker-card-body">
+              <div class="maker-card-location">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                Bagru, Rajasthan
+              </div>
+              <h3 class="maker-card-name">Handloom Weavers</h3>
+              <p class="maker-card-desc">Weavers who spend hours at the loom for each metre of cloth — their rhythm dictating the texture, their patience the quality of every thread interlaced by hand.</p>
+              <div class="maker-card-footer">
+                <span class="maker-card-years">4 Generations</span>
+                <span class="maker-card-accent-dot"></span>
+              </div>
+            </div>
+          </article>
+
+
+          <!-- Tile 6: CTA tile -->
+          <div class="maker-card maker-card--cta reveal reveal-delay-5" id="maker-cta-tile">
+            <div class="maker-cta-tile-inner">
+              <div class="maker-cta-tile-ornament" aria-hidden="true">
+                <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+                  <path d="M26 3 L28.8 23.2 L49 26 L28.8 28.8 L26 49 L23.2 28.8 L3 26 L23.2 23.2 Z" stroke="#c9a86a" stroke-width="0.8" fill="none" opacity="0.55"/>
+                  <circle cx="26" cy="26" r="4.5" stroke="#c9a86a" stroke-width="0.7" fill="none" opacity="0.55"/>
+                </svg>
+              </div>
+              <p class="maker-cta-tile-label">Every purchase supports</p>
+              <p class="maker-cta-tile-headline">An Artisan Family</p>
+              <p class="maker-cta-tile-note">2,400+ families across 12 states of India</p>
+              <a href="artisan-stories.html" class="maker-cta-tile-btn" id="makers-stories-btn">
+                Discover Their Stories
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+            </div>
+          </div>
+
+        </div><!-- /.makers-grid -->
+
+      </div><!-- /.makers-inner -->
+    </section>
+
+
+
+
+    <!-- SECTION 4: CURATED COLLECTIONS - Luxury Heritage Gallery -->
+    <section class="col-section" id="collections" aria-label="Featured craft collections">
+      <div class="col-floral-bg" aria-hidden="true">
+        <svg class="col-floral-svg col-floral-svg--left" viewBox="0 0 360 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g opacity="0.065" fill="#8B6914">
+            <path d="M100 100 C100 60 55 38 55 38 C55 38 100 26 122 62 C144 26 188 38 188 38 C188 38 144 60 144 100 C155 80 168 100 144 122 C132 133 112 133 100 122 C78 100 88 78 100 100Z"/>
+            <ellipse cx="122" cy="155" rx="9" ry="22"/>
+            <ellipse cx="122" cy="155" rx="9" ry="22" transform="rotate(45 122 155)"/>
+            <ellipse cx="122" cy="155" rx="9" ry="22" transform="rotate(90 122 155)"/>
+            <circle cx="122" cy="155" r="11"/>
+            <path d="M70 195 Q48 240 70 290 Q92 340 68 385" stroke="#8B6914" stroke-width="1.5" fill="none"/>
+            <path d="M175 195 Q197 240 175 290 Q153 340 177 385" stroke="#8B6914" stroke-width="1.5" fill="none"/>
+            <ellipse cx="63" cy="248" rx="7" ry="13" transform="rotate(-22 63 248)"/>
+            <ellipse cx="182" cy="248" rx="7" ry="13" transform="rotate(22 182 248)"/>
+            <path d="M100 480 C100 440 55 418 55 418 C55 418 100 406 122 442 C144 406 188 418 188 418 C188 418 144 440 144 480 C155 460 168 480 144 502 C132 513 112 513 100 502 C78 480 88 458 100 480Z"/>
+            <circle cx="122" cy="530" r="9"/>
+            <ellipse cx="122" cy="530" rx="7" ry="18"/>
+            <ellipse cx="122" cy="530" rx="7" ry="18" transform="rotate(60 122 530)"/>
+            <ellipse cx="100" cy="720" rx="22" ry="60" fill="none" stroke="#8B6914" stroke-width="1.4"/>
+            <ellipse cx="100" cy="695" rx="12" ry="24"/>
+            <circle cx="100" cy="672" r="7"/>
+          </g>
+        </svg>
+        <svg class="col-floral-svg col-floral-svg--right" viewBox="0 0 360 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g opacity="0.065" fill="#8B6914">
+            <path d="M240 80 C240 40 195 18 195 18 C195 18 240 6 262 42 C284 6 328 18 328 18 C328 18 284 40 284 80 C295 60 308 80 284 102 C272 113 252 113 240 102 C218 80 228 58 240 80Z"/>
+            <ellipse cx="262" cy="130" rx="9" ry="22"/>
+            <ellipse cx="262" cy="130" rx="9" ry="22" transform="rotate(45 262 130)"/>
+            <ellipse cx="262" cy="130" rx="9" ry="22" transform="rotate(90 262 130)"/>
+            <circle cx="262" cy="130" r="11"/>
+            <path d="M210 175 Q188 220 210 270 Q232 320 208 365" stroke="#8B6914" stroke-width="1.5" fill="none"/>
+            <path d="M315 175 Q337 220 315 270 Q293 320 317 365" stroke="#8B6914" stroke-width="1.5" fill="none"/>
+            <ellipse cx="203" cy="228" rx="7" ry="13" transform="rotate(-22 203 228)"/>
+            <ellipse cx="322" cy="228" rx="7" ry="13" transform="rotate(22 322 228)"/>
+            <path d="M240 490 C240 450 195 428 195 428 C195 428 240 416 262 452 C284 416 328 428 328 428 C328 428 284 450 284 490 C295 470 308 490 284 512 C272 523 252 523 240 512 C218 490 228 468 240 490Z"/>
+            <circle cx="262" cy="538" r="9"/>
+            <ellipse cx="262" cy="538" rx="7" ry="18"/>
+            <ellipse cx="262" cy="538" rx="7" ry="18" transform="rotate(60 262 538)"/>
+            <circle cx="270" cy="730" r="30" fill="none" stroke="#8B6914" stroke-width="1.2"/>
+            <circle cx="270" cy="730" r="14"/>
+            <path d="M270 700 L270 760 M240 730 L300 730 M249 709 L291 751 M291 709 L249 751" stroke="#8B6914" stroke-width="1" fill="none"/>
+          </g>
+        </svg>
+        <div class="col-floral-fade" aria-hidden="true"></div>
+      </div>
+      <div class="col-inner">
+        <div class="col-header reveal">
+          <span class="col-label">Curated Collections</span>
+          <h2 class="col-heading">Six Centuries of <em>Indian Craft</em></h2>
+          <p class="col-subtext">Each collection is a doorway into a living tradition &mdash; crafted by families who have kept these arts alive for generations.</p>
+        </div>
+
+        <!-- Row 1: Pichwai / Marble Inlay / Wood Carving -->
+        <div class="col-row" id="col-row-1">
+          <a href="handicrafts.html?category=pichwai" class="col-card col-card--side reveal reveal-delay-1" id="col-pichwai" aria-label="Pichwai Paintings">
+            <div class="col-card-img">
+              <img src="images/heritage_pichwai.png" alt="Pichwai Painting" loading="lazy"/>
+              <div class="col-card-img-overlay"></div>
+            </div>
+            <div class="col-card-body">
+              <span class="col-card-region">Nathdwara, Rajasthan</span>
+              <h3 class="col-card-title">Pichwai Painting</h3>
+              <div class="col-card-rule"></div>
+              <p class="col-card-story">Intricate devotional paintings known for their spiritual symbolism, natural pigments, and centuries of unbroken tradition.</p>
+              <span class="col-card-link">Explore Collection <span class="col-arrow">&#8594;</span></span>
+            </div>
+          </a>
+          <a href="handicrafts.html?category=marble" class="col-card col-card--center reveal reveal-delay-2" id="col-marble" aria-label="Marble Inlay Art">
+            <div class="col-card-img">
+              <img src="images/heritage_marble.png" alt="Marble Inlay Art" loading="lazy"/>
+              <div class="col-card-img-overlay"></div>
+            </div>
+            <div class="col-card-body">
+              <span class="col-card-region">Agra, Uttar Pradesh</span>
+              <h3 class="col-card-title">Marble Inlay Art</h3>
+              <div class="col-card-rule"></div>
+              <p class="col-card-story">The same craft that adorns the Taj Mahal &mdash; semi-precious stones set by families who have served this tradition for centuries.</p>
+              <span class="col-card-link">Explore Collection <span class="col-arrow">&#8594;</span></span>
+            </div>
+          </a>
+          <a href="handicrafts.html?category=woodcarving" class="col-card col-card--side reveal reveal-delay-3" id="col-woodcarving" aria-label="Wood Carving">
+            <div class="col-card-img">
+              <img src="images/heritage_woodcarving.png" alt="Wood Carving" loading="lazy"/>
+              <div class="col-card-img-overlay"></div>
+            </div>
+            <div class="col-card-body">
+              <span class="col-card-region">Saharanpur, Uttar Pradesh</span>
+              <h3 class="col-card-title">Wood Carving</h3>
+              <div class="col-card-rule"></div>
+              <p class="col-card-story">Hand-carved from seasoned sheesham wood &mdash; each piece carries the mark of its maker, shaped by centuries of craft memory.</p>
+              <span class="col-card-link">Explore Collection <span class="col-arrow">&#8594;</span></span>
+            </div>
+          </a>
+        </div>
+
+        <!-- Row divider ornament -->
+        <div class="col-row-divider reveal" aria-hidden="true">
+          <svg width="200" height="14" viewBox="0 0 200 14" fill="none">
+            <line x1="0" y1="7" x2="82" y2="7" stroke="#C9A86A" stroke-width="0.7" opacity="0.4"/>
+            <path d="M94 3 L100 7 L106 3 L100 11 Z" fill="#C9A86A" opacity="0.45"/>
+            <circle cx="100" cy="7" r="2.2" fill="#C9A86A" opacity="0.55"/>
+            <line x1="118" y1="7" x2="200" y2="7" stroke="#C9A86A" stroke-width="0.7" opacity="0.4"/>
+          </svg>
+        </div>
+
+        <!-- Row 2: Blue Pottery / Textiles / Brass Craft -->
+        <div class="col-row" id="col-row-2">
+          <a href="handicrafts.html?category=bluepottery" class="col-card col-card--side reveal reveal-delay-1" id="col-bluepottery" aria-label="Blue Pottery">
+            <div class="col-card-img">
+              <img src="images/heritage_bluepottery.png" alt="Blue Pottery" loading="lazy" onerror="this.src='images/craft_blue_pottery.png'"/>
+              <div class="col-card-img-overlay"></div>
+            </div>
+            <div class="col-card-body">
+              <span class="col-card-region">Jaipur, Rajasthan</span>
+              <h3 class="col-card-title">Blue Pottery</h3>
+              <div class="col-card-rule"></div>
+              <p class="col-card-story">A Mughal-Persian tradition reborn in Jaipur &mdash; hand-glazed in cobalt blue, each piece painted with age-old floral motifs.</p>
+              <span class="col-card-link">Explore Collection <span class="col-arrow">&#8594;</span></span>
+            </div>
+          </a>
+          <a href="handicrafts.html?category=textiles" class="col-card col-card--center reveal reveal-delay-2" id="col-textiles" aria-label="Handwoven Textiles">
+            <div class="col-card-img">
+              <img src="images/heritage_textiles.png" alt="Handwoven Textiles" loading="lazy"/>
+              <div class="col-card-img-overlay"></div>
+            </div>
+            <div class="col-card-body">
+              <span class="col-card-region">Bagru, Rajasthan</span>
+              <h3 class="col-card-title">Handwoven Textiles</h3>
+              <div class="col-card-rule"></div>
+              <p class="col-card-story">Woven on traditional looms using natural dyes and age-old techniques &mdash; each thread carrying a generation of knowledge.</p>
+              <span class="col-card-link">Explore Collection <span class="col-arrow">&#8594;</span></span>
+            </div>
+          </a>
+          <a href="handicrafts.html?category=brass" class="col-card col-card--side reveal reveal-delay-3" id="col-brass" aria-label="Brass Craft">
+            <div class="col-card-img">
+              <img src="images/heritage_brass.png" alt="Brass Craft" loading="lazy"/>
+              <div class="col-card-img-overlay"></div>
+            </div>
+            <div class="col-card-body">
+              <span class="col-card-region">Moradabad, Uttar Pradesh</span>
+              <h3 class="col-card-title">Brass Craft</h3>
+              <div class="col-card-rule"></div>
+              <p class="col-card-story">Traditional metalwork of extraordinary precision &mdash; engraved by hand in workshops where the art has passed through centuries.</p>
+              <span class="col-card-link">Explore Collection <span class="col-arrow">&#8594;</span></span>
+            </div>
+          </a>
+        </div>
+
+        <!-- CTA -->
+        <div class="col-cta reveal">
+          <a href="handicrafts.html" class="col-cta-btn" id="col-explore-all">
+            View All Collections
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+         SECTION 6 · EXPERIENCES (Cinematic)
+     ══════════════════════════════════════════════════════════ -->
+    <section class="experiences-section" id="experiences" aria-label="Cultural experiences">
+      <div class="experiences-bg">
+        <img src="images/travel-experince-1.jpg" alt="Immersive cultural journey across India" loading="lazy" />
+        <div class="experiences-overlay"></div>
+      </div>
+      <div class="experiences-content">
+        <div class="reveal">
+          <span class="mk-tag mk-tag--light">Curated Escapes</span>
+          <h2 class="mk-heading mk-heading--light experiences-heading">Experience The Culture<br /><em>Behind The
+              Craft</em></h2>
+          <p class="mk-body mk-body--light">Travel beyond the marketplace. Discover artisan villages, heritage towns,
+            cultural workshops, and immersive journeys across the living landscape of Indian civilisation.</p>
+          <div class="experiences-pills">
+            <span class="exp-pill">Jaipur Artisan Trail</span>
+            <span class="exp-pill">Nathdwara Workshop</span>
+            <span class="exp-pill">Lucknow Heritage Walk</span>
+            <span class="exp-pill">Varanasi Journey</span>
+            <span class="exp-pill">Kutch Expedition</span>
+          </div>
+          <a href="travel.html" class="mk-btn-primary" style="margin-top:40px;display:inline-flex;">Discover
+            Experiences</a>
+        </div>
+      </div>
+    </section>
+
+    </div><!-- /.content-stack -->
+
+  </main>
+
+
+
+
+
+
+
+  <!-- =======================================================
+     FOOTER
+     ======================================================= -->
+  <footer class="footer" role="contentinfo">
+    <div class="footer-top">
+
+      <div>
+        <p class="footer-brand-name">Mokshita Enterprises</p>
+        <p class="footer-brand-sub">Art &amp; Experiences</p>
+        <p class="footer-brand-desc">
+          Connecting the world to India's living artisan traditions and curating experiences that transform the way you
+          see this ancient civilisation.
+        </p>
+        <div class="footer-social">
+          <a href="#" class="footer-social-btn" aria-label="Instagram">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="2" y="2" width="20" height="20" rx="5" />
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+            </svg>
+          </a>
+          <a href="#" class="footer-social-btn" aria-label="WhatsApp">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path
+                d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+            </svg>
+          </a>
+          <a href="#" class="footer-social-btn" aria-label="Pinterest">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path
+                d="M12 2C6.477 2 2 6.477 2 12c0 4.236 2.636 7.855 6.356 9.312-.088-.791-.167-2.005.035-2.868.181-.78 1.172-4.97 1.172-4.97s-.299-.598-.299-1.482c0-1.388.806-2.428 1.808-2.428.853 0 1.267.641 1.267 1.408 0 .858-.546 2.14-.828 3.33-.236.995.499 1.806 1.476 1.806 1.771 0 3.132-1.867 3.132-4.563 0-2.387-1.716-4.057-4.165-4.057-2.836 0-4.498 2.127-4.498 4.326 0 .856.33 1.774.741 2.277a.3.3 0 0 1 .069.286c-.075.314-.243.995-.276 1.134-.044.183-.146.222-.337.134-1.249-.581-2.03-2.407-2.03-3.874 0-3.154 2.292-6.052 6.608-6.052 3.469 0 6.165 2.473 6.165 5.776 0 3.447-2.173 6.22-5.19 6.22-1.013 0-1.966-.527-2.292-1.148l-.623 2.378c-.226.869-.835 1.958-1.244 2.621.937.29 1.931.446 2.962.446 5.523 0 10-4.477 10-10S17.523 2 12 2z" />
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <p class="footer-col-title">Experiences</p>
+        <ul class="footer-links">
+          <li><a href="travel.html" class="footer-link">All Experiences</a></li>
+          <li><a href="travel.html#pkg-agra" class="footer-link">Agra &amp; Taj Mahal</a></li>
+          <li><a href="travel.html#pkg-delhi" class="footer-link">Delhi Heritage</a></li>
+          <li><a href="travel.html#pkg-jaipur" class="footer-link">Jaipur Royal</a></li>
+          <li><a href="contact.html" class="footer-link">Custom Packages</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <p class="footer-col-title">Art &amp; Shop</p>
+        <ul class="footer-links">
+          <li><a href="handicrafts.html" class="footer-link">All Products</a></li>
+          <li><a href="handicrafts.html" class="footer-link">Pichwai Art</a></li>
+          <li><a href="handicrafts.html" class="footer-link">Marble Inlay</a></li>
+          <li><a href="handicrafts.html" class="footer-link">Zardozi Craft</a></li>
+          <li><a href="handicrafts.html" class="footer-link">Watercolour</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <p class="footer-col-title">Support</p>
+        <ul class="footer-links">
+          <li><a href="mailto:mokshitaenterprises2024@gmail.com" class="footer-link">Email Us</a></li>
+          <li><a href="tel:+918871872924" class="footer-link">+91 88718 72924</a></li>
+          <li class="footer-link" style="cursor:default;">Agra, Uttar Pradesh</li>
+          <li><a href="shipping-policy.html" class="footer-link">Shipping Policy</a></li>
+          <li><a href="refund-policy.html"   class="footer-link">Return Policy</a></li>
+        </ul>
+      </div>
+
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2025 Mokshita Enterprises. All rights reserved.</p>
+      <ul class="footer-bottom-links" role="list">
+        <li><a href="privacy-policy.html"       class="footer-bottom-link">Privacy Policy</a></li>
+        <li><a href="terms-and-conditions.html" class="footer-bottom-link">Terms &amp; Conditions</a></li>
+        <li><a href="refund-policy.html"        class="footer-bottom-link">Refund Policy</a></li>
+        <li><a href="shipping-policy.html"      class="footer-bottom-link">Shipping Policy</a></li>
+      </ul>
+    </div>
+  </footer>
+
+
+  <!-- ── PRODUCT MODAL ─────────────────────────────────────── -->
+  <div id="product-modal" class="product-modal" role="dialog" aria-modal="true" aria-label="Product detail">
+    <div class="modal-close" id="modal-close" role="button" tabindex="0">&times;</div>
+    <div class="modal-content">
+      <img id="modal-img" src="" alt="Product image" />
+      <div class="modal-info">
+        <h2 id="modal-title" class="modal-title"></h2>
+        <p id="modal-desc" class="modal-desc"></p>
+        <div id="modal-price" class="modal-price"></div>
+        <a id="modal-buy-btn" href="#" target="_blank" rel="noopener" class="btn btn-whatsapp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z" />
+          </svg>
+          Order on WhatsApp
+        </a>
+      </div>
     </div>
   </div>
-</div>
 
 
-<!-- ── SCRIPTS ───────────────────────────────────────────── -->
-<script src="modules/whatsapp.js"></script>
-<script src="modules/ui.js"></script>
-<script src="modules/auth.js"></script>
-<script src="js/main.js"></script>
-<script src="js/products.js"></script>
-<script src="js/cart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="src/services/api.js"></script>
-<script src="js/backend-products.js"></script>
-<script src="js/homepage-cms.js"></script>
-<script src="js/featured-cms.js"></script>
-<script src="js/global-search.js"></script>
-<script>
-  /* ── DYNAMIC HOMEPAGE PRODUCTS ─────────────────────── */
-  document.addEventListener('productsLoaded', function() {
-    if (!window.products) return;
+  <!-- ── SCRIPTS ───────────────────────────────────────────── -->
+  <script src="modules/whatsapp.js"></script>
+  <script src="modules/ui.js"></script>
+  <script src="modules/auth.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/products.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="src/services/api.js"></script>
+  <script src="js/backend-products.js"></script>
+  <script src="js/homepage-cms.js"></script>
+  <script src="js/featured-cms.js"></script>
+  <script src="js/global-search.js"></script>
+  <script>
+    /* ── DYNAMIC HOMEPAGE PRODUCTS ─────────────────────── */
+    document.addEventListener('productsLoaded', function () {
+      if (!window.products) return;
 
-    function createArtisanCardHTML(p, isNew = false) {
-      const priceHTML = `&#8377;${p.price}`;
-      const oldPriceHTML = p.oldPrice ? `<span class="artisan-orig">&#8377;${p.oldPrice}</span>` : '';
-      const badgeHTML = isNew ? `<span class="artisan-badge artisan-badge--new">NEW</span>` : '';
-      const ratingVal = p.rating ? parseFloat(p.rating).toFixed(1) : '5.0';
-      const ratingCount = p.reviews ? `(${p.reviews})` : '(0)';
-      
-      return `
+      function createArtisanCardHTML(p, isNew = false) {
+        const priceHTML = `&#8377;${p.price}`;
+        const oldPriceHTML = p.oldPrice ? `<span class="artisan-orig">&#8377;${p.oldPrice}</span>` : '';
+        const badgeHTML = isNew ? `<span class="artisan-badge artisan-badge--new">NEW</span>` : '';
+        const ratingVal = p.rating ? parseFloat(p.rating).toFixed(1) : '5.0';
+        const ratingCount = p.reviews ? `(${p.reviews})` : '(0)';
+
+        return `
         <article class="artisan-card" onclick="window.location.href='product.html?slug=${p.id}'" style="cursor: pointer;">
           <div class="artisan-card-img-wrap">
             ${badgeHTML}
@@ -859,379 +935,457 @@
           </div>
         </article>
       `;
-    }
+      }
 
-    const bsTrack = document.getElementById('bs-track');
-    const naTrack = document.getElementById('na-track');
+      const bsTrack = document.getElementById('bs-track');
+      const naTrack = document.getElementById('na-track');
 
-    if (bsTrack) {
-      // Best Sellers: Sort by reviews
-      const bestSellers = [...window.products].sort((a, b) => (b.reviews || 0) - (a.reviews || 0)).slice(0, 5);
-      let bsHTML = bestSellers.map(p => createArtisanCardHTML(p, false)).join('');
-      bsHTML += `
+      if (bsTrack) {
+        // Best Sellers: Sort by reviews
+        const bestSellers = [...window.products].sort((a, b) => (b.reviews || 0) - (a.reviews || 0)).slice(0, 5);
+        let bsHTML = bestSellers.map(p => createArtisanCardHTML(p, false)).join('');
+        bsHTML += `
         <article class="artisan-card artisan-card--cta" onclick="window.location.href='handicrafts.html'">
           <div class="artisan-card-cta-content">
             <h3>View Full Collection &#8594;</h3>
           </div>
         </article>
       `;
-      bsTrack.innerHTML = bsHTML;
-    }
+        bsTrack.innerHTML = bsHTML;
+      }
 
-    if (naTrack) {
-      // New Arrivals: Backend products first (they are newer), then fallback
-      const newArrivals = [...window.products].reverse().slice(0, 5);
-      let naHTML = newArrivals.map(p => createArtisanCardHTML(p, true)).join('');
-      naHTML += `
+      if (naTrack) {
+        // New Arrivals: Backend products first (they are newer), then fallback
+        const newArrivals = [...window.products].reverse().slice(0, 5);
+        let naHTML = newArrivals.map(p => createArtisanCardHTML(p, true)).join('');
+        naHTML += `
         <article class="artisan-card artisan-card--cta" onclick="window.location.href='handicrafts.html'">
           <div class="artisan-card-cta-content">
             <h3>View Full Collection &#8594;</h3>
           </div>
         </article>
       `;
-      naTrack.innerHTML = naHTML;
-    }
-  });
-</script>
-<script>
-  /* ── NAV SCROLL ──────────────────────────────────── */
-  const nav = document.getElementById('main-nav');
-  function updateNav() {
-    nav.classList.toggle('scrolled', window.scrollY > 48);
-  }
-  window.addEventListener('scroll', updateNav, { passive: true });
-  updateNav();
-
-  /* ── HAMBURGER ───────────────────────────────────── */
-  const hamburger = document.getElementById('nav-hamburger');
-  const mobileMenu= document.getElementById('mobile-menu');
-  hamburger.addEventListener('click', () => {
-    const open = mobileMenu.classList.toggle('open');
-    hamburger.setAttribute('aria-expanded', open);
-  });
-
-  /* ── HERO SEQUENCE ───────────────────────────────── */
-  function triggerHero() {
-    ['hero-eyebrow','hero-title','hero-subtitle','hero-actions'].forEach((id, i) => {
-      const el = document.getElementById(id);
-      if (el) setTimeout(() => el.classList.add('visible'), 300 + i * 180);
-    });
-  }
-  setTimeout(triggerHero, 700);
-
-  /* ── REVEAL ON SCROLL ────────────────────────────── */
-  const revealEls = document.querySelectorAll('.reveal');
-  const observer  = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
-  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-  revealEls.forEach(el => observer.observe(el));
-
-  /* ── PAGE LOADER ─────────────────────────────────── */
-  window.addEventListener('load', () => {
-    const loader = document.getElementById('page-loader');
-    setTimeout(() => loader.classList.add('hidden'), 500);
-  });
-
-  /* ── NEWSLETTER ──────────────────────────────────── */
-  function handleNewsletter(e) {
-    e.preventDefault();
-    const input = document.getElementById('newsletter-email');
-    const btn   = e.target.querySelector('button');
-    const orig  = btn.textContent;
-    btn.textContent = 'Subscribed ✓';
-    btn.style.background = 'var(--olive)';
-    input.value = '';
-    setTimeout(() => { btn.textContent = orig; btn.style.background = ''; }, 3200);
-  }
-
-  /* ── MODAL (Quick View) ──────────────────────────── */
-  const modal    = document.getElementById('product-modal');
-  const modalClose = document.getElementById('modal-close');
-  const modalImg   = document.getElementById('modal-img');
-  const modalTitle = document.getElementById('modal-title');
-  const modalDesc  = document.getElementById('modal-desc');
-  const modalPrice = document.getElementById('modal-price');
-  const modalBtn   = document.getElementById('modal-buy-btn');
-
-  document.querySelectorAll('.open-modal-btn').forEach(btn => {
-    btn.addEventListener('click', e => {
-      e.preventDefault();
-      const card = btn.closest('article, .product-card');
-      if (!card) return;
-      const img  = card.querySelector('img');
-      const name = card.querySelector('.product-card-name, .craft-name')?.textContent || '';
-      const desc = card.querySelector('.craft-desc, [data-desc]')?.textContent || '';
-      const price= card.querySelector('.product-card-price, .craft-price')?.textContent || '';
-      const orig = card.querySelector('.product-card-original, .craft-price-orig')?.textContent || '';
-      modalImg.src = img?.src || '';
-      modalImg.alt = img?.alt || name;
-      modalTitle.textContent = name;
-      modalDesc.textContent  = desc;
-      modalPrice.textContent = price + (orig ? ` (was ${orig})` : '');
-      modalBtn.href = `https://wa.me/918871872924?text=Hi! I'm interested in: ${encodeURIComponent(name)}`;
-      modal.classList.add('show');
-      document.body.style.overflow = 'hidden';
-    });
-  });
-
-  function closeModal() {
-    modal.classList.remove('show');
-    document.body.style.overflow = '';
-  }
-  modalClose.addEventListener('click', closeModal);
-  modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-  /* ─── EXPLORE CARDS: MOUSE-DRAG SCROLL ─────────────────── */
-  (function () {
-    const track = document.querySelector('.explore-cards-track');
-    if (!track) return;
-
-    let isDown   = false;
-    let startX   = 0;
-    let scrollL  = 0;
-    let dragDist = 0; /* Track how far we actually dragged */
-
-    track.addEventListener('mousedown', e => {
-      isDown   = true;
-      dragDist = 0;
-      startX   = e.pageX - track.offsetLeft;
-      scrollL  = track.scrollLeft;
-      track.classList.add('is-dragging');
-    });
-
-    track.addEventListener('mousemove', e => {
-      if (!isDown) return;
-      e.preventDefault();
-      const x    = e.pageX - track.offsetLeft;
-      const walk = (x - startX) * 1.2; /* 1.2× speed multiplier */
-      dragDist   = Math.abs(walk);
-      track.scrollLeft = scrollL - walk;
-    });
-
-    const endDrag = () => {
-      isDown = false;
-      track.classList.remove('is-dragging');
-    };
-    track.addEventListener('mouseup',    endDrag);
-    track.addEventListener('mouseleave', endDrag);
-
-    /* Cancel link navigation if user was dragging (> 5px movement) */
-    track.addEventListener('click', e => {
-      if (dragDist > 5) {
-        e.preventDefault();
-        e.stopPropagation();
+        naTrack.innerHTML = naHTML;
       }
-      dragDist = 0;
-    }, true /* capture phase */);
-  })();
+    });
+  </script>
+  <script>
+    /* ── NAV SCROLL ──────────────────────────────────── */
+    const nav = document.getElementById('main-nav');
+    function updateNav() {
+      nav.classList.toggle('scrolled', window.scrollY > 48);
+    }
+    window.addEventListener('scroll', updateNav, { passive: true });
+    updateNav();
 
-  /* ─── SHOP CARDS: MOUSE-DRAG SCROLL ────────────────────── */
-  (function () {
-    const track = document.getElementById('shop-cards-track');
-    if (!track) return;
-
-    let isDown = false, startX = 0, scrollL = 0, dragDist = 0;
-
-    track.addEventListener('mousedown', e => {
-      isDown = true; dragDist = 0;
-      startX = e.pageX - track.offsetLeft;
-      scrollL = track.scrollLeft;
-      track.classList.add('is-dragging');
+    /* ── HAMBURGER ───────────────────────────────────── */
+    const hamburger = document.getElementById('nav-hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+    hamburger.addEventListener('click', () => {
+      const open = mobileMenu.classList.toggle('open');
+      hamburger.setAttribute('aria-expanded', open);
     });
 
-    track.addEventListener('mousemove', e => {
-      if (!isDown) return;
+    /* ── HERO SEQUENCE ───────────────────────────────── */
+    function triggerHero() {
+      ['hero-eyebrow', 'hero-title', 'hero-subtitle', 'hero-actions'].forEach((id, i) => {
+        const el = document.getElementById(id);
+        if (el) setTimeout(() => el.classList.add('visible'), 300 + i * 180);
+      });
+    }
+    setTimeout(triggerHero, 700);
+
+    /* ── REVEAL ON SCROLL ────────────────────────────── */
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    revealEls.forEach(el => observer.observe(el));
+
+    /* ── PAGE LOADER ─────────────────────────────────── */
+    window.addEventListener('load', () => {
+      const loader = document.getElementById('page-loader');
+      setTimeout(() => loader.classList.add('hidden'), 500);
+    });
+
+    /* ── NEWSLETTER ──────────────────────────────────── */
+    function handleNewsletter(e) {
       e.preventDefault();
-      const walk = (e.pageX - track.offsetLeft - startX) * 1.2;
-      dragDist = Math.abs(walk);
-      track.scrollLeft = scrollL - walk;
+      const input = document.getElementById('newsletter-email');
+      const btn = e.target.querySelector('button');
+      const orig = btn.textContent;
+      btn.textContent = 'Subscribed ✓';
+      btn.style.background = 'var(--olive)';
+      input.value = '';
+      setTimeout(() => { btn.textContent = orig; btn.style.background = ''; }, 3200);
+    }
+
+    /* ── MODAL (Quick View) ──────────────────────────── */
+    const modal = document.getElementById('product-modal');
+    const modalClose = document.getElementById('modal-close');
+    const modalImg = document.getElementById('modal-img');
+    const modalTitle = document.getElementById('modal-title');
+    const modalDesc = document.getElementById('modal-desc');
+    const modalPrice = document.getElementById('modal-price');
+    const modalBtn = document.getElementById('modal-buy-btn');
+
+    document.querySelectorAll('.open-modal-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        const card = btn.closest('article, .product-card');
+        if (!card) return;
+        const img = card.querySelector('img');
+        const name = card.querySelector('.product-card-name, .craft-name')?.textContent || '';
+        const desc = card.querySelector('.craft-desc, [data-desc]')?.textContent || '';
+        const price = card.querySelector('.product-card-price, .craft-price')?.textContent || '';
+        const orig = card.querySelector('.product-card-original, .craft-price-orig')?.textContent || '';
+        modalImg.src = img?.src || '';
+        modalImg.alt = img?.alt || name;
+        modalTitle.textContent = name;
+        modalDesc.textContent = desc;
+        modalPrice.textContent = price + (orig ? ` (was ${orig})` : '');
+        modalBtn.href = `https://wa.me/918871872924?text=Hi! I'm interested in: ${encodeURIComponent(name)}`;
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+      });
     });
 
-    const end = () => { isDown = false; track.classList.remove('is-dragging'); };
-    track.addEventListener('mouseup',    end);
-    track.addEventListener('mouseleave', end);
-
-    track.addEventListener('click', e => {
-      if (dragDist > 5) { e.preventDefault(); e.stopPropagation(); }
-      dragDist = 0;
-    }, true);
-  })();
-
-  /* ─── EXPLORE CARDS: ACTIVE CARD FOCUS SYSTEM ──────────── */
-  (function () {
-    const track = document.querySelector('.explore-cards-track');
-    if (!track) return;
-
-    const cards = Array.from(track.querySelectorAll('.explore-card'));
-    if (!cards.length) return;
-
-    let activeCard = null;
-    let rafId     = null;
-
-    function setActive(card) {
-      if (card === activeCard) return;
-      if (activeCard) activeCard.classList.remove('is-active');
-      activeCard = card;
-      if (activeCard) activeCard.classList.add('is-active');
+    function closeModal() {
+      modal.classList.remove('show');
+      document.body.style.overflow = '';
     }
+    modalClose.addEventListener('click', closeModal);
+    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-    function findActive() {
-      /* Track center in the viewport = track's left edge + half its width */
-      const cr     = track.getBoundingClientRect();
-      const center = cr.left + cr.width * 0.5;
+    /* ─── EXPLORE CARDS: MOUSE-DRAG SCROLL ─────────────────── */
+    (function () {
+      const track = document.querySelector('.explore-cards-track');
+      if (!track) return;
 
-      let best = null, bestDist = Infinity;
-      cards.forEach(card => {
-        const r    = card.getBoundingClientRect();
-        const dist = Math.abs((r.left + r.width * 0.5) - center);
-        if (dist < bestDist) { bestDist = dist; best = card; }
+      let isDown = false;
+      let startX = 0;
+      let scrollL = 0;
+      let dragDist = 0; /* Track how far we actually dragged */
+
+      track.addEventListener('mousedown', e => {
+        isDown = true;
+        dragDist = 0;
+        startX = e.pageX - track.offsetLeft;
+        scrollL = track.scrollLeft;
+        track.classList.add('is-dragging');
       });
-      setActive(best);
-    }
 
-    /* Throttle updates to one per animation frame */
-    function onScroll() {
-      if (rafId) return;
-      rafId = requestAnimationFrame(() => { findActive(); rafId = null; });
-    }
-
-    track.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll, { passive: true });
-
-    /* Initial active card — delay slightly so layout has painted */
-    setTimeout(findActive, 60);
-  })();
-
-  /* ─── ARTISAN ROW SCROLL ARROWS ───────────────────────── */
-  (function() {
-    function initRowScroll(trackId, prevId, nextId) {
-      var track = document.getElementById(trackId);
-      var prev  = document.getElementById(prevId);
-      var next  = document.getElementById(nextId);
-      if (!track || !prev || !next) return;
-      var scrollAmount = 320; // Approximately one card width + gap
-      function doScroll(amount) {
-        track.style.scrollSnapType = 'none';
-        track.scrollBy({ left: amount, behavior: 'smooth' });
-        // Restore snap after animation finishes
-        setTimeout(function() { track.style.scrollSnapType = ''; }, 400);
-      }
-      prev.addEventListener('click', function(e) { 
+      track.addEventListener('mousemove', e => {
+        if (!isDown) return;
         e.preventDefault();
-        doScroll(-scrollAmount);
+        const x = e.pageX - track.offsetLeft;
+        const walk = (x - startX) * 1.2; /* 1.2× speed multiplier */
+        dragDist = Math.abs(walk);
+        track.scrollLeft = scrollL - walk;
       });
-      next.addEventListener('click', function(e) { 
-        e.preventDefault();
-        doScroll(scrollAmount);
-      });
-      var isDown = false, startX = 0, scrollL = 0, dragDist = 0;
-      track.addEventListener('mousedown', function(e) {
+
+      const endDrag = () => {
+        isDown = false;
+        track.classList.remove('is-dragging');
+      };
+      track.addEventListener('mouseup', endDrag);
+      track.addEventListener('mouseleave', endDrag);
+
+      /* Cancel link navigation if user was dragging (> 5px movement) */
+      track.addEventListener('click', e => {
+        if (dragDist > 5) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        dragDist = 0;
+      }, true /* capture phase */);
+    })();
+
+    /* ─── SHOP CARDS: MOUSE-DRAG SCROLL ────────────────────── */
+    (function () {
+      const track = document.getElementById('shop-cards-track');
+      if (!track) return;
+
+      let isDown = false, startX = 0, scrollL = 0, dragDist = 0;
+
+      track.addEventListener('mousedown', e => {
         isDown = true; dragDist = 0;
         startX = e.pageX - track.offsetLeft;
         scrollL = track.scrollLeft;
         track.classList.add('is-dragging');
       });
-      track.addEventListener('mousemove', function(e) {
+
+      track.addEventListener('mousemove', e => {
         if (!isDown) return;
         e.preventDefault();
-        var walk = (e.pageX - track.offsetLeft - startX) * 1.2;
+        const walk = (e.pageX - track.offsetLeft - startX) * 1.2;
         dragDist = Math.abs(walk);
         track.scrollLeft = scrollL - walk;
       });
-      function end() { isDown = false; track.classList.remove('is-dragging'); }
+
+      const end = () => { isDown = false; track.classList.remove('is-dragging'); };
       track.addEventListener('mouseup', end);
       track.addEventListener('mouseleave', end);
-      track.addEventListener('click', function(e) {
+
+      track.addEventListener('click', e => {
         if (dragDist > 5) { e.preventDefault(); e.stopPropagation(); }
         dragDist = 0;
       }, true);
-    }
-    initRowScroll('bs-track', 'bs-prev', 'bs-next');
-    initRowScroll('na-track', 'na-prev', 'na-next');
-  })();
-  document.querySelectorAll('.artisan-wishlist').forEach(function(btn) {
-    btn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      var liked = btn.classList.toggle('liked');
-      var path = btn.querySelector('svg path');
-      if (path) path.setAttribute('fill', liked ? '#c26a3d' : 'none');
-      btn.style.color = liked ? '#c26a3d' : '';
-    });
-  });
+    })();
 
-  /* ─── ARTISAN ATC BUTTON FEEDBACK ─────────────────────── */
-  document.querySelectorAll('.artisan-atc').forEach(function(btn) {
-    btn.addEventListener('click', function(e) {
-      e.stopPropagation();
+    /* ─── EXPLORE CARDS: ACTIVE CARD FOCUS SYSTEM ──────────── */
+    (function () {
+      const track = document.querySelector('.explore-cards-track');
+      if (!track) return;
 
-      const article = btn.closest('.artisan-card');
-      const onclickAttr = article ? article.getAttribute('onclick') : '';
-      const match = onclickAttr ? onclickAttr.match(/id=([^']+)/) : null;
-      if (match && match[1] && typeof window.addToCart === 'function') {
-         window.addToCart(match[1], 1);
+      const cards = Array.from(track.querySelectorAll('.explore-card'));
+      if (!cards.length) return;
+
+      let activeCard = null;
+      let rafId = null;
+
+      function setActive(card) {
+        if (card === activeCard) return;
+        if (activeCard) activeCard.classList.remove('is-active');
+        activeCard = card;
+        if (activeCard) activeCard.classList.add('is-active');
       }
 
-      btn.style.background = '#2f5d50';
-      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
-      setTimeout(function() {
-        btn.style.background = '';
-        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>';
-      }, 1800);
-    });
-  });
-</script>
+      function findActive() {
+        /* Track center in the viewport = track's left edge + half its width */
+        const cr = track.getBoundingClientRect();
+        const center = cr.left + cr.width * 0.5;
 
-<!-- ── AUTH NAV STATE ──────────────────────────────────────────────────────────── -->
-<script>
-  /* Dynamically update Account button based on session state.
-     - Logged out  → href="login.html",   label="Account"
-     - Logged in   → href="account.html", label="My Account"
-     No page blocking; runs asynchronously after page load. */
-  (async function () {
-    if (!window.App || !window.App.Auth) return;
-    try {
-      const { session } = await window.App.Auth.getCurrentUser();
-      const desktopBtn = document.getElementById('nav-account-btn');
-      const mobileBtn  = document.getElementById('mobile-account-btn');
-      if (session) {
-        const name = session.user.user_metadata?.full_name || 'My Account';
-        if (desktopBtn) {
-          desktopBtn.href  = 'account.html';
-          desktopBtn.title = name;
-          desktopBtn.setAttribute('aria-label', name);
-          /* Swap icon to a filled silhouette to signal logged-in state */
-          desktopBtn.querySelector('svg').style.color = 'var(--terracotta, #c26a3d)';
-        }
-        if (mobileBtn) {
-          mobileBtn.href        = 'account.html';
-          mobileBtn.textContent = 'My Account';
-        }
+        let best = null, bestDist = Infinity;
+        cards.forEach(card => {
+          const r = card.getBoundingClientRect();
+          const dist = Math.abs((r.left + r.width * 0.5) - center);
+          if (dist < bestDist) { bestDist = dist; best = card; }
+        });
+        setActive(best);
       }
-    } catch (e) {
-      /* Silent — auth check is best-effort for nav enhancement only */
-    }
-  })();
-</script>
 
-<!-- ── WHATSAPP PERSONALISATION ──────────────────────────────── -->
-<script>
-  /* When the product modal opens, personalise the "Order on WhatsApp" button.
-     We observe href changes on the button (set by openModal in main.js) and
-     re-personalise with the logged-in user's name + email each time. */
-  document.addEventListener('DOMContentLoaded', function () {
-    const modalBuyBtn = document.getElementById('modal-buy-btn');
-    if (!modalBuyBtn || !window.App || !window.App.WA) return;
+      /* Throttle updates to one per animation frame */
+      function onScroll() {
+        if (rafId) return;
+        rafId = requestAnimationFrame(() => { findActive(); rafId = null; });
+      }
 
-    const observer = new MutationObserver(function () {
-      const href = modalBuyBtn.getAttribute('href') || '';
-      const m = href.match(/[?&]text=([^&]*)/);
-      if (!m) return;
-      window.App.WA.personalise(modalBuyBtn, decodeURIComponent(m[1]));
+      track.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll, { passive: true });
+
+      /* Initial active card — delay slightly so layout has painted */
+      setTimeout(findActive, 60);
+    })();
+
+    /* ─── ARTISAN ROW SCROLL ARROWS ───────────────────────── */
+    (function () {
+      function initRowScroll(trackId, prevId, nextId) {
+        var track = document.getElementById(trackId);
+        var prev = document.getElementById(prevId);
+        var next = document.getElementById(nextId);
+        if (!track || !prev || !next) return;
+        var scrollAmount = 320; // Approximately one card width + gap
+        function doScroll(amount) {
+          track.style.scrollSnapType = 'none';
+          track.scrollBy({ left: amount, behavior: 'smooth' });
+          // Restore snap after animation finishes
+          setTimeout(function () { track.style.scrollSnapType = ''; }, 400);
+        }
+        prev.addEventListener('click', function (e) {
+          e.preventDefault();
+          doScroll(-scrollAmount);
+        });
+        next.addEventListener('click', function (e) {
+          e.preventDefault();
+          doScroll(scrollAmount);
+        });
+        var isDown = false, startX = 0, scrollL = 0, dragDist = 0;
+        track.addEventListener('mousedown', function (e) {
+          isDown = true; dragDist = 0;
+          startX = e.pageX - track.offsetLeft;
+          scrollL = track.scrollLeft;
+          track.classList.add('is-dragging');
+        });
+        track.addEventListener('mousemove', function (e) {
+          if (!isDown) return;
+          e.preventDefault();
+          var walk = (e.pageX - track.offsetLeft - startX) * 1.2;
+          dragDist = Math.abs(walk);
+          track.scrollLeft = scrollL - walk;
+        });
+        function end() { isDown = false; track.classList.remove('is-dragging'); }
+        track.addEventListener('mouseup', end);
+        track.addEventListener('mouseleave', end);
+        track.addEventListener('click', function (e) {
+          if (dragDist > 5) { e.preventDefault(); e.stopPropagation(); }
+          dragDist = 0;
+        }, true);
+      }
+      initRowScroll('bs-track', 'bs-prev', 'bs-next');
+      initRowScroll('na-track', 'na-prev', 'na-next');
+    })();
+    document.querySelectorAll('.artisan-wishlist').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var liked = btn.classList.toggle('liked');
+        var path = btn.querySelector('svg path');
+        if (path) path.setAttribute('fill', liked ? '#c26a3d' : 'none');
+        btn.style.color = liked ? '#c26a3d' : '';
+      });
     });
-    observer.observe(modalBuyBtn, { attributes: true, attributeFilter: ['href'] });
-  });
-</script>
+
+    /* ─── ARTISAN ATC BUTTON FEEDBACK ─────────────────────── */
+    document.querySelectorAll('.artisan-atc').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+
+        const article = btn.closest('.artisan-card');
+        const onclickAttr = article ? article.getAttribute('onclick') : '';
+        const match = onclickAttr ? onclickAttr.match(/id=([^']+)/) : null;
+        if (match && match[1] && typeof window.addToCart === 'function') {
+          window.addToCart(match[1], 1);
+        }
+
+        btn.style.background = '#2f5d50';
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
+        setTimeout(function () {
+          btn.style.background = '';
+          btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>';
+        }, 1800);
+      });
+    });
+  </script>
+
+  <!-- ── AUTH NAV STATE ──────────────────────────────────────────────────────────── -->
+  <script>
+    /* Dynamically update Account button based on session state.
+       - Logged out  → href="login.html",   label="Account"
+       - Logged in   → href="account.html", label="My Account"
+       No page blocking; runs asynchronously after page load. */
+    (async function () {
+      if (!window.App || !window.App.Auth) return;
+      try {
+        const { session } = await window.App.Auth.getCurrentUser();
+        const desktopBtn = document.getElementById('nav-account-btn');
+        const mobileBtn = document.getElementById('mobile-account-btn');
+        if (session) {
+          const name = session.user.user_metadata?.full_name || 'My Account';
+          if (desktopBtn) {
+            desktopBtn.href = 'account.html';
+            desktopBtn.title = name;
+            desktopBtn.setAttribute('aria-label', name);
+            /* Swap icon to a filled silhouette to signal logged-in state */
+            desktopBtn.querySelector('svg').style.color = 'var(--terracotta, #c26a3d)';
+          }
+          if (mobileBtn) {
+            mobileBtn.href = 'account.html';
+            mobileBtn.textContent = 'My Account';
+          }
+        }
+      } catch (e) {
+        /* Silent — auth check is best-effort for nav enhancement only */
+      }
+    })();
+  </script>
+
+  <!-- ── WHATSAPP PERSONALISATION ──────────────────────────────── -->
+  <script>
+    /* When the product modal opens, personalise the "Order on WhatsApp" button.
+       We observe href changes on the button (set by openModal in main.js) and
+       re-personalise with the logged-in user's name + email each time. */
+    document.addEventListener('DOMContentLoaded', function () {
+      const modalBuyBtn = document.getElementById('modal-buy-btn');
+      if (!modalBuyBtn || !window.App || !window.App.WA) return;
+
+      const observer = new MutationObserver(function () {
+        const href = modalBuyBtn.getAttribute('href') || '';
+        const m = href.match(/[?&]text=([^&]*)/);
+        if (!m) return;
+        window.App.WA.personalise(modalBuyBtn, decodeURIComponent(m[1]));
+      });
+      observer.observe(modalBuyBtn, { attributes: true, attributeFilter: ['href'] });
+    });
+  </script>
+
+  <!-- CINEMATIC HERO CONTROLLER + TRANSPARENT NAV -->
+  <script>
+    (function () {
+      var isMobile = window.matchMedia('(max-width: 768px)').matches;
+      var nav          = document.getElementById('main-nav');
+      var introVideo   = document.getElementById('hero-intro-video');
+      var finalVideo   = document.getElementById('hero-final-video');
+      var heroContent  = document.getElementById('hero-content');
+      var heroScroll   = document.getElementById('hero-scroll');
+      var contentStack = document.getElementById('content-stack');
+
+      /* ── NAV: Start transparent while hero is showing ─────────── */
+      if (nav) nav.classList.add('nav--hero');
+
+      /* ── INTERSECTION OBSERVER: nav turns solid when content-stack
+         slides up enough to cover the hero (10% visible threshold) */
+      if (contentStack && nav) {
+        var navObserver = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              /* content-stack is rising into view — solidify nav */
+              nav.classList.remove('nav--hero');
+              nav.classList.add('scrolled');
+            } else {
+              /* hero is fully visible again — make nav transparent */
+              nav.classList.add('nav--hero');
+              nav.classList.remove('scrolled');
+            }
+          });
+        }, { threshold: 0.08 });
+        navObserver.observe(contentStack);
+      }
+
+      /* ── MOBILE: skip cinematic, show content immediately ──────── */
+      if (isMobile || !introVideo || !finalVideo) {
+        if (heroContent) heroContent.classList.add('hero-content--visible');
+        if (heroScroll)  heroScroll.classList.add('hero-scroll--visible');
+        return;
+      }
+
+      /* ── DESKTOP CINEMATIC SEQUENCE ────────────────────────────── */
+
+      function revealHero() {
+        finalVideo.currentTime = finalVideo.duration - 0.001;
+        finalVideo.pause();
+        finalVideo.classList.add('hero-final-video--visible');
+        setTimeout(function () {
+          introVideo.classList.add('hero-intro-video--done');
+          if (heroContent) heroContent.classList.add('hero-content--visible');
+          if (heroScroll)  heroScroll.classList.add('hero-scroll--visible');
+        }, 300);
+      }
+
+      finalVideo.addEventListener('loadedmetadata', function () {
+        finalVideo.currentTime = finalVideo.duration - 0.001;
+      });
+
+      introVideo.addEventListener('ended', function () {
+        if (finalVideo.readyState >= 1 && finalVideo.duration) {
+          revealHero();
+        } else {
+          finalVideo.addEventListener('loadedmetadata', function () {
+            revealHero();
+          }, { once: true });
+          finalVideo.load();
+        }
+      });
+
+      var playPromise = introVideo.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(function () {
+          revealHero();
+        });
+      }
+    })();
+  </script>
 
 </body>
+
 </html>
