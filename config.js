@@ -12,8 +12,8 @@
  */
 
 // ─── Replace this URL after your first Railway/Render deployment ──────────────
-window.BACKEND_URL = 'https://YOUR_RAILWAY_URL.up.railway.app';
+window.BACKEND_URL = 'https://mokshita-final-release.onrender.com';
 
 // ─── Local development override ───────────────────────────────────────────────
 // If running locally, uncomment the line below (and comment out the line above):
-// window.BACKEND_URL = 'http://localhost:3000';
+// window.BACKEND_URL = 'http://localhost:5000';

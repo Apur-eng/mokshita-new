@@ -3,7 +3,7 @@
 
 const API_URL = (window.BACKEND_URL ? window.BACKEND_URL + '/api' : null)
   || (window.process && window.process.env && window.process.env.VITE_API_URL)
-  || 'http://localhost:3000/api';
+  || 'https://mokshita-final-release.onrender.com/api';
 
 // Create an Axios instance
 const apiClient = axios.create({
@@ -58,7 +58,7 @@ window.apiService = {
     },
     getBySlug: async (slug) => {
       try {
-        const response = await apiClient.get(`/products/slug/${slug}`);
+        const response = await apiClient.get(`/products/${slug}`);
         return { data: response.data, error: null };
       } catch (error) {
         console.error(`[API] Error fetching product by slug ${slug}:`, error);
