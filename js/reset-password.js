@@ -8,14 +8,31 @@ document.addEventListener('DOMContentLoaded', async () => {
   const newPwdInput = document.getElementById('new-password');
   const confirmPwdInput = document.getElementById('confirm-password');
 
-  // Extract token from URL
-  const urlParams = new URLSearchParams(window.location.search);
-  const token = urlParams.get('token');
+  // Extract Supabase tokens from URL (can be in hash or search params)
+  const hashParams = new URLSearchParams(window.location.hash.substring(1));
+  const queryParams = new URLSearchParams(window.location.search);
+  
+  const accessToken = hashParams.get('access_token') || queryParams.get('access_token');
+  const refreshToken = hashParams.get('refresh_token') || queryParams.get('refresh_token');
+  const tokenHash = hashParams.get('token_hash') || queryParams.get('token_hash');
+  const type = hashParams.get('type') || queryParams.get('type') || 'recovery';
 
-  if (!token) {
+  let recoveryPayload = null;
+  if (accessToken && refreshToken) {
+    recoveryPayload = { access_token: accessToken, refresh_token: refreshToken, type };
+  } else if (tokenHash) {
+    recoveryPayload = { token_hash: tokenHash, type };
+  }
+
+  if (!recoveryPayload) {
     if (window.App && window.App.UI) window.App.UI.showError('Invalid or expired password reset link. Please request a new one.');
     btnUpdate.disabled = true;
     return;
+  }
+
+  // Clear hash from URL for security (don't leave tokens in browser history)
+  if (window.history && window.history.replaceState) {
+    window.history.replaceState(null, null, window.location.pathname);
   }
 
   formReset.addEventListener('submit', async (e) => {
@@ -39,7 +56,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     btnUpdate.disabled = true;
 
     try {
-      const { error } = await window.apiService.auth.resetPassword(token, newPassword);
+      recoveryPayload.password = newPassword;
+      const { error } = await window.apiService.auth.resetPassword(recoveryPayload);
 
       if (error) {
         if (window.App && window.App.UI) window.App.UI.showError(error);

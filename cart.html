@@ -652,12 +652,40 @@ async function placeOrderFinal() {
 
     // ── Razorpay Flow ─────────────────────────────────────────
     if (paymentMethod === 'Razorpay') {
-        const amountInPaise = Math.round(cartTotal * 100); // Razorpay uses paise
+        btn.textContent = 'Creating Order...';
+        btn.disabled = true;
+
+        // 1. Create a pending order securely on the backend
+        const checkoutResult = await checkoutToOrderFull(
+            addressData, 'RAZORPAY', cartSubtotal, cartShipping, cartTotal
+        );
+
+        if (!checkoutResult.success) {
+            window.App.UI.showError(checkoutResult.error || 'Failed to create order. Please try again.');
+            btn.textContent = 'Place Order';
+            btn.disabled = false;
+            return;
+        }
+
+        const localOrderId = checkoutResult.orderId;
+
+        // 2. Create Razorpay order on the backend with authoritative amount
+        const rzpResponse = await window.apiService.payments.createOrder(localOrderId);
+        if (rzpResponse.error || !rzpResponse.data.success) {
+            window.App.UI.showError(rzpResponse.error || 'Failed to initialize payment gateway.');
+            btn.textContent = 'Place Order';
+            btn.disabled = false;
+            return;
+        }
+
+        const razorpay_order_id = rzpResponse.data.razorpay_order_id;
+        const amountInPaise = rzpResponse.data.amount;
 
         const rzpOptions = {
-            key:         'rzp_test_Sj4dSjgJB6rQmF',
+            key:         'rzp_test_Sj4dSjgJB6rQmF', // Ensure this is just the public key
             amount:      amountInPaise,
             currency:    'INR',
+            order_id:    razorpay_order_id,
             name:        'Mokshita Enterprises',
             description: 'Handcrafted Art & Experiences',
             image:       'images/logo.png',
@@ -674,16 +702,20 @@ async function placeOrderFinal() {
             },
             // Called on successful payment
             handler: async function (response) {
-                btn.textContent = 'Saving Order...';
-                // Save order to the backend with Razorpay payment reference
-                const paymentRef = 'Razorpay:' + response.razorpay_payment_id;
-                const result = await checkoutToOrderFull(
-                    addressData, paymentRef, cartSubtotal, cartShipping, cartTotal
-                );
-                if (result.success) {
-                    showConfirmation(result.orderNumber, addressData);
+                btn.textContent = 'Verifying Payment...';
+                
+                // 3. Verify the payment server-side
+                const verifyResult = await window.apiService.payments.verifyPayment({
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_signature: response.razorpay_signature,
+                    order_id: localOrderId
+                });
+
+                if (verifyResult.data && verifyResult.data.success) {
+                    showConfirmation(checkoutResult.orderNumber, addressData);
                 } else {
-                    window.App.UI.showError(result.error || 'Payment received but order save failed. Contact support.');
+                    window.App.UI.showError(verifyResult.error || 'Payment verification failed. If money was deducted, contact support.');
                     btn.textContent = 'Place Order';
                     btn.disabled = false;
                 }
@@ -691,8 +723,8 @@ async function placeOrderFinal() {
             modal: {
                 // User closed the popup without paying
                 ondismiss: function () {
-                    window.App.UI.showError('Payment cancelled. Your order was not placed.');
-                    btn.textContent = 'Place Order';
+                    window.App.UI.showError('Payment cancelled. Your order is pending in your account.');
+                    btn.textContent = 'Retry Payment';
                     btn.disabled = false;
                 }
             }
@@ -701,11 +733,11 @@ async function placeOrderFinal() {
         const rzp = new Razorpay(rzpOptions);
         rzp.on('payment.failed', function (response) {
             window.App.UI.showError('Payment failed: ' + (response.error.description || 'Please try again.'));
-            btn.textContent = 'Place Order';
+            btn.textContent = 'Retry Payment';
             btn.disabled = false;
         });
         rzp.open();
-        return; // Order is saved inside handler callback above
+        return; 
     }
 
     // ── COD / Bank Transfer Flow ──────────────────────────────

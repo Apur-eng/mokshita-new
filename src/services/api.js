@@ -40,8 +40,8 @@ window.apiService = {
   products: {
     getAll: async () => {
       try {
-        const response = await apiClient.get('/products');
-        return { data: response.data, error: null };
+        const response = await apiClient.get('/products/', { params: { page_size: 100 } });
+        return { data: response.data.items || response.data, error: null };
       } catch (error) {
         console.error('[API] Error fetching products:', error);
         return { data: null, error };
@@ -77,28 +77,28 @@ window.apiService = {
      */
     getDetail: async (slug) => {
       try {
-        const response = await apiClient.get(`/products/detail/${slug}`);
+        const response = await apiClient.get(`/products/${slug}`);
         return { data: response.data, error: null };
       } catch (error) {
         console.error(`[API] Error fetching product detail ${slug}:`, error);
         return { data: null, error };
       }
     },
-    /** GET /api/products/featured  → featured products array */
+    /** GET /api/products/?featured=true  → featured products array */
     getFeatured: async (limit = 8) => {
       try {
         const response = await apiClient.get('/products/featured', { params: { limit } });
-        return { data: response.data, error: null };
+        return { data: response.data.items || response.data, error: null };
       } catch (error) {
         console.error('[API] Error fetching featured products:', error);
         return { data: null, error };
       }
     },
-    /** GET /api/products/search?q=  → full-text search */
+    /** GET /api/products/?search=q  → full-text search */
     search: async (query, params = {}) => {
       try {
         const response = await apiClient.get('/products/search', { params: { q: query, ...params } });
-        return { data: response.data, error: null };
+        return { data: response.data.items || response.data, error: null };
       } catch (error) {
         console.error(`[API] Error searching products "${query}":`, error);
         return { data: null, error };
@@ -111,7 +111,7 @@ window.apiService = {
     login: async (email, password) => {
       try {
         const response = await apiClient.post('/auth/login', { email, password });
-        return { data: response.data, error: null };
+        return { data: { token: response.data.access_token, ...response.data }, error: null };
       } catch (error) {
         return { data: null, error: error.response?.data?.message || error.message };
       }
@@ -119,7 +119,7 @@ window.apiService = {
     register: async (email, password, full_name) => {
       try {
         const response = await apiClient.post('/auth/register', { email, password, full_name });
-        return { data: response.data, error: null };
+        return { data: { token: response.data.access_token, ...response.data }, error: null };
       } catch (error) {
         return { data: null, error: error.response?.data?.message || error.message };
       }
@@ -148,9 +148,9 @@ window.apiService = {
         return { data: null, error: error.response?.data?.message || error.message };
       }
     },
-    resetPassword: async (token, newPassword) => {
+    resetPassword: async (payload) => {
       try {
-        const response = await apiClient.post('/auth/reset-password', { token, newPassword });
+        const response = await apiClient.post('/auth/reset-password', payload);
         return { data: response.data, error: null };
       } catch (error) {
         return { data: null, error: error.response?.data?.message || error.message };
@@ -215,6 +215,26 @@ window.apiService = {
     checkout: async (checkoutData) => {
       try {
         const response = await apiClient.post('/orders/checkout', checkoutData);
+        return { data: response.data, error: null };
+      } catch (error) {
+        return { data: null, error: error.response?.data?.message || error.message };
+      }
+    }
+  },
+
+  // Payment APIs
+  payments: {
+    createOrder: async (orderId) => {
+      try {
+        const response = await apiClient.post('/payments/create-order', { order_id: orderId });
+        return { data: response.data, error: null };
+      } catch (error) {
+        return { data: null, error: error.response?.data?.message || error.message };
+      }
+    },
+    verifyPayment: async (paymentData) => {
+      try {
+        const response = await apiClient.post('/payments/verify', paymentData);
         return { data: response.data, error: null };
       } catch (error) {
         return { data: null, error: error.response?.data?.message || error.message };
