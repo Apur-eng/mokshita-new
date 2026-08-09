@@ -565,8 +565,35 @@ async function renderCart() {
 function loadLocalCart(cartItems) {
   const local = JSON.parse(localStorage.getItem('mokshita_cart') || '[]');
   local.forEach(item => {
-    const prod = (window.products || []).find(p => p.id === item.id);
-    if (prod) cartItems.push({ productId: item.id, quantity: item.quantity, price: prod.price, name: prod.title, image: prod.mainImage });
+    // Items in localStorage are stored with UUID (dbId).
+    // window.products uses frontend slug as p.id and UUID as p.dbId.
+    // Must check BOTH to find the matching product.
+    const prod = (window.products || []).find(p =>
+      p.id    === item.id ||
+      p.dbId  === item.id ||
+      String(p.id)   === String(item.id) ||
+      String(p.dbId) === String(item.id)
+    );
+
+    if (prod) {
+      cartItems.push({
+        productId: item.id,
+        quantity:  item.quantity,
+        price:     prod.price,
+        name:      prod.title,
+        image:     prod.mainImage || ''
+      });
+    } else {
+      // Product metadata not loaded yet — still show the item as a placeholder
+      // so the cart isn't silently empty. Name/price fill in when products load.
+      cartItems.push({
+        productId: item.id,
+        quantity:  item.quantity,
+        price:     0,
+        name:      'Loading…',
+        image:     ''
+      });
+    }
   });
 }
 
