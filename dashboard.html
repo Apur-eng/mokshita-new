@@ -12,13 +12,13 @@
 <body>
   <div style="font-family: sans-serif; text-align: center; margin-top: 100px;">
     <h2>Redirecting to your account dashboard...</h2>
-    <p>If you are not redirected automatically, <a href="account.html">click here</a>.</p>
+    <p>If you are not redirected automatically, <a href="user-dashboard.html">click here</a>.</p>
   </div>
   <script>
     // Perform session verification first
     window.App.Auth.getCurrentUser().then(({ session }) => {
       if (session) {
-        window.location.replace('account.html');
+        window.location.replace('user-dashboard.html');
       } else {
         window.location.replace('login.html');
       }

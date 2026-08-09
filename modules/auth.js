@@ -7,7 +7,8 @@ window.App.Auth = (function() {
     let supabaseLoadingPromise = null;
 
     function ensureSupabaseLoaded() {
-        if (window.supabase) return Promise.resolve();
+        // A real Supabase client has .auth — the CDN namespace object does NOT
+        if (window.supabase && window.supabase.auth) return Promise.resolve();
         if (supabaseLoadingPromise) return supabaseLoadingPromise;
 
         supabaseLoadingPromise = new Promise((resolve, reject) => {
@@ -44,7 +45,8 @@ window.App.Auth = (function() {
     }
 
     function initializeSupabaseClient() {
-        if (typeof supabase !== 'undefined' && !window.supabase) {
+        // Only create a client if one doesn't already exist (check .auth, not just truthiness)
+        if (typeof supabase !== 'undefined' && !(window.supabase && window.supabase.auth)) {
             const url = window.SUPABASE_URL || 'https://syycggibqwvqravtdhhx.supabase.co';
             const key = window.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5eWNnZ2licXd2cXJhdnRkaGh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1MjA4NDIsImV4cCI6MjEwMDA5Njg0Mn0.1A50etqd78iHVgQC7uVUM2fRovssgn3M9yfdXVkQHTM';
             window.supabase = supabase.createClient(url, key);
@@ -83,7 +85,7 @@ window.App.Auth = (function() {
                 console.error('Failed to load Supabase script dynamically:', e);
             }
 
-            if (!window.supabase) {
+            if (!window.supabase || !window.supabase.auth) {
                 // Fallback: check localStorage directly if Supabase failed to load
                 const localToken = localStorage.getItem('mokshita_token');
                 if (!localToken) return { session: null, user: null, error: null };
