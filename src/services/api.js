@@ -66,12 +66,10 @@ apiClient.interceptors.response.use(
         '(3) BACKEND_URL in config.js is correct.'
       );
     } else if (status === 401) {
-      // Token invalid/expired — clear it and signal the app
-      // NOTE: Do NOT redirect here. Individual pages/features decide what to do
-      // (e.g. cart falls back to localStorage, checkout prompts login explicitly)
-      localStorage.removeItem('mokshita_token');
+      // Token invalid/expired — keep it and signal the app
+      // NOTE: Do NOT redirect or clear here.
       window.dispatchEvent(new CustomEvent('auth:unauthorized', { detail: { url } }));
-      console.warn(`[API] 401 Unauthorized on ${url} — token cleared.`);
+      console.warn("401 received - keeping token, possible mismatch");
     } else if (status === 500) {
       // Backend crash — most likely missing SUPABASE_URL/ANON_KEY env vars on Render
       console.error(
@@ -287,9 +285,9 @@ window.apiService = {
         return { data: null, error: error.response?.data?.message || error.message };
       }
     },
-    checkout: async (checkoutData) => {
+    checkout: async (checkoutData, config = {}) => {
       try {
-        const response = await apiClient.post('/orders/checkout', checkoutData);
+        const response = await apiClient.post('/orders/checkout', checkoutData, config);
         return { data: response.data, error: null };
       } catch (error) {
         return { data: null, error: error.response?.data?.message || error.message };

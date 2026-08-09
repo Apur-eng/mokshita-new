@@ -4,6 +4,16 @@
 
 'use strict';
 
+async function getFreshAuthToken() {
+  try {
+    const { data } = await window.supabase.auth.getSession();
+    return data?.session?.access_token || null;
+  } catch (e) {
+    console.warn("Token fetch failed", e);
+    return null;
+  }
+}
+
 // ── Cart Badge Update ────────────────────────────────────────
 async function updateCartUI() {
   let count = 0;
@@ -116,20 +126,45 @@ window.updateQuantityFallback = async function(productId, change) {
 
 // ── Checkout: Cart → Orders ──────────────────────────────────
 window.checkoutToOrderFull = async function(addressData, paymentMethod, subtotal, shippingCost, totalAmount) {
+  // 8. PREVENT MULTIPLE REQUESTS (SAFE UX FIX)
+  const button = document.getElementById('btn-place-order');
+  if (button) button.disabled = true;
+
   // --- ANTI-SPAM & RATE LIMITING ---
   const lastOrderTime = localStorage.getItem('mokshita_last_order');
   const now = Date.now();
   if (lastOrderTime && now - parseInt(lastOrderTime) < 60000) { // 1 min limit
+    if (button) button.disabled = false;
     return { error: 'Please wait a minute before placing another order.' };
   }
   if (addressData.honeypot) {
+    if (button) button.disabled = false;
     return { error: 'Spam detected.' };
   }
 
   // --- STRICT INPUT VALIDATION ---
-  if (!addressData.name || addressData.name.trim().length < 2) return { error: 'Please enter a valid name.' };
-  if (!addressData.phone || !/^[0-9\s\+\-]{10,15}$/.test(addressData.phone)) return { error: 'Please enter a valid phone number.' };
-  if (!addressData.pincode || !/^[0-9]{5,6}$/.test(addressData.pincode)) return { error: 'Please enter a valid 5 or 6 digit pincode.' };
+  if (!addressData.name || addressData.name.trim().length < 2) {
+    if (button) button.disabled = false;
+    return { error: 'Please enter a valid name.' };
+  }
+  if (!addressData.phone || !/^[0-9\s\+\-]{10,15}$/.test(addressData.phone)) {
+    if (button) button.disabled = false;
+    return { error: 'Please enter a valid phone number.' };
+  }
+  if (!addressData.pincode || !/^[0-9]{5,6}$/.test(addressData.pincode)) {
+    if (button) button.disabled = false;
+    return { error: 'Please enter a valid 5 or 6 digit pincode.' };
+  }
+
+  // 5. ADD PAYMENT METHOD SAFETY CHECK
+  const selectedPayment = document.querySelector('input[name="payment_method"]:checked') || document.querySelector('input[name="payment"]:checked');
+  const finalPaymentMethod = paymentMethod || (selectedPayment ? selectedPayment.value : null);
+
+  if (!finalPaymentMethod) {
+    alert("Please select a payment method");
+    if (button) button.disabled = false;
+    return { error: 'Please select a payment method' };
+  }
   
   let cartItems = [];
   const local = JSON.parse(localStorage.getItem('mokshita_cart') || '[]');
@@ -147,6 +182,7 @@ window.checkoutToOrderFull = async function(addressData, paymentMethod, subtotal
   });
 
   if (cartItems.length === 0) {
+    if (button) button.disabled = false;
     return { error: 'Cart is empty' };
   }
 
@@ -160,16 +196,33 @@ window.checkoutToOrderFull = async function(addressData, paymentMethod, subtotal
       state:         addressData.state,
       pincode:       addressData.pincode,
       country:       addressData.country,
-      payment_method: paymentMethod,
+      payment_method: finalPaymentMethod,
       items:         cartItems
   };
 
-  console.log('[Checkout] Payload:', orderPayload);
+  // 6. ENSURE PAYMENT METHOD IS SENT
+  orderPayload.paymentMethod = finalPaymentMethod;
 
-  const { data, error } = await window.apiService.orders.checkout(orderPayload);
+  // 2. PATCH ONLY CHECKOUT API CALL
+  const freshToken = await getFreshAuthToken();
+  const existingToken = localStorage.getItem("mokshita_token");
+  const tokenToUse = freshToken || existingToken;
+
+  // 7. ADD NON-BREAKING DEBUG LOGS
+  console.log("Checkout token used:", tokenToUse);
+  console.log("Payment method:", finalPaymentMethod);
+
+  // 3. MODIFY FETCH HEADERS (SAFE MERGE)
+  const { data, error } = await window.apiService.orders.checkout(orderPayload, {
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${tokenToUse}`
+    }
+  });
 
   if (error) {
     console.error('[Checkout] Error creating order:', error);
+    if (button) button.disabled = false;
     return { error: error };
   }
 
