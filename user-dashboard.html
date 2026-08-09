@@ -722,7 +722,6 @@
   clearTimeout(_fallbackTimer);
 
   /* ── Hide overlay ────────────────────────────────────────── */
-  const authOverlay = document.getElementById('auth-overlay');
   authOverlay.classList.add('hidden');
   setTimeout(() => { authOverlay.style.display = 'none'; }, 350);
 
