@@ -1,75 +1,44 @@
-/* reset-password.js */
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-'use strict';
+const SUPABASE_URL = "https://syycggibqwvqravtdhhx.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5eWNnZ2licXd2cXJhdnRkaGh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1MjA4NDIsImV4cCI6MjEwMDA5Njg0Mn0.1A50etqd78iHVgQC7uVUM2fRovssgn3M9yfdXVkQHTM"; // replace this
 
-document.addEventListener('DOMContentLoaded', async () => {
-  const formReset = document.getElementById('form-reset-password');
-  const btnUpdate = document.getElementById('btn-update-password');
-  const newPwdInput = document.getElementById('new-password');
-  const confirmPwdInput = document.getElementById('confirm-password');
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  // Supabase password-recovery links contain: ?token_hash=xxx&type=recovery
-  // OR ?access_token=xxx&refresh_token=xxx (older PKCE flow)
-  const urlParams = new URLSearchParams(window.location.search);
-  const tokenHash    = urlParams.get('token_hash');
-  const type         = urlParams.get('type') || 'recovery';
-  const accessToken  = urlParams.get('access_token');
-  const refreshToken = urlParams.get('refresh_token');
+const form = document.getElementById("form-reset-password");
+const messageBox = document.getElementById("reset-message");
 
-  const hasValidToken = tokenHash || (accessToken && refreshToken);
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-  if (!hasValidToken) {
-    if (window.App && window.App.UI) window.App.UI.showError('Invalid or expired password reset link. Please request a new one.');
-    if (btnUpdate) btnUpdate.disabled = true;
+  const password = document.getElementById("new-password").value;
+  const confirmPassword = document.getElementById("confirm-password").value;
+
+  if (password.length < 8) {
+    messageBox.innerText = "Password must be at least 8 characters";
     return;
   }
 
-  if (formReset) {
-    formReset.addEventListener('submit', async (e) => {
-      e.preventDefault();
+  if (password !== confirmPassword) {
+    messageBox.innerText = "Passwords do not match";
+    return;
+  }
 
-      const newPassword     = newPwdInput.value;
-      const confirmPassword = confirmPwdInput.value;
-
-      if (newPassword.length < 8) {
-        if (window.App && window.App.UI) window.App.UI.showError('Password must be at least 8 characters long.');
-        return;
-      }
-
-      if (newPassword !== confirmPassword) {
-        if (window.App && window.App.UI) window.App.UI.showError('Passwords do not match.');
-        return;
-      }
-
-      const originalText = btnUpdate.innerText;
-      btnUpdate.innerText = 'Updating...';
-      btnUpdate.disabled = true;
-
-      try {
-        // Build the payload the backend expects
-        // auth.controller.js resetPassword reads: { password, token_hash, type }
-        // OR { password, access_token, refresh_token }
-        const payload = tokenHash
-          ? { password: newPassword, token_hash: tokenHash, type }
-          : { password: newPassword, access_token: accessToken, refresh_token: refreshToken };
-
-        const { error } = await window.apiService.auth.resetPassword(payload);
-
-        if (error) {
-          if (window.App && window.App.UI) window.App.UI.showError(error);
-          btnUpdate.innerText = originalText;
-          btnUpdate.disabled = false;
-        } else {
-          if (window.App && window.App.UI) window.App.UI.showSuccess('Password updated successfully!');
-          localStorage.removeItem('mokshita_token');
-          setTimeout(() => { window.location.href = 'login.html'; }, 1500);
-        }
-      } catch (err) {
-        console.error(err);
-        if (window.App && window.App.UI) window.App.UI.showError('An unexpected error occurred.');
-        btnUpdate.innerText = originalText;
-        btnUpdate.disabled = false;
-      }
+  try {
+    const { error } = await supabase.auth.updateUser({
+      password: password
     });
+
+    if (error) throw error;
+
+    messageBox.innerText = "✅ Password updated successfully!";
+
+    setTimeout(() => {
+      window.location.href = "/login.html";
+    }, 2000);
+
+  } catch (err) {
+    console.error(err);
+    messageBox.innerText = "❌ Failed to reset password";
   }
 });
