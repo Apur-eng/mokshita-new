@@ -2,13 +2,14 @@
  * Mokshita — Runtime Backend Configuration
  * ─────────────────────────────────────────────────────────────────────────────
  * This file is loaded BEFORE api.js in every HTML page.
- * To switch environments, swap the active BACKEND_URL line below.
+ * BACKEND_URL must point to the live Render deployment.
+ * After any re-deploy on Render the URL stays the same — no changes needed.
  */
 
-// ─── PRODUCTION ───────────────────────────────────────────────────────────────
-// Backend  → Render:   https://mokshita-final-release.onrender.com
-// Frontend → Vercel:   https://mokshita.vercel.app
+// ─── Production Render backend ────────────────────────────────────────────────
 window.BACKEND_URL = 'https://mokshita-final-release.onrender.com';
 
-// ─── LOCAL DEVELOPMENT (comment the line above and uncomment below) ───────────
-// window.BACKEND_URL = 'http://localhost:5000';
+// ─── Local development override ───────────────────────────────────────────────
+// Uncomment the line below when developing locally:
+// window.BACKEND_URL = 'http://localhost:3000';
+

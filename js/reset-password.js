@@ -1,16 +1,17 @@
 /* reset-password.js */
+
 'use strict';
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const formReset       = document.getElementById('form-reset-password');
-  const btnUpdate       = document.getElementById('btn-update-password');
-  const newPwdInput     = document.getElementById('new-password');
+  const formReset = document.getElementById('form-reset-password');
+  const btnUpdate = document.getElementById('btn-update-password');
+  const newPwdInput = document.getElementById('new-password');
   const confirmPwdInput = document.getElementById('confirm-password');
 
   // Supabase password-recovery links contain: ?token_hash=xxx&type=recovery
   // OR ?access_token=xxx&refresh_token=xxx (older PKCE flow)
-  const urlParams    = new URLSearchParams(window.location.search);
-  const tokenHash    = urlParams.get('token_hash');          // ← correct param
+  const urlParams = new URLSearchParams(window.location.search);
+  const tokenHash    = urlParams.get('token_hash');
   const type         = urlParams.get('type') || 'recovery';
   const accessToken  = urlParams.get('access_token');
   const refreshToken = urlParams.get('refresh_token');
@@ -19,11 +20,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   if (!hasValidToken) {
     if (window.App && window.App.UI) window.App.UI.showError('Invalid or expired password reset link. Please request a new one.');
-    if (btnUpdate) btnUpdate.disabled = true;  // ← null-safe
+    if (btnUpdate) btnUpdate.disabled = true;
     return;
   }
 
-  if (formReset) {                              // ← null-safe
+  if (formReset) {
     formReset.addEventListener('submit', async (e) => {
       e.preventDefault();
 
@@ -45,14 +46,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       btnUpdate.disabled = true;
 
       try {
-        // Build the payload the backend expects:
-        // resetPassword in auth.controller.js reads: { password, token_hash, type }
+        // Build the payload the backend expects
+        // auth.controller.js resetPassword reads: { password, token_hash, type }
         // OR { password, access_token, refresh_token }
         const payload = tokenHash
           ? { password: newPassword, token_hash: tokenHash, type }
           : { password: newPassword, access_token: accessToken, refresh_token: refreshToken };
 
-        const { error } = await window.apiService.auth.resetPassword(payload);  // ← correct
+        const { error } = await window.apiService.auth.resetPassword(payload);
 
         if (error) {
           if (window.App && window.App.UI) window.App.UI.showError(error);

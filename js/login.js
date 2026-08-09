@@ -34,41 +34,49 @@ document.addEventListener('DOMContentLoaded', () => {
   if (formLogin) {
     formLogin.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = document.getElementById('login-email').value;
+      const email    = document.getElementById('login-email').value.trim();
       const password = document.getElementById('login-password').value;
-      const btn = formLogin.querySelector('.auth-submit');
-      
+      const btn      = formLogin.querySelector('.auth-submit');
+
+      if (!email || !password) {
+        loginMsg.textContent = 'Please fill in all fields.';
+        loginMsg.className = 'auth-message error';
+        return;
+      }
+
       btn.disabled = true;
       btn.textContent = 'Signing in...';
       loginMsg.className = 'auth-message';
       loginMsg.textContent = '';
-      
+
       try {
         const { data, error } = await window.apiService.auth.login(email, password);
-        
+
         if (error) throw new Error(error);
-        
-        // Save token
+
+        // Save Supabase access_token returned by backend
         if (data && data.token) {
           localStorage.setItem('mokshita_token', data.token);
         }
-        
+
         if (typeof window.syncGuestCart === 'function') {
           await window.syncGuestCart();
         }
 
-        loginMsg.textContent = "Successfully logged in! Redirecting…";
-        loginMsg.classList.add('success');
-        
-        const urlParams = new URLSearchParams(window.location.search);
+        loginMsg.textContent = 'Successfully logged in! Redirecting…';
+        loginMsg.className = 'auth-message success';
+        if (window.App && window.App.UI) window.App.UI.showSuccess('Welcome back!');
+
+        const urlParams   = new URLSearchParams(window.location.search);
         const redirectUrl = urlParams.get('redirect') || 'account.html';
-        if (window.App && window.App.UI) window.App.UI.showSuccess("Welcome back!");
         setTimeout(() => { window.location.replace(redirectUrl); }, 800);
-        
+
       } catch (err) {
-        loginMsg.textContent = err.message || 'Login failed';
-        loginMsg.classList.add('error');
-        if (window.App && window.App.UI) window.App.UI.showError(err.message || 'Login failed');
+        // Backend returns specific messages — surface them directly
+        const msg = err.message || 'Login failed. Please try again.';
+        loginMsg.textContent = msg;
+        loginMsg.className = 'auth-message error';
+        if (window.App && window.App.UI) window.App.UI.showError(msg);
       } finally {
         btn.disabled = false;
         btn.textContent = 'Sign In';
@@ -80,37 +88,57 @@ document.addEventListener('DOMContentLoaded', () => {
   if (formSignup) {
     formSignup.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = document.getElementById('signup-email').value;
+      const email    = document.getElementById('signup-email').value.trim();
       const password = document.getElementById('signup-password').value;
-      const name = document.getElementById('signup-name').value;
-      const btn = formSignup.querySelector('.auth-submit');
-      
+      const name     = document.getElementById('signup-name').value.trim();
+      const btn      = formSignup.querySelector('.auth-submit');
+
+      if (!email || !password || !name) {
+        signupMsg.textContent = 'Please fill in all fields.';
+        signupMsg.className = 'auth-message error';
+        return;
+      }
+
+      if (password.length < 8) {
+        signupMsg.textContent = 'Password must be at least 8 characters.';
+        signupMsg.className = 'auth-message error';
+        return;
+      }
+
       btn.disabled = true;
       btn.textContent = 'Creating account...';
       signupMsg.className = 'auth-message';
       signupMsg.textContent = '';
-      
+
       try {
         const { data, error } = await window.apiService.auth.register(email, password, name);
-        
+
         if (error) throw new Error(error);
 
-        // Auto login on successful registration
+        // Supabase requires email confirmation → backend returns token: null
+        // Do NOT store null as a token — that breaks all subsequent auth checks
         if (data && data.token) {
-           localStorage.setItem('mokshita_token', data.token);
+          localStorage.setItem('mokshita_token', data.token);
+          if (window.App && window.App.UI) window.App.UI.showSuccess('Account created! Redirecting...');
+          signupMsg.textContent = 'Account created! Redirecting...';
+          signupMsg.className = 'auth-message success';
+          setTimeout(() => { window.location.replace('account.html'); }, 800);
+        } else {
+          // Email confirmation required — do NOT redirect, just inform the user
+          signupMsg.textContent =
+            'Account created! Please check your email to verify your account before logging in.';
+          signupMsg.className = 'auth-message success';
+          if (window.App && window.App.UI)
+            window.App.UI.showSuccess('Check your email to verify your account.');
+          btn.disabled = false;
+          btn.textContent = 'Create Account';
         }
 
-        signupMsg.textContent = "Account created! Redirecting...";
-        signupMsg.classList.add('success');
-        if (window.App && window.App.UI) window.App.UI.showSuccess("Account created successfully.");
-        
-        setTimeout(() => { window.location.replace('account.html'); }, 800);
-        
       } catch (err) {
-        signupMsg.textContent = err.message || 'Signup failed';
-        signupMsg.classList.add('error');
-        if (window.App && window.App.UI) window.App.UI.showError(err.message || 'Signup failed');
-      } finally {
+        const msg = err.message || 'Signup failed. Please try again.';
+        signupMsg.textContent = msg;
+        signupMsg.className = 'auth-message error';
+        if (window.App && window.App.UI) window.App.UI.showError(msg);
         btn.disabled = false;
         btn.textContent = 'Create Account';
       }
