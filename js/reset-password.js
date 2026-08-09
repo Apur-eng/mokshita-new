@@ -1,51 +1,122 @@
-const form = document.getElementById("form-reset-password");
-const messageBox = document.getElementById("reset-message");
+/* reset-password.js */
 
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
+'use strict';
 
-  const password = document.getElementById("new-password").value;
-  const confirmPassword = document.getElementById("confirm-password").value;
+document.addEventListener('DOMContentLoaded', async () => {
+  const formReset       = document.getElementById('form-reset-password');
+  const btnUpdate       = document.getElementById('btn-update-password');
+  const newPwdInput     = document.getElementById('new-password');
+  const confirmPwdInput = document.getElementById('confirm-password');
+  const msgEl           = document.getElementById('reset-message');
 
-  if (password.length < 8) {
-    messageBox.innerText = "Password must be at least 8 characters";
-    return;
-  }
+  // Supabase password-recovery links contain: ?token_hash=xxx&type=recovery
+  // OR ?access_token=xxx&refresh_token=xxx&type=recovery (implicit / hash flow)
+  const urlParams    = new URLSearchParams(window.location.search);
+  const hashParams   = new URLSearchParams(window.location.hash.substring(1));
 
-  if (password !== confirmPassword) {
-    messageBox.innerText = "Passwords do not match";
-    return;
-  }
+  const tokenHash    = urlParams.get('token_hash') || hashParams.get('token_hash');
+  const type         = urlParams.get('type') || hashParams.get('type') || 'recovery';
+  const accessToken  = urlParams.get('access_token') || hashParams.get('access_token');
+  const refreshToken = urlParams.get('refresh_token') || hashParams.get('refresh_token');
 
-  try {
-    const hash = window.location.hash;
-    const params = new URLSearchParams(hash.substring(1));
-    const access_token = params.get("access_token");
-    const refresh_token = params.get("refresh_token");
+  const hasValidToken = tokenHash || (accessToken && refreshToken);
 
-    if (!access_token || !refresh_token) {
-      throw new Error("No access token or refresh token found in the URL. Please request a new password reset link.");
+  function showError(message) {
+    if (window.App && window.App.UI) window.App.UI.showError(message);
+    if (msgEl) {
+      msgEl.textContent = message;
+      msgEl.className = 'auth-message error';
     }
+    if (btnUpdate) btnUpdate.disabled = true;
+  }
 
-    await window.supabase.auth.setSession({
-      access_token,
-      refresh_token
+  // Handle ONLY type === "recovery"
+  if (type !== 'recovery') {
+    showError('Invalid link: link type must be recovery.');
+    return;
+  }
+
+  if (!hasValidToken) {
+    showError('Invalid or expired password reset link. Please request a new one.');
+    return;
+  }
+
+  if (formReset) {
+    formReset.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const newPassword     = newPwdInput.value;
+      const confirmPassword = confirmPwdInput.value;
+
+      if (newPassword.length < 8) {
+        if (window.App && window.App.UI) window.App.UI.showError('Password must be at least 8 characters long.');
+        return;
+      }
+
+      if (newPassword !== confirmPassword) {
+        if (window.App && window.App.UI) window.App.UI.showError('Passwords do not match.');
+        return;
+      }
+
+      const originalText = btnUpdate.innerText;
+      btnUpdate.innerText = 'Updating...';
+      btnUpdate.disabled = true;
+
+      try {
+        if (!window.supabase) {
+          throw new Error('Supabase client is not initialized.');
+        }
+
+        // 1. Establish session using the recovery tokens if not already established
+        if (tokenHash) {
+          const { error: verifyError } = await window.supabase.auth.verifyOtp({
+            token_hash: tokenHash,
+            type: 'recovery'
+          });
+          if (verifyError) throw verifyError;
+        } else if (accessToken && refreshToken) {
+          const { error: sessionError } = await window.supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken
+          });
+          if (sessionError) throw sessionError;
+        }
+
+        // 2. Perform password update
+        const { error } = await window.supabase.auth.updateUser({
+          password: newPassword
+        });
+
+        if (error) throw error;
+
+        // Success
+        if (window.App && window.App.UI) window.App.UI.showSuccess('Password updated successfully!');
+        if (msgEl) {
+          msgEl.textContent = 'Password updated successfully!';
+          msgEl.className = 'auth-message success';
+        }
+        
+        // Clear custom auth tokens
+        localStorage.removeItem('mokshita_token');
+        
+        // Sign out user to make them login with the new password
+        await window.supabase.auth.signOut();
+
+        setTimeout(() => {
+          window.location.href = 'login.html';
+        }, 1500);
+
+      } catch (err) {
+        console.error(err);
+        const errMsg = err.message || 'An unexpected error occurred.';
+        if (window.App && window.App.UI) window.App.UI.showError(errMsg);
+        if (msgEl) {
+          msgEl.textContent = errMsg;
+          msgEl.className = 'auth-message error';
+        }
+        btnUpdate.innerText = originalText;
+        btnUpdate.disabled = false;
+      }
     });
-
-    const { error } = await window.supabase.auth.updateUser({
-      password: password
-    });
-
-    if (error) throw error;
-
-    messageBox.innerText = "✅ Password updated successfully!";
-
-    setTimeout(() => {
-      window.location.href = "/login.html";
-    }, 2000);
-
-  } catch (err) {
-    console.error(err);
-    messageBox.innerText = "❌ Failed to reset password: " + err.message;
   }
 });

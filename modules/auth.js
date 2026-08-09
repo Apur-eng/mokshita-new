@@ -4,22 +4,131 @@
 window.App = window.App || {};
 
 window.App.Auth = (function() {
+    let supabaseLoadingPromise = null;
+
+    function ensureSupabaseLoaded() {
+        if (window.supabase) return Promise.resolve();
+        if (supabaseLoadingPromise) return supabaseLoadingPromise;
+
+        supabaseLoadingPromise = new Promise((resolve, reject) => {
+            // First check if the script is already in the document
+            const existingScript = document.querySelector('script[src*="supabase-js"]');
+            if (existingScript) {
+                if (typeof supabase !== 'undefined') {
+                    initializeSupabaseClient();
+                    resolve();
+                    return;
+                }
+                existingScript.addEventListener('load', () => {
+                    initializeSupabaseClient();
+                    resolve();
+                });
+                existingScript.addEventListener('error', reject);
+                return;
+            }
+
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+            script.onload = () => {
+                initializeSupabaseClient();
+                resolve();
+            };
+            script.onerror = (err) => {
+                supabaseLoadingPromise = null;
+                reject(err);
+            };
+            document.head.appendChild(script);
+        });
+
+        return supabaseLoadingPromise;
+    }
+
+    function initializeSupabaseClient() {
+        if (typeof supabase !== 'undefined' && !window.supabase) {
+            const url = window.SUPABASE_URL || 'https://syycggibqwvqravtdhhx.supabase.co';
+            const key = window.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5eWNnZ2licXd2cXJhdnRkaGh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1MjA4NDIsImV4cCI6MjEwMDA5Njg0Mn0.1A50etqd78iHVgQC7uVUM2fRovssgn3M9yfdXVkQHTM';
+            window.supabase = supabase.createClient(url, key);
+            setupAuthListener(window.supabase);
+        }
+    }
+
+    function setupAuthListener(supabaseInstance) {
+        if (supabaseInstance) {
+            supabaseInstance.auth.onAuthStateChange((event, session) => {
+                if (session) {
+                    localStorage.setItem('mokshita_token', session.access_token);
+                } else {
+                    localStorage.removeItem('mokshita_token');
+                }
+            });
+        }
+    }
+
+    // Set up state change listener on the pre-existing client if it exists
+    if (window.supabase) {
+        setupAuthListener(window.supabase);
+    }
+
     return {
         /**
-         * Fetch current session/user from API. Returns { session, user, error }
+         * Fetch current session/user from Supabase client directly.
+         * Returns { session, user, error }
          */
         getCurrentUser: async function() {
-            const token = localStorage.getItem('mokshita_token');
-            if (!token) return { session: null, user: null, error: null };
+            try {
+                await ensureSupabaseLoaded();
+            } catch (e) {
+                console.error('Failed to load Supabase script dynamically:', e);
+            }
+
+            if (!window.supabase) {
+                // Fallback: check localStorage directly if Supabase failed to load
+                const localToken = localStorage.getItem('mokshita_token');
+                if (!localToken) return { session: null, user: null, error: null };
+                
+                try {
+                    const projectRef = window.SUPABASE_URL ? window.SUPABASE_URL.split('//')[1].split('.')[0] : 'syycggibqwvqravtdhhx';
+                    const sbTokenKey = `sb-${projectRef}-auth-token`;
+                    const sbData = localStorage.getItem(sbTokenKey);
+                    if (sbData) {
+                        const parsed = JSON.parse(sbData);
+                        if (parsed && parsed.user) {
+                            const user = {
+                                id: parsed.user.id,
+                                email: parsed.user.email,
+                                full_name: parsed.user.user_metadata?.full_name || parsed.user.user_metadata?.name || '',
+                                role: parsed.user.user_metadata?.role || 'customer'
+                            };
+                            return { session: { user }, user, error: null };
+                        }
+                    }
+                } catch (e) {
+                    console.error('Failed to parse Supabase local session:', e);
+                }
+                return { session: null, user: null, error: null };
+            }
             
             try {
-                const { data, error } = await window.apiService.auth.getMe();
+                const { data: { session }, error } = await window.supabase.auth.getSession();
                 if (error) {
-                    localStorage.removeItem('mokshita_token');
                     return { session: null, user: null, error };
                 }
-                // Return in format expected by legacy code (simulating session.user)
-                return { session: { user: data }, user: data, error: null };
+                if (!session) {
+                    localStorage.removeItem('mokshita_token');
+                    return { session: null, user: null, error: null };
+                }
+                
+                // Sync the token immediately
+                localStorage.setItem('mokshita_token', session.access_token);
+                
+                const user = {
+                    id: session.user.id,
+                    email: session.user.email,
+                    full_name: session.user.user_metadata?.full_name || session.user.user_metadata?.name || '',
+                    role: session.user.user_metadata?.role || 'customer'
+                };
+                
+                return { session: { user }, user, error: null };
             } catch (err) {
                 return { session: null, user: null, error: err };
             }
@@ -53,6 +162,13 @@ window.App.Auth = (function() {
 
         logout: async function(redirectUrl = 'index.html') {
             localStorage.removeItem('mokshita_token');
+            if (window.supabase) {
+                try {
+                    await window.supabase.auth.signOut();
+                } catch (e) {
+                    console.error('Supabase signOut error:', e);
+                }
+            }
             if (redirectUrl) {
                 window.location.replace(redirectUrl);
             } else {

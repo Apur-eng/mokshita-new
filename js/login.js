@@ -1,5 +1,5 @@
 /* ============================================================
-   API AUTHENTICATION LOGIC
+   API AUTHENTICATION LOGIC (Direct Supabase Version)
    ============================================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -50,6 +50,10 @@ document.addEventListener('DOMContentLoaded', () => {
       loginMsg.textContent = '';
 
       try {
+        if (!window.supabase) {
+          throw new Error('Supabase client is not initialized.');
+        }
+
         // Authenticate directly with Supabase instead of the backend
         const { data, error } = await window.supabase.auth.signInWithPassword({
           email,
@@ -74,12 +78,11 @@ document.addEventListener('DOMContentLoaded', () => {
           window.App.UI.showSuccess('Login successful');
         }
 
-        const urlParams   = new URLSearchParams(window.location.search);
-        const redirectUrl = urlParams.get('redirect') || 'account.html';
-        setTimeout(() => { window.location.replace(redirectUrl); }, 800);
+        // Redirect to dashboard.html on login success
+        setTimeout(() => { window.location.replace('dashboard.html'); }, 800);
 
       } catch (err) {
-        const msg = 'Invalid email or password';
+        const msg = err.message || 'Invalid email or password';
         loginMsg.textContent = msg;
         loginMsg.className = 'auth-message error';
         if (window.App && window.App.UI) {
@@ -119,27 +122,30 @@ document.addEventListener('DOMContentLoaded', () => {
       signupMsg.textContent = '';
 
       try {
-        const { data, error } = await window.apiService.auth.register(email, password, name);
+        if (!window.supabase) {
+          throw new Error('Supabase client is not initialized.');
+        }
 
-        if (error) throw new Error(error);
+        // SignUp directly with Supabase
+        const { data, error } = await window.supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: 'https://mokshitahandicrafts.com/verify.html',
+            data: {
+              full_name: name,
+              role: 'customer'
+            }
+          }
+        });
 
-        // Supabase requires email confirmation → backend returns token: null
-        // Do NOT store null as a token — that breaks all subsequent auth checks
-        if (data && data.token) {
-          localStorage.setItem('mokshita_token', data.token);
-          if (window.App && window.App.UI) window.App.UI.showSuccess('Account created! Redirecting...');
-          signupMsg.textContent = 'Account created! Redirecting...';
-          signupMsg.className = 'auth-message success';
-          setTimeout(() => { window.location.replace('account.html'); }, 800);
-        } else {
-          // Email confirmation required — do NOT redirect, just inform the user
-          signupMsg.textContent =
-            'Account created! Please check your email to verify your account before logging in.';
-          signupMsg.className = 'auth-message success';
-          if (window.App && window.App.UI)
-            window.App.UI.showSuccess('Check your email to verify your account.');
-          btn.disabled = false;
-          btn.textContent = 'Create Account';
+        if (error) throw error;
+
+        // Email confirmation is required - inform the user
+        signupMsg.textContent = 'Check your email for verification';
+        signupMsg.className = 'auth-message success';
+        if (window.App && window.App.UI) {
+          window.App.UI.showSuccess('Check your email for verification.');
         }
 
       } catch (err) {
@@ -147,6 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
         signupMsg.textContent = msg;
         signupMsg.className = 'auth-message error';
         if (window.App && window.App.UI) window.App.UI.showError(msg);
+      } finally {
         btn.disabled = false;
         btn.textContent = 'Create Account';
       }
@@ -162,10 +169,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
   
-  // Check initial session — redirect to account if already logged in
-  const urlParams = new URLSearchParams(window.location.search);
-  const redirectUrl = urlParams.get('redirect') || 'account.html';
-  window.App.Auth.requireGuest(redirectUrl).then(isGuest => {
+  // Check initial session — redirect to dashboard if already logged in
+  window.App.Auth.requireGuest('dashboard.html').then(isGuest => {
       if (isGuest) updateAuthUI(null);
   });
 
