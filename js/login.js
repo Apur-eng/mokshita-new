@@ -50,33 +50,41 @@ document.addEventListener('DOMContentLoaded', () => {
       loginMsg.textContent = '';
 
       try {
-        const { data, error } = await window.apiService.auth.login(email, password);
+        // Authenticate directly with Supabase instead of the backend
+        const { data, error } = await window.supabase.auth.signInWithPassword({
+          email,
+          password
+        });
 
-        if (error) throw new Error(error);
+        if (error) throw error;
 
-        // Save Supabase access_token returned by backend
-        if (data && data.token) {
-          localStorage.setItem('mokshita_token', data.token);
+        // Ensure session persists locally for backend API calls
+        const { data: { session } } = await window.supabase.auth.getSession();
+        if (session && session.access_token) {
+          localStorage.setItem('mokshita_token', session.access_token);
         }
 
         if (typeof window.syncGuestCart === 'function') {
           await window.syncGuestCart();
         }
 
-        loginMsg.textContent = 'Successfully logged in! Redirecting…';
+        loginMsg.textContent = 'Login successful';
         loginMsg.className = 'auth-message success';
-        if (window.App && window.App.UI) window.App.UI.showSuccess('Welcome back!');
+        if (window.App && window.App.UI) {
+          window.App.UI.showSuccess('Login successful');
+        }
 
         const urlParams   = new URLSearchParams(window.location.search);
         const redirectUrl = urlParams.get('redirect') || 'account.html';
         setTimeout(() => { window.location.replace(redirectUrl); }, 800);
 
       } catch (err) {
-        // Backend returns specific messages — surface them directly
-        const msg = err.message || 'Login failed. Please try again.';
+        const msg = 'Invalid email or password';
         loginMsg.textContent = msg;
         loginMsg.className = 'auth-message error';
-        if (window.App && window.App.UI) window.App.UI.showError(msg);
+        if (window.App && window.App.UI) {
+          window.App.UI.showError(msg);
+        }
       } finally {
         btn.disabled = false;
         btn.textContent = 'Sign In';

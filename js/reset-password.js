@@ -1,11 +1,3 @@
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-
-const SUPABASE_URL = "https://syycggibqwvqravtdhhx.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5eWNnZ2licXd2cXJhdnRkaGh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1MjA4NDIsImV4cCI6MjEwMDA5Njg0Mn0.1A50etqd78iHVgQC7uVUM2fRovssgn3M9yfdXVkQHTM"; // replace this
-
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-window.supabase = supabase;
-
 const form = document.getElementById("form-reset-password");
 const messageBox = document.getElementById("reset-message");
 
@@ -26,7 +18,21 @@ form.addEventListener("submit", async (e) => {
   }
 
   try {
-    const { error } = await supabase.auth.updateUser({
+    const hash = window.location.hash;
+    const params = new URLSearchParams(hash.substring(1));
+    const access_token = params.get("access_token");
+    const refresh_token = params.get("refresh_token");
+
+    if (!access_token || !refresh_token) {
+      throw new Error("No access token or refresh token found in the URL. Please request a new password reset link.");
+    }
+
+    await window.supabase.auth.setSession({
+      access_token,
+      refresh_token
+    });
+
+    const { error } = await window.supabase.auth.updateUser({
       password: password
     });
 
@@ -40,6 +46,6 @@ form.addEventListener("submit", async (e) => {
 
   } catch (err) {
     console.error(err);
-    messageBox.innerText = "❌ Failed to reset password";
+    messageBox.innerText = "❌ Failed to reset password: " + err.message;
   }
 });
