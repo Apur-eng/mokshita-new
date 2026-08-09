@@ -641,12 +641,24 @@
 (async function () {
   'use strict';
 
+  /* ── Hard-redirect fallback: if the script crashes for any
+     reason the spinner will never get stuck — redirect after 5s */
+  const _fallbackTimer = setTimeout(() => {
+    window.location.replace('login.html');
+  }, 5000);
+
+  /* ── Top-level error guard ───────────────────────────────── */
+  try {
+
   /* ── Config ──────────────────────────────────────────────── */
   const SUPABASE_URL      = window.SUPABASE_URL      || 'https://syycggibqwvqravtdhhx.supabase.co';
   const SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5eWNnZ2licXd2cXJhdnRkaGh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1MjA4NDIsImV4cCI6MjEwMDA5Njg0Mn0.1A50etqd78iHVgQC7uVUM2fRovssgn3M9yfdXVkQHTM';
   const BACKEND_URL       = window.BACKEND_URL        || 'https://mokshita-final-release.onrender.com';
 
-  /* ── Supabase client ─────────────────────────────────────── */
+  /* ── Supabase client (inside guard — creation errors are now caught) */
+  if (typeof supabase === 'undefined' || typeof supabase.createClient !== 'function') {
+    throw new Error('Supabase SDK not loaded.');
+  }
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   /* ── DOM refs ────────────────────────────────────────────── */
@@ -682,7 +694,7 @@
   async function doLogout() {
     localStorage.removeItem('mokshita_token');
     try { await sb.auth.signOut(); } catch (_) {}
-    window.location.replace('/login.html');
+    window.location.replace('login.html');
   }
 
   document.getElementById('btn-topnav-logout').addEventListener('click', doLogout);
@@ -692,27 +704,25 @@
   let currentUser = null;
   let accessToken = null;
 
-  try {
-    const { data: { session }, error } = await sb.auth.getSession();
+  const { data: { session }, error: sessionError } = await sb.auth.getSession();
 
-    if (error || !session) {
-      window.location.replace('/login.html');
-      return;
-    }
-
-    currentUser = session.user;
-    accessToken = session.access_token;
-
-    // Keep token in sync
-    localStorage.setItem('mokshita_token', accessToken);
-
-  } catch (err) {
-    console.error('[dashboard] session error:', err);
-    window.location.replace('/login.html');
+  if (sessionError || !session) {
+    console.warn('[dashboard] No session found, redirecting to login.');
+    window.location.replace('login.html');
     return;
   }
 
+  currentUser = session.user;
+  accessToken = session.access_token;
+
+  // Keep token in sync for backend API calls
+  localStorage.setItem('mokshita_token', accessToken);
+
+  /* ── Session confirmed — cancel fallback timer ───────────── */
+  clearTimeout(_fallbackTimer);
+
   /* ── Hide overlay ────────────────────────────────────────── */
+  const authOverlay = document.getElementById('auth-overlay');
   authOverlay.classList.add('hidden');
   setTimeout(() => { authOverlay.style.display = 'none'; }, 350);
 
@@ -891,6 +901,13 @@
       fetchOrders();
     }
   });
+
+  } catch (fatalErr) {
+    /* Top-level catch: any unexpected error → redirect to login */
+    console.error('[dashboard] Fatal error:', fatalErr);
+    clearTimeout(_fallbackTimer);
+    window.location.replace('login.html');
+  }
 
 })();
 </script>
