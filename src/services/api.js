@@ -25,8 +25,25 @@ const apiClient = axios.create({
   },
 });
 
-// ── Request interceptor — attach auth token ───────────────────────────────────
-apiClient.interceptors.request.use(config => {
+// ── Request interceptor — attach fresh Supabase auth token ──────────────────
+apiClient.interceptors.request.use(async config => {
+  // 1. Try to get a fresh token directly from Supabase client (most reliable)
+  try {
+    if (window.supabase && window.supabase.auth) {
+      const { data } = await window.supabase.auth.getSession();
+      const freshToken = data?.session?.access_token;
+      if (freshToken) {
+        // Keep localStorage in sync
+        localStorage.setItem('mokshita_token', freshToken);
+        config.headers.Authorization = `Bearer ${freshToken}`;
+        return config;
+      }
+    }
+  } catch (_) {
+    // Supabase not available — fall through to localStorage
+  }
+
+  // 2. Fallback: use stored token (set during login or auth state change)
   const token = localStorage.getItem('mokshita_token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -49,8 +66,16 @@ apiClient.interceptors.response.use(
         '(3) BACKEND_URL in config.js is correct.'
       );
     } else if (status === 401) {
+      // Token expired or invalid — clear it and redirect to login
       localStorage.removeItem('mokshita_token');
       window.dispatchEvent(new CustomEvent('auth:unauthorized'));
+      // Only redirect if not already on an auth page
+      const authPages = ['login.html', 'forgot-password.html', 'reset-password.html', 'verify.html'];
+      const isAuthPage = authPages.some(p => window.location.pathname.includes(p));
+      if (!isAuthPage) {
+        const returnUrl = encodeURIComponent(window.location.pathname + window.location.search);
+        window.location.replace(`login.html?redirect=${returnUrl}`);
+      }
     } else if (status === 500) {
       // Backend crash — most likely missing SUPABASE_URL/ANON_KEY env vars on Render
       console.error(

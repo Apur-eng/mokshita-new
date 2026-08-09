@@ -413,16 +413,19 @@ async function renderCart() {
   try {
     const { session } = await window.App.Auth.getCurrentUser();
     if (session) {
-      // Pre-fill email and name if logged in
-      document.getElementById('ship-email').value = session.user.email || '';
-      document.getElementById('ship-name').value = session.user.full_name || session.user.user_metadata?.full_name || '';
+      // Pre-fill email and name if logged in (safe null checks)
+      const shipEmail = document.getElementById('ship-email');
+      const shipName  = document.getElementById('ship-name');
+      if (shipEmail) shipEmail.value = session.user.email || '';
+      if (shipName)  shipName.value  = session.user.full_name || session.user.user_metadata?.full_name || '';
       if (session.user.profile) {
         const m = session.user.profile;
-        if (m.address_line) document.getElementById('ship-address').value = m.address_line;
-        if (m.phone) document.getElementById('ship-phone').value = m.phone;
-        if (m.city) document.getElementById('ship-city').value = m.city;
-        if (m.state) document.getElementById('ship-state').value = m.state;
-        if (m.pincode) document.getElementById('ship-pincode').value = m.pincode;
+        const safeSet = (id, val) => { const el = document.getElementById(id); if (el && val) el.value = val; };
+        safeSet('ship-address', m.address_line);
+        safeSet('ship-phone',   m.phone);
+        safeSet('ship-city',    m.city);
+        safeSet('ship-state',   m.state);
+        safeSet('ship-pincode', m.pincode);
       }
 
       // Fetch cart from backend API
@@ -765,7 +768,7 @@ function showConfirmation(orderNumber, addressData) {
           <h3 style="margin-bottom: 16px; border-bottom: 1px solid rgba(184, 106, 61,0.2); padding-bottom: 8px;">Order Summary</h3>
           <p><strong>Order Number:</strong> #${orderNumber}</p>
           <p><strong>Total Amount:</strong> \u20b9${cartTotal.toLocaleString('en-IN')}</p>
-          <p><strong>Payment Method:</strong> ${document.querySelector('input[name="payment_method"]:checked').value}</p>
+          <p><strong>Payment Method:</strong> ${document.querySelector('input[name="payment_method"]:checked')?.value || 'N/A'}</p>
           
           <h3 style="margin-top: 24px; margin-bottom: 16px; border-bottom: 1px solid rgba(184, 106, 61,0.2); padding-bottom: 8px;">Shipping Address</h3>
           <p>${addressData.name}</p>
