@@ -53,7 +53,9 @@ window.App.Auth = (function() {
     }
 
     function setupAuthListener(supabaseInstance) {
-        if (supabaseInstance) {
+        // Guard: supabaseInstance must be a real client (has .auth),
+        // not the CDN namespace object (which only has .createClient)
+        if (supabaseInstance && supabaseInstance.auth) {
             supabaseInstance.auth.onAuthStateChange((event, session) => {
                 if (session) {
                     localStorage.setItem('mokshita_token', session.access_token);
@@ -64,8 +66,8 @@ window.App.Auth = (function() {
         }
     }
 
-    // Set up state change listener on the pre-existing client if it exists
-    if (window.supabase) {
+    // Set up state change listener only if window.supabase is a real client instance
+    if (window.supabase && window.supabase.auth) {
         setupAuthListener(window.supabase);
     }
 
