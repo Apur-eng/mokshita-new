@@ -66,16 +66,12 @@ apiClient.interceptors.response.use(
         '(3) BACKEND_URL in config.js is correct.'
       );
     } else if (status === 401) {
-      // Token expired or invalid — clear it and redirect to login
+      // Token invalid/expired — clear it and signal the app
+      // NOTE: Do NOT redirect here. Individual pages/features decide what to do
+      // (e.g. cart falls back to localStorage, checkout prompts login explicitly)
       localStorage.removeItem('mokshita_token');
-      window.dispatchEvent(new CustomEvent('auth:unauthorized'));
-      // Only redirect if not already on an auth page
-      const authPages = ['login.html', 'forgot-password.html', 'reset-password.html', 'verify.html'];
-      const isAuthPage = authPages.some(p => window.location.pathname.includes(p));
-      if (!isAuthPage) {
-        const returnUrl = encodeURIComponent(window.location.pathname + window.location.search);
-        window.location.replace(`login.html?redirect=${returnUrl}`);
-      }
+      window.dispatchEvent(new CustomEvent('auth:unauthorized', { detail: { url } }));
+      console.warn(`[API] 401 Unauthorized on ${url} — token cleared.`);
     } else if (status === 500) {
       // Backend crash — most likely missing SUPABASE_URL/ANON_KEY env vars on Render
       console.error(

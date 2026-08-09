@@ -428,25 +428,32 @@ async function renderCart() {
         safeSet('ship-pincode', m.pincode);
       }
 
-      // Fetch cart from backend API
-      const { data: apiCart } = await window.apiService.cart.getCart();
-      if (apiCart && apiCart.items && apiCart.items.length > 0) {
-        apiCart.items.forEach(item => {
-          // Backend returns product details nested or via product_id
-          const localProd = (window.products || []).find(p =>
-            String(p.dbId) === String(item.product_id) || p.id === item.product_id
-          );
-          const name  = item.product_name  || (localProd && localProd.title) || 'Unknown Item';
-          const price = item.product_price || item.price || (localProd && localProd.price) || 0;
-          let   image = item.product_image || item.image_url || (localProd && localProd.mainImage) || '';
-          // Resolve relative backend image URLs to absolute
-          if (image && image.startsWith('/') && window.apiService) {
-            image = window.apiService.getBaseUrl() + image;
-          }
-          cartItems.push({ productId: item.product_id, quantity: item.quantity, price, name, image });
-        });
+      // Try backend cart first, fall back to localStorage on any failure
+      try {
+        const { data: apiCart, error: cartErr } = await window.apiService.cart.getCart();
+        if (!cartErr && apiCart && apiCart.items && apiCart.items.length > 0) {
+          apiCart.items.forEach(item => {
+            const localProd = (window.products || []).find(p =>
+              String(p.dbId) === String(item.product_id) || p.id === item.product_id
+            );
+            const name  = item.product_name  || (localProd && localProd.title) || 'Unknown Item';
+            const price = item.product_price || item.price || (localProd && localProd.price) || 0;
+            let   image = item.product_image || item.image_url || (localProd && localProd.mainImage) || '';
+            if (image && image.startsWith('/') && window.apiService) {
+              image = window.apiService.getBaseUrl() + image;
+            }
+            cartItems.push({ productId: item.product_id, quantity: item.quantity, price, name, image });
+          });
+        } else {
+          // Backend cart empty or 401/error — use localStorage
+          loadLocalCart(cartItems);
+        }
+      } catch (_apiErr) {
+        console.warn('[Cart] Backend cart unavailable, using localStorage cart.');
+        loadLocalCart(cartItems);
       }
     } else {
+      // Not logged in — use localStorage cart
       loadLocalCart(cartItems);
     }
   } catch (err) {
