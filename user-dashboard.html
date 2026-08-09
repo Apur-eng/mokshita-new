@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Dashboard — Mokshita Enterprises</title>
+  <meta name="description" content="View your profile, orders, and delivery status on Mokshita Enterprises." />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ══════════════════════════════════════════════════════════
+       DESIGN TOKENS
+    ══════════════════════════════════════════════════════════ */
+    :root {
+      --bg:          #0f0d0b;
+      --surface:     #181410;
+      --surface-2:   #201c17;
+      --border:      rgba(255,255,255,0.08);
+      --terra:       #ab4a3b;
+      --terra-light: #d4775f;
+      --text-1:      #f0ebe4;
+      --text-2:      rgba(240,235,228,0.65);
+      --text-3:      rgba(240,235,228,0.38);
+      --green:       #34d399;
+      --green-bg:    rgba(52,211,153,0.10);
+      --amber:       #fbbf24;
+      --amber-bg:    rgba(251,191,36,0.10);
+      --blue:        #60a5fa;
+      --blue-bg:     rgba(96,165,250,0.10);
+      --red:         #f87171;
+      --red-bg:      rgba(248,113,113,0.10);
+      --sidebar-w:   240px;
+      --radius:      14px;
+      --radius-sm:   8px;
+      --shadow:      0 4px 24px rgba(0,0,0,0.4);
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       RESET
+    ══════════════════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text-1);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; border: none; background: none; font: inherit; }
+
+    /* ══════════════════════════════════════════════════════════
+       AUTH GUARD OVERLAY
+    ══════════════════════════════════════════════════════════ */
+    #auth-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      z-index: 9999;
+      transition: opacity 0.3s;
+    }
+    #auth-overlay.hidden { opacity: 0; pointer-events: none; }
+
+    .overlay-spinner {
+      width: 44px;
+      height: 44px;
+      border: 3px solid rgba(255,255,255,0.1);
+      border-top-color: var(--terra);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    .overlay-label {
+      font-size: 0.875rem;
+      color: var(--text-3);
+      letter-spacing: 0.02em;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ══════════════════════════════════════════════════════════
+       TOP NAV
+    ══════════════════════════════════════════════════════════ */
+    .topnav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: 60px;
+      background: rgba(15,13,11,0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+    }
+
+    .topnav-logo {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+    .topnav-logo-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      color: var(--text-1);
+    }
+    .topnav-logo-sub {
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-3);
+    }
+
+    .topnav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .topnav-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--terra), var(--terra-light));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .topnav-email {
+      font-size: 0.8rem;
+      color: var(--text-2);
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .btn-topnav-logout {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 99px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-2);
+      font-size: 0.78rem;
+      font-weight: 500;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .btn-topnav-logout:hover {
+      background: var(--red-bg);
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       LAYOUT
+    ══════════════════════════════════════════════════════════ */
+    .dashboard-layout {
+      display: flex;
+      min-height: calc(100vh - 60px);
+    }
+
+    /* ── SIDEBAR ─────────────────────────────────────────────── */
+    .sidebar {
+      width: var(--sidebar-w);
+      flex-shrink: 0;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 28px 0;
+      position: sticky;
+      top: 60px;
+      height: calc(100vh - 60px);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-section-label {
+      padding: 0 20px 10px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-3);
+    }
+
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 10px 20px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-2);
+      border-left: 3px solid transparent;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+      width: 100%;
+      text-align: left;
+    }
+    .sidebar-item:hover {
+      background: rgba(255,255,255,0.04);
+      color: var(--text-1);
+    }
+    .sidebar-item.active {
+      background: rgba(171,74,59,0.10);
+      color: var(--terra-light);
+      border-left-color: var(--terra);
+    }
+    .sidebar-item svg { flex-shrink: 0; opacity: 0.7; }
+    .sidebar-item.active svg { opacity: 1; }
+
+    .sidebar-spacer { flex: 1; }
+
+    .sidebar-logout {
+      margin: 8px 12px 0;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-2);
+      transition: background 0.15s, color 0.15s;
+    }
+    .sidebar-logout:hover {
+      background: var(--red-bg);
+      color: var(--red);
+    }
+
+    /* ── MAIN CONTENT ────────────────────────────────────────── */
+    .main-content {
+      flex: 1;
+      padding: 32px;
+      overflow-y: auto;
+      max-width: 900px;
+    }
+
+    .panel { display: none; }
+    .panel.active { display: block; animation: fadeUp 0.25s ease both; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .panel-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-1);
+      margin-bottom: 4px;
+    }
+    .panel-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-3);
+      margin-bottom: 24px;
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       PROFILE CARD
+    ══════════════════════════════════════════════════════════ */
+    .profile-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .profile-hero {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 28px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .profile-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--terra), var(--terra-light));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+      box-shadow: 0 0 0 4px rgba(171,74,59,0.15);
+    }
+
+    .profile-hero-info h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-1);
+      margin-bottom: 2px;
+    }
+    .profile-hero-info p {
+      font-size: 0.85rem;
+      color: var(--text-2);
+    }
+
+    .profile-fields {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .profile-field label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 6px;
+    }
+    .profile-field-value {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-1);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      word-break: break-all;
+    }
+    .profile-field-value.mono {
+      font-family: 'Courier New', monospace;
+      font-size: 0.78rem;
+      color: var(--text-2);
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       ORDERS
+    ══════════════════════════════════════════════════════════ */
+    .orders-loading,
+    .orders-empty,
+    .orders-error {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 60px 20px;
+      text-align: center;
+      color: var(--text-3);
+      font-size: 0.9rem;
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+    }
+    .orders-loading .mini-spin {
+      width: 28px;
+      height: 28px;
+      border: 2px solid var(--border);
+      border-top-color: var(--terra);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    .orders-empty svg,
+    .orders-error svg { opacity: 0.4; }
+    .orders-error { border-color: rgba(248,113,113,0.3); color: var(--red); }
+    .orders-error p { color: var(--text-3); font-size: 0.82rem; margin-top: 4px; }
+
+    .order-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow);
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .order-card:hover {
+      border-color: rgba(255,255,255,0.14);
+      transform: translateY(-1px);
+    }
+
+    .order-card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .order-id {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-3);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+    .order-date {
+      font-size: 0.85rem;
+      color: var(--text-2);
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 99px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .status-badge .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+    .status-badge.pending   { background: var(--amber-bg); color: var(--amber); }
+    .status-badge.pending .dot { background: var(--amber); }
+    .status-badge.shipped   { background: var(--blue-bg);  color: var(--blue);  }
+    .status-badge.shipped .dot  { background: var(--blue); }
+    .status-badge.delivered { background: var(--green-bg); color: var(--green); }
+    .status-badge.delivered .dot { background: var(--green); animation: pulse-dot 2s infinite; }
+    .status-badge.cancelled { background: var(--red-bg);   color: var(--red);   }
+    .status-badge.cancelled .dot { background: var(--red); }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    .order-divider {
+      height: 1px;
+      background: var(--border);
+      margin-bottom: 16px;
+    }
+
+    .order-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .order-meta {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .order-meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .order-meta-item .meta-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-3);
+    }
+    .order-meta-item .meta-value {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-1);
+    }
+    .order-meta-item .meta-value.muted {
+      font-weight: 400;
+      color: var(--text-2);
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .sidebar {
+        display: none;
+      }
+      .main-content {
+        padding: 20px 16px;
+      }
+      .topnav-email { display: none; }
+      .profile-hero { flex-direction: column; align-items: flex-start; }
+      .order-card-header { flex-direction: column; }
+      .order-card-footer { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     AUTH GUARD OVERLAY
+══════════════════════════════════════════════════════════ -->
+<div id="auth-overlay" role="status" aria-label="Verifying session">
+  <div class="overlay-spinner"></div>
+  <span class="overlay-label">Verifying your session…</span>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     TOP NAV
+══════════════════════════════════════════════════════════ -->
+<nav class="topnav" aria-label="Dashboard navigation">
+  <a href="index.html" class="topnav-logo">
+    <span class="topnav-logo-title">Mokshita Enterprises</span>
+    <span class="topnav-logo-sub">Art &amp; Experiences</span>
+  </a>
+  <div class="topnav-right">
+    <div class="topnav-avatar" id="topnav-avatar">M</div>
+    <span class="topnav-email" id="topnav-email"></span>
+    <button class="btn-topnav-logout" id="btn-topnav-logout" aria-label="Sign out">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+        <polyline points="16 17 21 12 16 7"/>
+        <line x1="21" y1="12" x2="9" y2="12"/>
+      </svg>
+      Logout
+    </button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════════
+     LAYOUT
+══════════════════════════════════════════════════════════ -->
+<div class="dashboard-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" aria-label="Dashboard sidebar">
+    <div class="sidebar-section-label">Menu</div>
+
+    <button class="sidebar-item active" data-panel="profile" id="nav-profile">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+      </svg>
+      My Profile
+    </button>
+
+    <button class="sidebar-item" data-panel="orders" id="nav-orders">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <path d="M16 10a4 4 0 0 1-8 0"/>
+      </svg>
+      Orders
+    </button>
+
+    <div class="sidebar-spacer"></div>
+
+    <button class="sidebar-item sidebar-logout" id="btn-sidebar-logout">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+        <polyline points="16 17 21 12 16 7"/>
+        <line x1="21" y1="12" x2="9" y2="12"/>
+      </svg>
+      Sign Out
+    </button>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+
+    <!-- ── PROFILE PANEL ─────────────────────────────────────── -->
+    <section class="panel active" id="panel-profile" aria-label="Profile">
+      <h1 class="panel-title">My Profile</h1>
+      <p class="panel-subtitle">Your account information stored with Mokshita Enterprises.</p>
+
+      <div class="profile-card">
+        <div class="profile-hero">
+          <div class="profile-avatar" id="profile-avatar">M</div>
+          <div class="profile-hero-info">
+            <h2 id="profile-name">—</h2>
+            <p id="profile-email-display">—</p>
+          </div>
+        </div>
+        <div class="profile-fields">
+          <div class="profile-field">
+            <label>Email Address</label>
+            <div class="profile-field-value" id="pf-email">—</div>
+          </div>
+          <div class="profile-field">
+            <label>Full Name</label>
+            <div class="profile-field-value" id="pf-name">—</div>
+          </div>
+          <div class="profile-field">
+            <label>Account ID</label>
+            <div class="profile-field-value mono" id="pf-uid">—</div>
+          </div>
+          <div class="profile-field">
+            <label>Account Type</label>
+            <div class="profile-field-value">Customer</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── ORDERS PANEL ──────────────────────────────────────── -->
+    <section class="panel" id="panel-orders" aria-label="Order history">
+      <h1 class="panel-title">Order History</h1>
+      <p class="panel-subtitle">All orders placed using your account.</p>
+      <div id="orders-container">
+        <div class="orders-loading">
+          <div class="mini-spin"></div>
+          <span>Loading your orders…</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div><!-- /.dashboard-layout -->
+
+
+<!-- ══════════════════════════════════════════════════════════
+     SCRIPTS
+══════════════════════════════════════════════════════════ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+
+<script>
+(async function () {
+  'use strict';
+
+  /* ── Config ──────────────────────────────────────────────── */
+  const SUPABASE_URL      = window.SUPABASE_URL      || 'https://syycggibqwvqravtdhhx.supabase.co';
+  const SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5eWNnZ2licXd2cXJhdnRkaGh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1MjA4NDIsImV4cCI6MjEwMDA5Njg0Mn0.1A50etqd78iHVgQC7uVUM2fRovssgn3M9yfdXVkQHTM';
+  const BACKEND_URL       = window.BACKEND_URL        || 'https://mokshita-final-release.onrender.com';
+
+  /* ── Supabase client ─────────────────────────────────────── */
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  /* ── DOM refs ────────────────────────────────────────────── */
+  const authOverlay     = document.getElementById('auth-overlay');
+  const topnavAvatar    = document.getElementById('topnav-avatar');
+  const topnavEmail     = document.getElementById('topnav-email');
+  const profileAvatar   = document.getElementById('profile-avatar');
+  const profileName     = document.getElementById('profile-name');
+  const profileEmailDisp= document.getElementById('profile-email-display');
+  const pfEmail         = document.getElementById('pf-email');
+  const pfName          = document.getElementById('pf-name');
+  const pfUid           = document.getElementById('pf-uid');
+  const ordersContainer = document.getElementById('orders-container');
+
+  const panels          = document.querySelectorAll('.panel');
+  const navItems        = document.querySelectorAll('.sidebar-item[data-panel]');
+
+  /* ── Panel switching ─────────────────────────────────────── */
+  function switchPanel(panelId) {
+    panels.forEach(p => p.classList.remove('active'));
+    navItems.forEach(n => n.classList.remove('active'));
+    const target = document.getElementById('panel-' + panelId);
+    if (target) target.classList.add('active');
+    const navEl = document.querySelector(`.sidebar-item[data-panel="${panelId}"]`);
+    if (navEl) navEl.classList.add('active');
+  }
+
+  navItems.forEach(btn => {
+    btn.addEventListener('click', () => switchPanel(btn.dataset.panel));
+  });
+
+  /* ── Logout ──────────────────────────────────────────────── */
+  async function doLogout() {
+    localStorage.removeItem('mokshita_token');
+    try { await sb.auth.signOut(); } catch (_) {}
+    window.location.replace('/login.html');
+  }
+
+  document.getElementById('btn-topnav-logout').addEventListener('click', doLogout);
+  document.getElementById('btn-sidebar-logout').addEventListener('click', doLogout);
+
+  /* ── Auth guard ──────────────────────────────────────────── */
+  let currentUser = null;
+  let accessToken = null;
+
+  try {
+    const { data: { session }, error } = await sb.auth.getSession();
+
+    if (error || !session) {
+      window.location.replace('/login.html');
+      return;
+    }
+
+    currentUser = session.user;
+    accessToken = session.access_token;
+
+    // Keep token in sync
+    localStorage.setItem('mokshita_token', accessToken);
+
+  } catch (err) {
+    console.error('[dashboard] session error:', err);
+    window.location.replace('/login.html');
+    return;
+  }
+
+  /* ── Hide overlay ────────────────────────────────────────── */
+  authOverlay.classList.add('hidden');
+  setTimeout(() => { authOverlay.style.display = 'none'; }, 350);
+
+  /* ── Populate profile ────────────────────────────────────── */
+  const email    = currentUser.email || '—';
+  const fullName = currentUser.user_metadata?.full_name
+                || currentUser.user_metadata?.name
+                || '';
+  const uid      = currentUser.id || '—';
+  const initials = (fullName || email).charAt(0).toUpperCase();
+
+  topnavAvatar.textContent    = initials;
+  topnavEmail.textContent     = email;
+  profileAvatar.textContent   = initials;
+  profileName.textContent     = fullName || email;
+  profileEmailDisp.textContent= email;
+  pfEmail.textContent         = email;
+  pfName.textContent          = fullName || '—';
+  pfUid.textContent           = uid;
+
+  /* ── Fetch orders ────────────────────────────────────────── */
+  async function fetchOrders() {
+    try {
+      const token = accessToken || localStorage.getItem('mokshita_token');
+
+      if (!token) {
+        throw new Error('No access token available. Please log in again.');
+      }
+
+      const res = await fetch(`${BACKEND_URL}/api/orders/my-orders`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type':  'application/json'
+        }
+      });
+
+      if (res.status === 401) {
+        throw new Error('Session expired. Please log in again.');
+      }
+      if (!res.ok) {
+        throw new Error(`Server error (${res.status}). Please try again later.`);
+      }
+
+      const data = await res.json();
+      // Support both { orders: [...] } and raw array
+      const orders = Array.isArray(data) ? data : (data.orders || data.data || []);
+      renderOrders(orders);
+
+    } catch (err) {
+      console.error('[dashboard] orders fetch error:', err);
+      renderOrdersError(err.message);
+    }
+  }
+
+  /* ── Render helpers ──────────────────────────────────────── */
+  function formatDate(dateStr) {
+    if (!dateStr) return '—';
+    try {
+      return new Date(dateStr).toLocaleDateString('en-IN', {
+        day: 'numeric', month: 'short', year: 'numeric'
+      });
+    } catch (_) { return dateStr; }
+  }
+
+  function formatAmount(amount) {
+    if (amount == null) return '—';
+    return '₹' + Number(amount).toLocaleString('en-IN', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2
+    });
+  }
+
+  function statusClass(status) {
+    if (!status) return 'pending';
+    const s = status.toLowerCase();
+    if (s.includes('deliver')) return 'delivered';
+    if (s.includes('ship'))    return 'shipped';
+    if (s.includes('cancel'))  return 'cancelled';
+    return 'pending';
+  }
+
+  function statusLabel(status) {
+    if (!status) return 'Pending';
+    const s = status.toLowerCase();
+    if (s.includes('deliver')) return 'Delivered';
+    if (s.includes('ship'))    return 'Shipped';
+    if (s.includes('cancel'))  return 'Cancelled';
+    return 'Pending';
+  }
+
+  function renderOrders(orders) {
+    if (!orders || orders.length === 0) {
+      ordersContainer.innerHTML = `
+        <div class="orders-empty">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <path d="M16 10a4 4 0 0 1-8 0"/>
+          </svg>
+          <strong>No orders yet</strong>
+          <span>Your orders will appear here once you make a purchase.</span>
+          <a href="handicrafts.html" style="
+            margin-top:8px;
+            padding:8px 20px;
+            border-radius:99px;
+            background:rgba(171,74,59,0.15);
+            color:#d4775f;
+            font-size:0.82rem;
+            font-weight:600;
+            border:1px solid rgba(171,74,59,0.3);
+            text-decoration:none;
+          ">Shop Now →</a>
+        </div>`;
+      return;
+    }
+
+    const html = orders.map(order => {
+      const sClass = statusClass(order.status);
+      const sLabel = statusLabel(order.status);
+
+      return `
+        <article class="order-card">
+          <div class="order-card-header">
+            <div>
+              <div class="order-id"># ${order.id || order._id || order.order_id || '—'}</div>
+              <div class="order-date">${formatDate(order.created_at || order.date || order.createdAt)}</div>
+            </div>
+            <span class="status-badge ${sClass}">
+              <span class="dot"></span>
+              ${sLabel}
+            </span>
+          </div>
+          <div class="order-divider"></div>
+          <div class="order-card-footer">
+            <div class="order-meta">
+              <div class="order-meta-item">
+                <span class="meta-label">Total</span>
+                <span class="meta-value">${formatAmount(order.total || order.total_amount || order.amount)}</span>
+              </div>
+              <div class="order-meta-item">
+                <span class="meta-label">Expected Delivery</span>
+                <span class="meta-value muted">${formatDate(order.expected_delivery || order.delivery_date || order.estimatedDelivery) || 'TBD'}</span>
+              </div>
+              ${order.items_count != null ? `
+              <div class="order-meta-item">
+                <span class="meta-label">Items</span>
+                <span class="meta-value muted">${order.items_count}</span>
+              </div>` : ''}
+            </div>
+          </div>
+        </article>`;
+    }).join('');
+
+    ordersContainer.innerHTML = html;
+  }
+
+  function renderOrdersError(message) {
+    ordersContainer.innerHTML = `
+      <div class="orders-error">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <strong>Could not load orders</strong>
+        <p>${message || 'An unexpected error occurred. Please refresh and try again.'}</p>
+      </div>`;
+  }
+
+  /* ── Load orders when the orders tab is first opened ─────── */
+  let ordersLoaded = false;
+  document.getElementById('nav-orders').addEventListener('click', () => {
+    if (!ordersLoaded) {
+      ordersLoaded = true;
+      fetchOrders();
+    }
+  });
+
+})();
+</script>
+
+</body>
+</html>
