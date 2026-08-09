@@ -2,18 +2,13 @@
  * Mokshita — Runtime Backend Configuration
  * ─────────────────────────────────────────────────────────────────────────────
  * This file is loaded BEFORE api.js in every HTML page.
- * Update BACKEND_URL below after deploying the backend to Railway/Render.
- *
- * Steps:
- *  1. Deploy the backend to Railway → copy the generated URL
- *     (e.g. https://mokshita-backend-production.up.railway.app)
- *  2. Replace the value below with that URL
- *  3. Commit & push → Vercel auto-redeploys the frontend
+ * To switch environments, swap the active BACKEND_URL line below.
  */
 
-// ─── Replace this URL after your first Railway/Render deployment ──────────────
+// ─── PRODUCTION ───────────────────────────────────────────────────────────────
+// Backend  → Render:   https://mokshita-final-release.onrender.com
+// Frontend → Vercel:   https://mokshita.vercel.app
 window.BACKEND_URL = 'https://mokshita-final-release.onrender.com';
 
-// ─── Local development override ───────────────────────────────────────────────
-// If running locally, uncomment the line below (and comment out the line above):
+// ─── LOCAL DEVELOPMENT (comment the line above and uncomment below) ───────────
 // window.BACKEND_URL = 'http://localhost:5000';
