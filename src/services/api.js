@@ -9,8 +9,8 @@ const API_URL = (window.BACKEND_URL ? window.BACKEND_URL + '/api' : null)
       'Open config.js and set it to your Render backend URL. ' +
       'All API calls will fail until this is fixed.'
     );
-    // Last-resort fallback — works only in local dev, NEVER on Vercel
-    return 'http://localhost:3000/api';
+    // Last-resort fallback — local dev port 5000
+    return 'http://localhost:5000/api';
   })();
 
 console.log('[API] Base URL:', API_URL);

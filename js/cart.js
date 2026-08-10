@@ -126,33 +126,62 @@ window.updateQuantityFallback = async function(productId, change) {
 
 // ── Checkout: Cart → Orders ──────────────────────────────────
 window.checkoutToOrderFull = async function(addressData, paymentMethod, subtotal, shippingCost, totalAmount) {
-  // 8. PREVENT MULTIPLE REQUESTS (SAFE UX FIX)
+  // STEP 7: Prevent multiple requests
+  if (window.checkoutInProgress) {
+    console.log("Checkout already in progress, ignoring click.");
+    return { error: 'Checkout in progress. Please wait.' };
+  }
+  window.checkoutInProgress = true;
+
   const button = document.getElementById('btn-place-order');
-  if (button) button.disabled = true;
+  if (button) {
+    button.disabled = true;
+    button.textContent = 'Processing...';
+  }
 
   // --- ANTI-SPAM & RATE LIMITING ---
   const lastOrderTime = localStorage.getItem('mokshita_last_order');
   const now = Date.now();
   if (lastOrderTime && now - parseInt(lastOrderTime) < 60000) { // 1 min limit
-    if (button) button.disabled = false;
+    if (button) {
+      button.disabled = false;
+      button.textContent = 'Place Order';
+    }
+    window.checkoutInProgress = false;
     return { error: 'Please wait a minute before placing another order.' };
   }
   if (addressData.honeypot) {
-    if (button) button.disabled = false;
+    if (button) {
+      button.disabled = false;
+      button.textContent = 'Place Order';
+    }
+    window.checkoutInProgress = false;
     return { error: 'Spam detected.' };
   }
 
   // --- STRICT INPUT VALIDATION ---
   if (!addressData.name || addressData.name.trim().length < 2) {
-    if (button) button.disabled = false;
+    if (button) {
+      button.disabled = false;
+      button.textContent = 'Place Order';
+    }
+    window.checkoutInProgress = false;
     return { error: 'Please enter a valid name.' };
   }
   if (!addressData.phone || !/^[0-9\s\+\-]{10,15}$/.test(addressData.phone)) {
-    if (button) button.disabled = false;
+    if (button) {
+      button.disabled = false;
+      button.textContent = 'Place Order';
+    }
+    window.checkoutInProgress = false;
     return { error: 'Please enter a valid phone number.' };
   }
   if (!addressData.pincode || !/^[0-9]{5,6}$/.test(addressData.pincode)) {
-    if (button) button.disabled = false;
+    if (button) {
+      button.disabled = false;
+      button.textContent = 'Place Order';
+    }
+    window.checkoutInProgress = false;
     return { error: 'Please enter a valid 5 or 6 digit pincode.' };
   }
 
@@ -162,9 +191,15 @@ window.checkoutToOrderFull = async function(addressData, paymentMethod, subtotal
 
   if (!finalPaymentMethod) {
     alert("Please select a payment method");
-    if (button) button.disabled = false;
+    if (button) {
+      button.disabled = false;
+      button.textContent = 'Place Order';
+    }
+    window.checkoutInProgress = false;
     return { error: 'Please select a payment method' };
   }
+
+  const normalizedPaymentMethod = String(finalPaymentMethod).toUpperCase() === 'RAZORPAY' ? 'RAZORPAY' : 'COD';
   
   let cartItems = [];
   const local = JSON.parse(localStorage.getItem('mokshita_cart') || '[]');
@@ -178,51 +213,102 @@ window.checkoutToOrderFull = async function(addressData, paymentMethod, subtotal
       if (productData && productData.dbId) {
         actualProductId = productData.dbId;
       }
-      return { product_id: actualProductId, quantity: i.quantity };
+      const price = productData ? parseFloat(productData.price) : 0;
+      return { 
+          product_id: actualProductId, 
+          quantity: parseInt(i.quantity, 10) || 1,
+          price: price
+      };
   });
 
+  // STEP 3: Ensure items array is NOT empty
   if (cartItems.length === 0) {
-    if (button) button.disabled = false;
+    if (button) {
+      button.disabled = false;
+      button.textContent = 'Place Order';
+    }
+    window.checkoutInProgress = false;
     return { error: 'Cart is empty' };
   }
 
-  const orderPayload = {
-      name:          addressData.name,
-      phone:         addressData.phone,
-      email:         addressData.email,
-      address:       addressData.address,
-      landmark:      addressData.landmark,
-      city:          addressData.city,
-      state:         addressData.state,
-      pincode:       addressData.pincode,
-      country:       addressData.country,
-      payment_method: finalPaymentMethod,
-      items:         cartItems
+  // STEP 3: Ensure total_amount is calculated correctly
+  const calculatedSubtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const calculatedShipping = calculatedSubtotal > 5000 ? 0 : 250;
+  const calculatedTotal = calculatedSubtotal + calculatedShipping;
+  const total_amount = typeof totalAmount === 'number' && !isNaN(totalAmount) ? totalAmount : calculatedTotal;
+
+  // STEP 3: Ensure shipping_address is not empty/null
+  const shippingAddress = addressData.address || '';
+  if (!shippingAddress || shippingAddress.trim() === '') {
+    if (button) {
+      button.disabled = false;
+      button.textContent = 'Place Order';
+    }
+    window.checkoutInProgress = false;
+    return { error: 'Shipping address is required.' };
+  }
+
+  // STEP 6: Ensure token exists
+  const freshToken = await getFreshAuthToken();
+  const existingToken = localStorage.getItem("mokshita_token") || sessionStorage.getItem("mokshita_token");
+  const token = freshToken || existingToken;
+
+  if (!token) {
+    if (button) {
+      button.disabled = false;
+      button.textContent = 'Place Order';
+    }
+    window.checkoutInProgress = false;
+    alert("You must be logged in to place an order.");
+    window.location.href = "login.html?redirect=cart.html";
+    return { error: 'Authentication token is missing. Please log in again.' };
+  }
+
+  // STEP 2 & 4: Ensure payload structure is correct and naming uses snake_case
+  const payload = {
+      // Backend validator expected fields:
+      customer_name: addressData.name || '',
+      email:         addressData.email || '',
+      phone:         addressData.phone || '',
+      address_line:  shippingAddress,
+      city:          addressData.city || '',
+      state:         addressData.state || '',
+      pincode:       addressData.pincode || '',
+      landmark:      addressData.landmark || '',
+      country:       addressData.country || 'India',
+
+      // STEP 2 structure:
+      items:            cartItems,
+      total_amount:     total_amount,
+      shipping_address: shippingAddress,
+      payment_method:   normalizedPaymentMethod
   };
 
-  // 6. ENSURE PAYMENT METHOD IS SENT
-  orderPayload.paymentMethod = finalPaymentMethod;
+  // STEP 1: Add debug log before request
+  console.log("Checkout payload:", payload);
 
-  // 2. PATCH ONLY CHECKOUT API CALL
-  const freshToken = await getFreshAuthToken();
-  const existingToken = localStorage.getItem("mokshita_token");
-  const tokenToUse = freshToken || existingToken;
+  let response;
+  try {
+    // STEP 5: Add Authorization header
+    response = await window.apiService.orders.checkout(payload, {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      }
+    });
+  } catch (err) {
+    response = { data: null, error: err.message || err };
+  }
 
-  // 7. ADD NON-BREAKING DEBUG LOGS
-  console.log("Checkout token used:", tokenToUse);
-  console.log("Payment method:", finalPaymentMethod);
-
-  // 3. MODIFY FETCH HEADERS (SAFE MERGE)
-  const { data, error } = await window.apiService.orders.checkout(orderPayload, {
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${tokenToUse}`
-    }
-  });
+  const { data, error } = response;
 
   if (error) {
     console.error('[Checkout] Error creating order:', error);
-    if (button) button.disabled = false;
+    if (button) {
+      button.disabled = false;
+      button.textContent = 'Place Order';
+    }
+    window.checkoutInProgress = false;
     return { error: error };
   }
 
@@ -232,6 +318,8 @@ window.checkoutToOrderFull = async function(addressData, paymentMethod, subtotal
   console.log('[Checkout] Order created:', data.order.id);
   localStorage.setItem('mokshita_last_order', Date.now().toString());
   await updateCartUI();
+  
+  window.checkoutInProgress = false;
   return { success: true, orderId: data.order.id, orderNumber: data.order.order_number, total: data.order.total };
 }
 

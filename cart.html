@@ -741,18 +741,43 @@ async function placeOrderFinal() {
             handler: async function (response) {
                 btn.textContent = 'Verifying Payment...';
                 
-                // 3. Verify the payment server-side
-                const verifyResult = await window.apiService.payments.verifyPayment({
+                const freshToken = await getFreshAuthToken();
+                const existingToken = localStorage.getItem("mokshita_token") || localStorage.getItem("token");
+                const token = freshToken || existingToken;
+
+                const payload = {
                     razorpay_payment_id: response.razorpay_payment_id,
                     razorpay_order_id: response.razorpay_order_id,
                     razorpay_signature: response.razorpay_signature,
-                    order_id: localOrderId
-                });
+                    order_db_id: localOrderId
+                };
 
-                if (verifyResult.data && verifyResult.data.success) {
-                    showConfirmation(checkoutResult.orderNumber, addressData);
-                } else {
-                    window.App.UI.showError(verifyResult.error || 'Payment verification failed. If money was deducted, contact support.');
+                // STEP 3: Add console logs
+                console.log("Verifying payment:", payload);
+
+                try {
+                    // STEP 1 & 4: Call backend with Authorization token
+                    const res = await fetch(`${window.BACKEND_URL}/api/payments/verify`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": "Bearer " + token
+                        },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const data = await res.json();
+                    
+                    // STEP 2: Handle response
+                    if (res.ok && data.success) {
+                        alert("Payment successful");
+                        showConfirmation(checkoutResult.orderNumber, addressData);
+                    } else {
+                        throw new Error(data.message || "Payment verification failed");
+                    }
+                } catch (err) {
+                    console.error("Payment verification error:", err);
+                    alert("Payment verification failed");
                     btn.textContent = 'Place Order';
                     btn.disabled = false;
                 }
