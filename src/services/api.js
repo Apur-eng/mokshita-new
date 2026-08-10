@@ -29,8 +29,9 @@ const apiClient = axios.create({
 apiClient.interceptors.request.use(async config => {
   // 1. Try to get a fresh token directly from Supabase client (most reliable)
   try {
-    if (window.supabase && window.supabase.auth) {
-      const { data } = await window.supabase.auth.getSession();
+    const client = window.supabaseClient || (window.supabase && window.supabase.auth ? window.supabase : null);
+    if (client && client.auth) {
+      const { data } = await client.auth.getSession();
       const freshToken = data?.session?.access_token;
       if (freshToken) {
         // Keep localStorage in sync

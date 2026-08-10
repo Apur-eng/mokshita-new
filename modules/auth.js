@@ -44,24 +44,32 @@ window.App.Auth = (function() {
         return supabaseLoadingPromise;
     }
 
+    function getSupabaseInstance() {
+        return window.supabaseClient || (window.supabase && window.supabase.auth ? window.supabase : null);
+    }
+
     function initializeSupabaseClient() {
-        // Only create a client if one doesn't already exist (check .auth, not just truthiness)
-        if (typeof supabase !== 'undefined' && !(window.supabase && window.supabase.auth)) {
+        const current = getSupabaseInstance();
+        if (current) {
+            setupAuthListener(current);
+            return;
+        }
+        if (typeof supabase !== 'undefined' && typeof supabase.createClient === 'function') {
             const url = window.SUPABASE_URL || 'https://syycggibqwvqravtdhhx.supabase.co';
             const key = window.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5eWNnZ2licXd2cXJhdnRkaGh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1MjA4NDIsImV4cCI6MjEwMDA5Njg0Mn0.1A50etqd78iHVgQC7uVUM2fRovssgn3M9yfdXVkQHTM';
-            window.supabase = supabase.createClient(url, key);
-            setupAuthListener(window.supabase);
+            const client = supabase.createClient(url, key);
+            window.supabaseClient = client;
+            window.supabase = client;
+            setupAuthListener(client);
         }
     }
 
     function setupAuthListener(supabaseInstance) {
-        // Guard: supabaseInstance must be a real client (has .auth),
-        // not the CDN namespace object (which only has .createClient)
         if (supabaseInstance && supabaseInstance.auth) {
             supabaseInstance.auth.onAuthStateChange((event, session) => {
-                if (session) {
+                if (session && session.access_token) {
                     localStorage.setItem('mokshita_token', session.access_token);
-                } else {
+                } else if (event === 'SIGNED_OUT') {
                     localStorage.removeItem('mokshita_token');
                 }
             });
@@ -85,7 +93,8 @@ window.App.Auth = (function() {
                 console.error('Failed to load Supabase script dynamically:', e);
             }
 
-            if (!window.supabase || !window.supabase.auth) {
+            const sbClient = getSupabaseInstance();
+            if (!sbClient) {
                 // Fallback: check localStorage directly if Supabase failed to load
                 const localToken = localStorage.getItem('mokshita_token');
                 if (!localToken) return { session: null, user: null, error: null };
@@ -113,7 +122,7 @@ window.App.Auth = (function() {
             }
             
             try {
-                const { data: { session }, error } = await window.supabase.auth.getSession();
+                const { data: { session }, error } = await sbClient.auth.getSession();
                 if (error) {
                     return { session: null, user: null, error };
                 }

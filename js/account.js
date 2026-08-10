@@ -126,7 +126,20 @@ async function loadOrders(user) {
     </div>`;
 
   try {
-    const { data: orders, error } = await window.apiService.orders.getMyOrders();
+    let { data: orders, error } = await window.apiService.orders.getMyOrders();
+
+    // If auth failed, attempt a session sync retry
+    if (error && (String(error).includes('Auth failed') || String(error).includes('401') || String(error).includes('Unauthorized'))) {
+      if (window.App && window.App.Auth) {
+        const authRes = await window.App.Auth.getCurrentUser();
+        if (authRes && authRes.session && authRes.session.access_token) {
+          localStorage.setItem('mokshita_token', authRes.session.access_token);
+          const retry = await window.apiService.orders.getMyOrders();
+          orders = retry.data;
+          error = retry.error;
+        }
+      }
+    }
 
     if (error) throw new Error(error);
 

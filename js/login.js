@@ -50,12 +50,13 @@ document.addEventListener('DOMContentLoaded', () => {
       loginMsg.textContent = '';
 
       try {
-        if (!window.supabase) {
+        const sb = window.supabaseClient || (window.supabase && window.supabase.auth ? window.supabase : null);
+        if (!sb) {
           throw new Error('Supabase client is not initialized.');
         }
 
         // Authenticate directly with Supabase instead of the backend
-        const { data, error } = await window.supabase.auth.signInWithPassword({
+        const { data, error } = await sb.auth.signInWithPassword({
           email,
           password
         });
@@ -63,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (error) throw error;
 
         // Ensure session persists locally for backend API calls
-        const { data: { session } } = await window.supabase.auth.getSession();
+        const { data: { session } } = await sb.auth.getSession();
         if (session && session.access_token) {
           localStorage.setItem('mokshita_token', session.access_token);
         }
@@ -122,16 +123,17 @@ document.addEventListener('DOMContentLoaded', () => {
       signupMsg.textContent = '';
 
       try {
-        if (!window.supabase) {
+        const sb = window.supabaseClient || (window.supabase && window.supabase.auth ? window.supabase : null);
+        if (!sb) {
           throw new Error('Supabase client is not initialized.');
         }
 
         // SignUp directly with Supabase
-        const { data, error } = await window.supabase.auth.signUp({
+        const { data, error } = await sb.auth.signUp({
           email,
           password,
           options: {
-            emailRedirectTo: 'https://mokshitahandicrafts.com/verify.html',
+            emailRedirectTo: 'https://www.mokshitahandicrafts.com/verify.html',
             data: {
               full_name: name,
               role: 'customer'

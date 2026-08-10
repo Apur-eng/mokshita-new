@@ -1,6 +1,6 @@
 /* supabase-client.js
  * Initializes the Supabase client using the UMD build (loaded via CDN <script> tag).
- * window.supabaseClient is available globally to all subsequent scripts.
+ * Exposes the created client globally as both window.supabaseClient AND window.supabase.
  */
 
 (function () {
@@ -14,8 +14,27 @@
     return;
   }
 
-  window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  // If window.supabase is already a client instance (has .auth), don't recreate
+  if (window.supabase && window.supabase.auth) {
+    window.supabaseClient = window.supabase;
+    return;
+  }
+
+  const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // Set BOTH references to the created client instance so all scripts share the exact same session
+  window.supabaseClient = client;
+  window.supabase       = client;
+
+  // Sync token whenever auth state changes
+  client.auth.onAuthStateChange((event, session) => {
+    if (session && session.access_token) {
+      localStorage.setItem('mokshita_token', session.access_token);
+    } else if (event === 'SIGNED_OUT') {
+      localStorage.removeItem('mokshita_token');
+    }
+  });
 
   // Debug log — confirms client is ready
-  console.log('[Supabase] Client initialized:', window.supabaseClient);
+  console.log('[Supabase] Client initialized globally as window.supabaseClient & window.supabase');
 })();
