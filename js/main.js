@@ -6,12 +6,19 @@
 'use strict';
 
 /* ─── PAGE LOADER ────────────────────────────────────────── */
-window.addEventListener('load', () => {
+function hideLoader() {
   const loader = document.getElementById('page-loader');
   if (loader) {
-    setTimeout(() => loader.classList.add('hidden'), 600);
+    loader.classList.add('hidden');
   }
-});
+}
+if (document.readyState === 'complete') {
+  setTimeout(hideLoader, 600);
+} else {
+  window.addEventListener('load', () => {
+    setTimeout(hideLoader, 600);
+  });
+}
 
 /* ─── NAV SCROLL BEHAVIOR ────────────────────────────────── */
 const nav = document.getElementById('main-nav');
