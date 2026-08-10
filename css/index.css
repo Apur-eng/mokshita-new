@@ -2802,3 +2802,599 @@
 @media (max-width: 480px) {
   .cd-strip { grid-template-columns: repeat(6, 180px); }
 }
+
+/* ============================================================
+   🔥 HOMEPAGE E-COMMERCE STYLES — HIGH CONVERSION E-COMMERCE
+   ============================================================ */
+
+/* ── Section Wrapper ─────────────────────────────────────── */
+.home-featured-section {
+  padding: 72px 5% 80px;
+  background: #F8F5EF;
+  position: relative;
+  border-bottom: 1px solid rgba(201, 168, 106, 0.15);
+}
+
+.home-featured-inner {
+  max-width: 1320px;
+  margin: 0 auto;
+}
+
+/* ── Section Header Row (title + controls side by side) ─── */
+.home-section-header-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.home-section-eyebrow {
+  display: inline-block;
+  font-size: 0.68rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #C9A86A;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.home-section-title {
+  font-family: 'Cinzel', 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  font-weight: 400;
+  color: #1F1F1F;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.home-section-sub {
+  font-size: 0.95rem;
+  color: #666666;
+  line-height: 1.6;
+  margin-top: 10px;
+}
+
+/* ── Scroll Controls (arrows + view all) ─────────────────── */
+.featured-scroll-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.featured-scroll-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(201, 168, 106, 0.5);
+  background: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #1F1F1F;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.featured-scroll-btn:hover {
+  background: #C9A86A;
+  border-color: #C9A86A;
+  color: #FFFFFF;
+  transform: scale(1.08);
+}
+
+/* ── Single-Row Horizontal Scroll Track ──────────────────── */
+.featured-scroll-track {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;          /* ← CRITICAL: prevents cards wrapping to next line */
+  gap: 20px;
+  overflow-x: auto;
+  overflow-y: visible;
+  scroll-behavior: smooth;
+  padding-bottom: 12px;
+  /* Hide scrollbar while keeping scroll functionality */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.featured-scroll-track::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Product Card ────────────────────────────────────────── */
+.home-product-card {
+  background: #FFFFFF;
+  border-radius: 14px;
+  border: 1px solid rgba(201, 168, 106, 0.2);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  /* Enforce fixed card width — crucial for single row */
+  flex: 0 0 auto;
+  min-width: 240px;
+  max-width: 240px;
+  width: 240px;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.3s ease,
+              border-color 0.3s ease;
+  position: relative;
+}
+
+.home-product-card:hover {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.09);
+  border-color: rgba(201, 168, 106, 0.5);
+}
+
+/* ── Image Wrap ──────────────────────────────────────────── */
+.home-product-img-wrap {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  background: #F4EFE6;
+}
+
+.home-product-img-wrap img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.home-product-card:hover .home-product-img-wrap img {
+  transform: scale(1.07);
+}
+
+/* ── Badges ──────────────────────────────────────────────── */
+.home-product-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: #2F5D50;
+  color: #FFFFFF;
+  font-size: 0.63rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 4px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  z-index: 2;
+}
+
+.home-product-tag {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #1F1F1F;
+  font-size: 0.63rem;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 4px;
+  z-index: 2;
+  backdrop-filter: blur(4px);
+}
+
+/* ── Quick Add Hover Overlay ─────────────────────────────── */
+.home-product-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 16px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 3;
+}
+
+.home-product-card:hover .home-product-overlay {
+  opacity: 1;
+}
+
+.home-product-quickadd {
+  width: 100%;
+  background: #1F1F1F;
+  color: #FFFFFF;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.home-product-quickadd:hover {
+  background: #C9A86A;
+  transform: translateY(-2px);
+}
+
+/* ── Card Body ───────────────────────────────────────────── */
+.home-product-info {
+  padding: 16px 14px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.home-product-meta {
+  margin-bottom: 6px;
+}
+
+.home-product-rating {
+  font-size: 0.7rem;
+  color: #C9A86A;
+  font-weight: 600;
+}
+
+.home-product-title {
+  font-family: 'Cinzel', 'Playfair Display', serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.35;
+  margin-bottom: 10px;
+  color: #1F1F1F;
+  /* Clamp to 2 lines */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.home-product-title a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.home-product-title a:hover {
+  color: #C9A86A;
+}
+
+.home-product-footer {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 10px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.home-product-price-box {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.home-product-price {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1F1F1F;
+}
+
+.home-product-oldprice {
+  font-size: 0.77rem;
+  color: #999999;
+  text-decoration: line-through;
+}
+
+.btn-home-atc-icon {
+  background: #F8F5EF;
+  border: 1px solid rgba(201, 168, 106, 0.3);
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1F1F1F;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.btn-home-atc-icon:hover {
+  background: #C9A86A;
+  color: #FFFFFF;
+  border-color: #C9A86A;
+  transform: scale(1.1);
+}
+
+/* ── CTA Button Variants ─────────────────────────────────── */
+.home-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: #1F1F1F;
+  color: #F8F5EF;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.home-cta-btn:hover {
+  background: #C9A86A;
+  color: #1F1F1F;
+  transform: translateY(-2px);
+}
+
+.home-cta-btn--sm {
+  padding: 10px 18px;
+  font-size: 0.72rem;
+}
+
+/* ── Category Showcases Section ──────────────────────────── */
+.home-categories-section {
+  padding: 80px 5% 90px;
+  background: #FFFFFF;
+}
+
+.home-categories-inner {
+  max-width: 1320px;
+  margin: 0 auto;
+}
+
+.home-cat-row {
+  margin-bottom: 60px;
+}
+
+.home-cat-row:last-child {
+  margin-bottom: 0;
+}
+
+.home-cat-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.home-cat-badge {
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #C9A86A;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.home-cat-title {
+  font-family: 'Cinzel', 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #1F1F1F;
+}
+
+.home-cat-link {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #1F1F1F;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.home-cat-link:hover {
+  color: #C9A86A;
+}
+
+/* ── Skeleton Loading ────────────────────────────────────── */
+.home-product-card--skeleton {
+  pointer-events: none;
+  min-width: 240px;
+  max-width: 240px;
+  width: 240px;
+}
+
+.skeleton-img {
+  width: 100%;
+  height: 220px;
+  background: linear-gradient(90deg, #EFECE6 25%, #F8F5EF 50%, #EFECE6 75%);
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.5s infinite;
+}
+
+.skeleton-body {
+  padding: 16px;
+}
+
+.skeleton-line {
+  height: 12px;
+  background: linear-gradient(90deg, #EFECE6 25%, #F8F5EF 50%, #EFECE6 75%);
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.5s infinite;
+  margin-bottom: 8px;
+  border-radius: 4px;
+}
+
+.skeleton-line.short { width: 40%; }
+.skeleton-line.full { width: 100%; }
+.skeleton-line.med { width: 70%; }
+
+@keyframes skeletonShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .home-featured-section,
+  .home-categories-section {
+    padding: 50px 4% 60px;
+  }
+
+  .home-section-header-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .featured-scroll-controls {
+    align-self: flex-end;
+  }
+
+  /* Cards slightly narrower on mobile for edge peek effect */
+  .home-product-card {
+    min-width: 200px;
+    max-width: 200px;
+    width: 200px;
+  }
+
+  .home-product-card--skeleton {
+    min-width: 200px;
+    max-width: 200px;
+    width: 200px;
+  }
+
+  .home-product-img-wrap,
+  .home-product-img-wrap img {
+    height: 190px;
+  }
+
+  .home-cat-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-section-title {
+    font-size: 1.6rem;
+  }
+
+  .home-product-card {
+    min-width: 180px;
+    max-width: 180px;
+    width: 180px;
+  }
+
+  .home-product-card--skeleton {
+    min-width: 180px;
+    max-width: 180px;
+    width: 180px;
+  }
+
+  .home-product-img-wrap,
+  .home-product-img-wrap img {
+    height: 170px;
+  }
+
+  .home-cta-btn--sm {
+    display: none;
+  }
+}
+
+/* ============================================================
+   🆕 TRUST SECTION & SPACING FIX
+   ============================================================ */
+
+/* Spacing Fix */
+section {
+  margin: 80px 0;
+}
+section.hero {
+  margin: 0;
+}
+
+/* Trust Section Styles */
+.trust-section {
+  padding: 80px 5%;
+  background: var(--bg);
+}
+
+.trust-section .container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.trust-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+}
+
+.trust-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 40px 24px;
+  text-align: center;
+  border-radius: var(--r-md, 10px);
+  box-shadow: 0 4px 16px rgba(74, 52, 38, 0.04);
+  transition: transform var(--t-mid) var(--ease), box-shadow var(--t-mid) var(--ease), border-color var(--t-mid) var(--ease);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.trust-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 12px 30px rgba(74, 52, 38, 0.08);
+  border-color: var(--gold);
+}
+
+.trust-card-icon {
+  margin-bottom: 20px;
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.trust-card-title {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.trust-card-desc {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .trust-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .trust-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .trust-section {
+    padding: 60px 20px;
+  }
+}
+

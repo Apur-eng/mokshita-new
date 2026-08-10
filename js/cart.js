@@ -49,7 +49,7 @@ async function addToCart(productId, quantity = 1) {
     actualProductId = productData.dbId;
   }
 
-  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   if (!uuidRegex.test(actualProductId)) {
     console.error('[Cart] Cannot add to cart, actualProductId is not a UUID:', actualProductId);
     if (window.App && window.App.UI) window.App.UI.showError('Error adding to cart. Product data invalid.');
@@ -220,6 +220,19 @@ window.checkoutToOrderFull = async function(addressData, paymentMethod, subtotal
           price: price
       };
   });
+
+  // Validate that all product IDs are UUIDs (reject fallback slugs)
+  const isProdCheckout = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1' && !window.location.hostname.startsWith('192.168.');
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  const invalidItem = cartItems.find(item => !uuidRegex.test(item.product_id));
+  if (invalidItem) {
+    if (button) {
+      button.disabled = false;
+      button.textContent = 'Place Order';
+    }
+    window.checkoutInProgress = false;
+    return { error: 'Some items in your cart are not available for purchase. Please refresh the page to load the active catalog.' };
+  }
 
   // STEP 3: Ensure items array is NOT empty
   if (cartItems.length === 0) {

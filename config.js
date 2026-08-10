@@ -7,11 +7,8 @@
  */
 
 // ─── Production Render backend ────────────────────────────────────────────────
-// window.BACKEND_URL = 'https://mokshita-final-release.onrender.com';
-
-// ─── Cross-Laptop / Local development backend ─────────────────────────────────
-// Set Laptop B's IP address below (e.g., 'http://192.168.1.50:5000') when running across laptops:
-window.BACKEND_URL = window.BACKEND_URL || 'http://localhost:5000';
+const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.');
+window.BACKEND_URL = window.BACKEND_URL || (isLocalhost ? 'http://localhost:5000' : 'https://mokshita-final-release.onrender.com');
 
 // ─── Supabase Configuration ───────────────────────────────────────────────────
 window.SUPABASE_URL = 'https://syycggibqwvqravtdhhx.supabase.co';
