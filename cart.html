@@ -548,7 +548,7 @@ async function renderCart() {
       </div>`;
   });
 
-  cartShipping = cartSubtotal > 5000 ? 0 : 250; // Example shipping logic
+  cartShipping = cartSubtotal >= 999 ? 0 : 99; // Free shipping over ₹999 else ₹99
   cartTotal = cartSubtotal + (currentStep > 1 ? cartShipping : 0);
 
   subtotalEl.innerText = '\u20b9' + cartSubtotal.toLocaleString('en-IN');
@@ -692,114 +692,117 @@ async function placeOrderFinal() {
         btn.textContent = 'Creating Order...';
         btn.disabled = true;
 
-        // 1. Create a pending order securely on the backend
-        const checkoutResult = await checkoutToOrderFull(
-            addressData, 'RAZORPAY', cartSubtotal, cartShipping, cartTotal
-        );
+        try {
+            // 1. Create order on backend — backend also creates Razorpay order and returns its details
+            const checkoutResult = await checkoutToOrderFull(
+                addressData, 'RAZORPAY', cartSubtotal, cartShipping, cartTotal
+            );
 
-        if (!checkoutResult.success) {
-            window.App.UI.showError(checkoutResult.error || 'Failed to create order. Please try again.');
-            btn.textContent = 'Place Order';
-            btn.disabled = false;
-            return;
-        }
-
-        const localOrderId = checkoutResult.orderId;
-
-        // 2. Create Razorpay order on the backend with authoritative amount
-        const rzpResponse = await window.apiService.payments.createOrder(localOrderId);
-        if (rzpResponse.error || !rzpResponse.data.success) {
-            window.App.UI.showError(rzpResponse.error || 'Failed to initialize payment gateway.');
-            btn.textContent = 'Place Order';
-            btn.disabled = false;
-            return;
-        }
-
-        const razorpay_order_id = rzpResponse.data.razorpay_order_id;
-        const amountInPaise = rzpResponse.data.amount;
-
-        const rzpOptions = {
-            key:         'rzp_test_Sj4dSjgJB6rQmF', // Ensure this is just the public key
-            amount:      amountInPaise,
-            currency:    'INR',
-            order_id:    razorpay_order_id,
-            name:        'Mokshita Enterprises',
-            description: 'Handcrafted Art & Experiences',
-            image:       'images/logo.png',
-            prefill: {
-                name:    addressData.name,
-                email:   addressData.email,
-                contact: addressData.phone,
-            },
-            notes: {
-                address: addressData.address + ', ' + addressData.city
-            },
-            theme: {
-                color: '#c26a3d'
-            },
-            // Called on successful payment
-            handler: async function (response) {
-                btn.textContent = 'Verifying Payment...';
-                
-                const freshToken = await getFreshAuthToken();
-                const existingToken = localStorage.getItem("mokshita_token") || localStorage.getItem("token");
-                const token = freshToken || existingToken;
-
-                const payload = {
-                    razorpay_payment_id: response.razorpay_payment_id,
-                    razorpay_order_id: response.razorpay_order_id,
-                    razorpay_signature: response.razorpay_signature,
-                    order_db_id: localOrderId
-                };
-
-                // STEP 3: Add console logs
-                console.log("Verifying payment:", payload);
-
-                try {
-                    // STEP 1 & 4: Call backend with Authorization token
-                    const res = await fetch(`${window.BACKEND_URL}/api/payments/verify`, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": "Bearer " + token
-                        },
-                        body: JSON.stringify(payload)
-                    });
-
-                    const data = await res.json();
-                    
-                    // STEP 2: Handle response
-                    if (res.ok && data.success) {
-                        alert("Payment successful");
-                        showConfirmation(checkoutResult.orderNumber, addressData);
-                    } else {
-                        throw new Error(data.message || "Payment verification failed");
-                    }
-                } catch (err) {
-                    console.error("Payment verification error:", err);
-                    alert("Payment verification failed");
-                    btn.textContent = 'Place Order';
-                    btn.disabled = false;
-                }
-            },
-            modal: {
-                // User closed the popup without paying
-                ondismiss: function () {
-                    window.App.UI.showError('Payment cancelled. Your order is pending in your account.');
-                    btn.textContent = 'Retry Payment';
-                    btn.disabled = false;
-                }
+            if (!checkoutResult.success) {
+                window.App.UI.showError(checkoutResult.error || 'Failed to create order. Please try again.');
+                return;
             }
-        };
 
-        const rzp = new Razorpay(rzpOptions);
-        rzp.on('payment.failed', function (response) {
-            window.App.UI.showError('Payment failed: ' + (response.error.description || 'Please try again.'));
-            btn.textContent = 'Retry Payment';
-            btn.disabled = false;
-        });
-        rzp.open();
-        return; 
+            const localOrderId        = checkoutResult.orderId;
+            // Use backend-provided Razorpay credentials — NO extra createOrder() call needed
+            const razorpay_order_id   = checkoutResult.razorpay_order_id;
+            const razorpay_key_id     = checkoutResult.razorpay_key_id;
+            const amountInPaise       = checkoutResult.amount;
+
+            if (!razorpay_order_id) {
+                window.App.UI.showError('Payment gateway could not be initialized. Please try again.');
+                return;
+            }
+
+            const rzpOptions = {
+                key:         razorpay_key_id,
+                amount:      amountInPaise,
+                currency:    checkoutResult.currency || 'INR',
+                order_id:    razorpay_order_id,
+                name:        'Mokshita Enterprises',
+                description: 'Handcrafted Art & Experiences',
+                image:       'images/logo.png',
+                prefill: {
+                    name:    addressData.name,
+                    email:   addressData.email,
+                    contact: addressData.phone,
+                },
+                notes: {
+                    address: addressData.address + ', ' + addressData.city
+                },
+                theme: {
+                    color: '#c26a3d'
+                },
+                handler: async function (response) {
+                    btn.textContent = 'Verifying Payment...';
+
+                    const freshToken   = await getFreshAuthToken();
+                    const existingToken = localStorage.getItem("mokshita_token") || localStorage.getItem("token");
+                    const token = freshToken || existingToken;
+
+                    const payload = {
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        razorpay_order_id:   response.razorpay_order_id,
+                        razorpay_signature:  response.razorpay_signature,
+                        order_db_id:         localOrderId
+                    };
+
+                    console.log("Verifying payment:", payload);
+
+                    try {
+                        const res = await fetch(`${window.BACKEND_URL}/api/payments/verify`, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type":  "application/json",
+                                "Authorization": "Bearer " + token
+                            },
+                            body: JSON.stringify(payload)
+                        });
+
+                        const data = await res.json();
+
+                        if (res.ok && data.success) {
+                            window.App.UI.showSuccess('Payment successful!');
+                            showConfirmation(checkoutResult.orderNumber, addressData);
+                        } else {
+                            throw new Error(data.message || "Payment verification failed");
+                        }
+                    } catch (err) {
+                        console.error("Payment verification error:", err);
+                        window.App.UI.showError('Payment verification failed. Contact support with your order #' + checkoutResult.orderNumber);
+                        btn.textContent = 'Place Order';
+                        btn.disabled = false;
+                    }
+                },
+                modal: {
+                    ondismiss: function () {
+                        window.App.UI.showError('Payment cancelled. Your order is pending in your account.');
+                        btn.textContent = 'Retry Payment';
+                        btn.disabled = false;
+                    }
+                }
+            };
+
+            const rzp = new Razorpay(rzpOptions);
+            rzp.on('payment.failed', function (response) {
+                window.App.UI.showError('Payment failed: ' + (response.error.description || 'Please try again.'));
+                btn.textContent = 'Retry Payment';
+                btn.disabled = false;
+            });
+            rzp.open();
+            return;
+
+        } catch (err) {
+            console.error('[Razorpay Checkout Error]:', err);
+            window.App.UI.showError(err.message || 'An unexpected error occurred during checkout.');
+        } finally {
+            // Only re-enable button if Razorpay modal was NOT successfully opened
+            if (!window.checkoutInProgress) {
+                btn.textContent = 'Place Order';
+                btn.disabled = false;
+            }
+        }
+        return;
     }
 
     // ── COD / Bank Transfer Flow ──────────────────────────────

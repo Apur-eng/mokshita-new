@@ -245,7 +245,7 @@ window.checkoutToOrderFull = async function(addressData, paymentMethod, subtotal
 
   // STEP 3: Ensure total_amount is calculated correctly
   const calculatedSubtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const calculatedShipping = calculatedSubtotal > 5000 ? 0 : 250;
+  const calculatedShipping = calculatedSubtotal >= 999 ? 0 : 99;
   const calculatedTotal = calculatedSubtotal + calculatedShipping;
   const total_amount = typeof totalAmount === 'number' && !isNaN(totalAmount) ? totalAmount : calculatedTotal;
 
@@ -332,7 +332,16 @@ window.checkoutToOrderFull = async function(addressData, paymentMethod, subtotal
   await updateCartUI();
   
   window.checkoutInProgress = false;
-  return { success: true, orderId: data.order.id, orderNumber: data.order.order_number, total: data.order.total };
+  return {
+    success: true,
+    orderId: data.order.id,
+    orderNumber: data.order.order_number,
+    total: data.order.total,
+    razorpay_order_id: data.razorpay_order_id || data.razorpayOrderId || (data.order && data.order.razorpay_order_id),
+    razorpay_key_id: data.razorpay_key_id || data.razorpayKeyId || (data.order && data.order.razorpay_key_id),
+    amount: data.amount || (data.order && data.order.total ? Math.round(data.order.total * 100) : null),
+    currency: data.currency || 'INR'
+  };
 }
 
 // ── Inject CSS ───────────────────────────────────────────────
