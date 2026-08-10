@@ -752,12 +752,14 @@
   </script>
   <script>
     /* ── NAV SCROLL ──────────────────────────────────── */
-    const nav = document.getElementById('main-nav');
-    function updateNav() {
-      nav.classList.toggle('scrolled', window.scrollY > 48);
-    }
-    window.addEventListener('scroll', updateNav, { passive: true });
-    updateNav();
+    (function () {
+      const navEl = document.getElementById('main-nav');
+      function updateNav() {
+        if (navEl) navEl.classList.toggle('scrolled', window.scrollY > 48);
+      }
+      window.addEventListener('scroll', updateNav, { passive: true });
+      updateNav();
+    })();
 
     /* ── HAMBURGER ───────────────────────────────────── */
     const hamburger = document.getElementById('nav-hamburger');

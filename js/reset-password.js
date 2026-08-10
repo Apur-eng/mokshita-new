@@ -63,19 +63,19 @@ document.addEventListener('DOMContentLoaded', async () => {
       btnUpdate.disabled = true;
 
       try {
-        if (!window.supabase) {
+        if (!window.supabaseClient) {
           throw new Error('Supabase client is not initialized.');
         }
 
         // 1. Establish session using the recovery tokens if not already established
         if (tokenHash) {
-          const { error: verifyError } = await window.supabase.auth.verifyOtp({
+          const { error: verifyError } = await window.supabaseClient.auth.verifyOtp({
             token_hash: tokenHash,
             type: 'recovery'
           });
           if (verifyError) throw verifyError;
         } else if (accessToken && refreshToken) {
-          const { error: sessionError } = await window.supabase.auth.setSession({
+          const { error: sessionError } = await window.supabaseClient.auth.setSession({
             access_token: accessToken,
             refresh_token: refreshToken
           });
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         // 2. Perform password update
-        const { error } = await window.supabase.auth.updateUser({
+        const { error } = await window.supabaseClient.auth.updateUser({
           password: newPassword
         });
 
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         localStorage.removeItem('mokshita_token');
         
         // Sign out user to make them login with the new password
-        await window.supabase.auth.signOut();
+        await window.supabaseClient.auth.signOut();
 
         setTimeout(() => {
           window.location.href = 'login.html';
