@@ -705,14 +705,16 @@ async function placeOrderFinal() {
 
             const localOrderId        = checkoutResult.orderId;
 
+            const keyId = checkoutResult.razorpayKeyId || 'rzp_live_T4iT5VUR4mqItD';
+
             // 6. Add guards
             if (!checkoutResult.razorpayOrderId) throw new Error("Missing Razorpay order ID");
             if (!checkoutResult.amountPaise) throw new Error("Missing amount");
-            if (!checkoutResult.razorpayKeyId) throw new Error("Missing key");
+            if (!keyId) throw new Error("Missing key");
 
             // 4 & 5. Map fields to options correctly
             const options = {
-                key:         checkoutResult.razorpayKeyId,
+                key:         keyId,
                 amount:      checkoutResult.amountPaise,
                 currency:    checkoutResult.currency || 'INR',
                 order_id:    checkoutResult.razorpayOrderId,
