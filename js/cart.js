@@ -221,8 +221,7 @@ window.checkoutToOrderFull = async function(addressData, paymentMethod, subtotal
       };
   });
 
-  // Validate that all product IDs are UUIDs (reject fallback slugs)
-  const isProdCheckout = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1' && !window.location.hostname.startsWith('192.168.');
+  // Validate that all product IDs are UUIDs (reject fallback slugs — always enforced)
   const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   const invalidItem = cartItems.find(item => !uuidRegex.test(item.product_id));
   if (invalidItem) {

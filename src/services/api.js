@@ -9,9 +9,8 @@ const API_URL = (window.BACKEND_URL ? window.BACKEND_URL + '/api' : null)
       'Open config.js and set it to your Render backend URL. ' +
       'All API calls will fail until this is fixed.'
     );
-    // Last-resort fallback
-    const isProd = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1' && !window.location.hostname.startsWith('192.168.');
-    return isProd ? 'https://mokshita-final-release.onrender.com/api' : 'http://localhost:5000/api';
+    // Last-resort fallback — always use Render
+    return 'https://mokshita-final-release.onrender.com/api';
   })();
 
 console.log('[API] Base URL:', API_URL);

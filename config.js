@@ -6,9 +6,8 @@
  * After any re-deploy on Render the URL stays the same — no changes needed.
  */
 
-// ─── Production Render backend ────────────────────────────────────────────────
-const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.');
-window.BACKEND_URL = window.BACKEND_URL || (isLocalhost ? 'http://localhost:5000' : 'https://mokshita-final-release.onrender.com');
+// ─── Production Render backend (always) ──────────────────────────────────────
+window.BACKEND_URL = 'https://mokshita-final-release.onrender.com';
 
 // ─── Supabase Configuration ───────────────────────────────────────────────────
 window.SUPABASE_URL = 'https://syycggibqwvqravtdhhx.supabase.co';
