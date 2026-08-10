@@ -143,7 +143,17 @@ async function loadOrders(user) {
 
     if (error) throw new Error(error);
 
-    if (!orders || orders.length === 0) {
+    // Normalize response payload (handle array, { orders: [...] }, or { data: [...] })
+    let ordersList = [];
+    if (Array.isArray(orders)) {
+      ordersList = orders;
+    } else if (orders && Array.isArray(orders.orders)) {
+      ordersList = orders.orders;
+    } else if (orders && Array.isArray(orders.data)) {
+      ordersList = orders.data;
+    }
+
+    if (!ordersList || ordersList.length === 0) {
       container.innerHTML = `
         <div class="orders-empty">
           <div class="orders-empty-icon">
@@ -160,11 +170,11 @@ async function loadOrders(user) {
       return;
     }
 
-    container.innerHTML = `<div class="orders-list">${orders.map(order => renderOrderCard(order)).join('')}</div>`;
+    container.innerHTML = `<div class="orders-list">${ordersList.map(order => renderOrderCard(order)).join('')}</div>`;
 
     // Fallback: if user doesn't have an address, populate from the latest order
-    if (!user.address_line && orders.length > 0) {
-      const latestOrder = orders[0];
+    if (!user.address_line && ordersList.length > 0) {
+      const latestOrder = ordersList[0];
       const addressPanel = document.getElementById('panel-addresses');
       if (addressPanel && latestOrder.address_line) {
         addressPanel.innerHTML = `
