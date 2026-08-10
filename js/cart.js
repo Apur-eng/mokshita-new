@@ -340,6 +340,9 @@ window.checkoutToOrderFull = async function(addressData, paymentMethod, subtotal
     razorpay_order_id: data.razorpay_order_id || data.razorpayOrderId || (data.order && data.order.razorpay_order_id),
     razorpay_key_id: data.razorpay_key_id || data.razorpayKeyId || (data.order && data.order.razorpay_key_id),
     amount: data.amount || (data.order && data.order.total ? Math.round(data.order.total * 100) : null),
+    razorpayOrderId: data.razorpayOrderId || data.razorpay_order_id || (data.order && (data.order.razorpayOrderId || data.order.razorpay_order_id)),
+    razorpayKeyId: data.razorpayKeyId || data.razorpay_key_id || (data.order && (data.order.razorpayKeyId || data.order.razorpay_key_id)),
+    amountPaise: data.amountPaise || data.amount || (data.order && data.order.total ? Math.round(data.order.total * 100) : null),
     currency: data.currency || 'INR'
   };
 }

@@ -704,21 +704,18 @@ async function placeOrderFinal() {
             }
 
             const localOrderId        = checkoutResult.orderId;
-            // Use backend-provided Razorpay credentials — NO extra createOrder() call needed
-            const razorpay_order_id   = checkoutResult.razorpay_order_id;
-            const razorpay_key_id     = checkoutResult.razorpay_key_id;
-            const amountInPaise       = checkoutResult.amount;
 
-            if (!razorpay_order_id) {
-                window.App.UI.showError('Payment gateway could not be initialized. Please try again.');
-                return;
-            }
+            // 6. Add guards
+            if (!checkoutResult.razorpayOrderId) throw new Error("Missing Razorpay order ID");
+            if (!checkoutResult.amountPaise) throw new Error("Missing amount");
+            if (!checkoutResult.razorpayKeyId) throw new Error("Missing key");
 
-            const rzpOptions = {
-                key:         razorpay_key_id,
-                amount:      amountInPaise,
+            // 4 & 5. Map fields to options correctly
+            const options = {
+                key:         checkoutResult.razorpayKeyId,
+                amount:      checkoutResult.amountPaise,
                 currency:    checkoutResult.currency || 'INR',
-                order_id:    razorpay_order_id,
+                order_id:    checkoutResult.razorpayOrderId,
                 name:        'Mokshita Enterprises',
                 description: 'Handcrafted Art & Experiences',
                 image:       'images/logo.png',
@@ -783,7 +780,12 @@ async function placeOrderFinal() {
                 }
             };
 
-            const rzp = new Razorpay(rzpOptions);
+            // 2. Add logs before Razorpay init
+            console.log("CHECKOUT RESULT:", checkoutResult);
+            console.log("RAZORPAY OPTIONS:", options);
+
+            // 7. Ensure proper init
+            const rzp = new Razorpay(options);
             rzp.on('payment.failed', function (response) {
                 window.App.UI.showError('Payment failed: ' + (response.error.description || 'Please try again.'));
                 btn.textContent = 'Retry Payment';
