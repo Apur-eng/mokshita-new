@@ -8,34 +8,47 @@
   <meta name="robots" content="noindex, nofollow" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
   <style>
     /* ══════════════════════════════════════════════════════════
        DESIGN TOKENS
+       Warm Premium Artisan · Editorial · Boutique Luxury
     ══════════════════════════════════════════════════════════ */
     :root {
-      --bg:          #0f0d0b;
-      --surface:     #181410;
-      --surface-2:   #201c17;
-      --border:      rgba(255,255,255,0.08);
-      --terra:       #ab4a3b;
-      --terra-light: #d4775f;
-      --text-1:      #f0ebe4;
-      --text-2:      rgba(240,235,228,0.65);
-      --text-3:      rgba(240,235,228,0.38);
-      --green:       #34d399;
-      --green-bg:    rgba(52,211,153,0.10);
-      --amber:       #fbbf24;
-      --amber-bg:    rgba(251,191,36,0.10);
-      --blue:        #60a5fa;
-      --blue-bg:     rgba(96,165,250,0.10);
-      --red:         #f87171;
-      --red-bg:      rgba(248,113,113,0.10);
+      /* Backgrounds — warm ivory layered system matching styles.css */
+      --bg:          #F6F1E8;
+      --bg-alt:      #EFE6D8;
+      --surface:     #FFFFFF;
+      --surface-2:   #FAF7F2;
+      --border:      rgba(176,141,87,0.15);
+      
+      /* Gold accent — muted luxury matching styles.css */
+      --gold:        #B08D57;
+      --gold-hover:  #8F7041;
+      --gold-light:  #C9AF85;
+      
+      /* Legacy aliases for dashboard consistency */
+      --terra:       #B08D57;
+      --terra-light: #C9AF85;
+      --text-1:      #2E241B;
+      --text-2:      #6E6257;
+      --text-3:      #8F8175;
+      
+      /* Status badges */
+      --green:       #3A7D60;
+      --green-bg:    rgba(58,125,96,0.10);
+      --amber:       #C89B3C;
+      --amber-bg:    rgba(200,155,60,0.10);
+      --blue:        #4A7E9C;
+      --blue-bg:     rgba(74,126,156,0.10);
+      --red:         #B95544;
+      --red-bg:      rgba(185,85,68,0.10);
+      
       --sidebar-w:   240px;
-      --radius:      14px;
-      --radius-sm:   8px;
-      --shadow:      0 4px 24px rgba(0,0,0,0.4);
+      --radius:      12px;
+      --radius-sm:   6px;
+      --shadow:      0 8px 24px rgba(46,36,27,0.04);
     }
 
     /* ══════════════════════════════════════════════════════════
@@ -74,14 +87,14 @@
     .overlay-spinner {
       width: 44px;
       height: 44px;
-      border: 3px solid rgba(255,255,255,0.1);
-      border-top-color: var(--terra);
+      border: 3px solid rgba(176,141,87,0.15);
+      border-top-color: var(--gold);
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
     }
     .overlay-label {
       font-size: 0.875rem;
-      color: var(--text-3);
+      color: var(--text-2);
       letter-spacing: 0.02em;
     }
 
@@ -94,8 +107,8 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      height: 60px;
-      background: rgba(15,13,11,0.85);
+      height: 70px;
+      background: rgba(246,241,232,0.92);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
@@ -111,16 +124,18 @@
       line-height: 1.2;
     }
     .topnav-logo-title {
-      font-size: 0.95rem;
-      font-weight: 700;
-      letter-spacing: 0.03em;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
       color: var(--text-1);
     }
     .topnav-logo-sub {
-      font-size: 0.65rem;
-      letter-spacing: 0.14em;
+      font-size: 0.62rem;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
       color: var(--text-3);
+      font-family: 'Inter', sans-serif;
     }
 
     .topnav-right {
@@ -133,12 +148,12 @@
       width: 34px;
       height: 34px;
       border-radius: 50%;
-      background: linear-gradient(135deg, var(--terra), var(--terra-light));
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 0.85rem;
-      font-weight: 700;
+      font-weight: 600;
       color: #fff;
       flex-shrink: 0;
     }
@@ -156,7 +171,7 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      padding: 6px 14px;
+      padding: 8px 16px;
       border-radius: 99px;
       border: 1px solid var(--border);
       background: transparent;
@@ -176,7 +191,7 @@
     ══════════════════════════════════════════════════════════ */
     .dashboard-layout {
       display: flex;
-      min-height: calc(100vh - 60px);
+      min-height: calc(100vh - 70px);
     }
 
     /* ── SIDEBAR ─────────────────────────────────────────────── */
@@ -187,8 +202,8 @@
       border-right: 1px solid var(--border);
       padding: 28px 0;
       position: sticky;
-      top: 60px;
-      height: calc(100vh - 60px);
+      top: 70px;
+      height: calc(100vh - 70px);
       overflow-y: auto;
       display: flex;
       flex-direction: column;
@@ -207,7 +222,7 @@
       display: flex;
       align-items: center;
       gap: 11px;
-      padding: 10px 20px;
+      padding: 12px 20px;
       font-size: 0.875rem;
       font-weight: 500;
       color: var(--text-2);
@@ -217,13 +232,13 @@
       text-align: left;
     }
     .sidebar-item:hover {
-      background: rgba(255,255,255,0.04);
+      background: var(--bg-alt);
       color: var(--text-1);
     }
     .sidebar-item.active {
-      background: rgba(171,74,59,0.10);
-      color: var(--terra-light);
-      border-left-color: var(--terra);
+      background: rgba(176,141,87,0.08);
+      color: var(--gold-hover);
+      border-left-color: var(--gold);
     }
     .sidebar-item svg { flex-shrink: 0; opacity: 0.7; }
     .sidebar-item.active svg { opacity: 1; }
@@ -232,7 +247,7 @@
 
     .sidebar-logout {
       margin: 8px 12px 0;
-      padding: 10px 14px;
+      padding: 12px 14px;
       border-radius: var(--radius-sm);
       display: flex;
       align-items: center;
@@ -250,39 +265,40 @@
     /* ── MAIN CONTENT ────────────────────────────────────────── */
     .main-content {
       flex: 1;
-      padding: 32px;
+      padding: 40px;
       overflow-y: auto;
-      max-width: 900px;
+      max-width: 960px;
     }
 
     .panel { display: none; }
     .panel.active { display: block; animation: fadeUp 0.25s ease both; }
 
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(10px); }
+      from { opacity: 0; transform: translateY(8px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
     .panel-title {
-      font-size: 1.3rem;
-      font-weight: 700;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 2rem;
+      font-weight: 500;
       color: var(--text-1);
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
     .panel-subtitle {
-      font-size: 0.85rem;
-      color: var(--text-3);
-      margin-bottom: 24px;
+      font-size: 0.9rem;
+      color: var(--text-2);
+      margin-bottom: 32px;
     }
 
     /* ══════════════════════════════════════════════════════════
        PROFILE CARD
     ══════════════════════════════════════════════════════════ */
     .profile-card {
-      background: var(--surface-2);
+      background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 28px;
+      padding: 32px;
       box-shadow: var(--shadow);
     }
 
@@ -299,20 +315,21 @@
       width: 64px;
       height: 64px;
       border-radius: 50%;
-      background: linear-gradient(135deg, var(--terra), var(--terra-light));
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 1.5rem;
-      font-weight: 700;
+      font-weight: 600;
       color: #fff;
       flex-shrink: 0;
-      box-shadow: 0 0 0 4px rgba(171,74,59,0.15);
+      box-shadow: 0 0 0 4px rgba(176,141,87,0.15);
     }
 
     .profile-hero-info h2 {
-      font-size: 1.1rem;
-      font-weight: 700;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.3rem;
+      font-weight: 500;
       color: var(--text-1);
       margin-bottom: 2px;
     }
@@ -340,15 +357,15 @@
       font-size: 0.9rem;
       font-weight: 500;
       color: var(--text-1);
-      background: var(--surface);
+      background: var(--surface-2);
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
-      padding: 10px 14px;
+      padding: 12px 16px;
       word-break: break-all;
     }
     .profile-field-value.mono {
       font-family: 'Courier New', monospace;
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       color: var(--text-2);
     }
 
@@ -364,35 +381,36 @@
       gap: 12px;
       padding: 60px 20px;
       text-align: center;
-      color: var(--text-3);
+      color: var(--text-2);
       font-size: 0.9rem;
       border: 1px dashed var(--border);
       border-radius: var(--radius);
+      background: var(--surface);
     }
     .orders-loading .mini-spin {
       width: 28px;
       height: 28px;
       border: 2px solid var(--border);
-      border-top-color: var(--terra);
+      border-top-color: var(--gold);
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
     }
     .orders-empty svg,
-    .orders-error svg { opacity: 0.4; }
-    .orders-error { border-color: rgba(248,113,113,0.3); color: var(--red); }
-    .orders-error p { color: var(--text-3); font-size: 0.82rem; margin-top: 4px; }
+    .orders-error svg { opacity: 0.5; color: var(--gold); }
+    .orders-error { border-color: rgba(185,85,68,0.3); color: var(--red); }
+    .orders-error p { color: var(--text-2); font-size: 0.82rem; margin-top: 4px; }
 
     .order-card {
-      background: var(--surface-2);
+      background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 22px 24px;
-      margin-bottom: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
       box-shadow: var(--shadow);
       transition: border-color 0.2s, transform 0.2s;
     }
     .order-card:hover {
-      border-color: rgba(255,255,255,0.14);
+      border-color: var(--gold-light);
       transform: translateY(-1px);
     }
 
@@ -406,6 +424,7 @@
     }
 
     .order-id {
+      font-family: 'Inter', sans-serif;
       font-size: 0.82rem;
       font-weight: 600;
       color: var(--text-3);
@@ -422,7 +441,7 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 4px 12px;
+      padding: 6px 14px;
       border-radius: 99px;
       font-size: 0.75rem;
       font-weight: 600;
@@ -465,7 +484,7 @@
 
     .order-meta {
       display: flex;
-      gap: 24px;
+      gap: 28px;
       flex-wrap: wrap;
     }
 
@@ -828,11 +847,11 @@
             margin-top:8px;
             padding:8px 20px;
             border-radius:99px;
-            background:rgba(171,74,59,0.15);
-            color:#d4775f;
+            background:rgba(176,141,87,0.12);
+            color:#8F7041;
             font-size:0.82rem;
             font-weight:600;
-            border:1px solid rgba(171,74,59,0.3);
+            border:1px solid rgba(176,141,87,0.25);
             text-decoration:none;
           ">Shop Now →</a>
         </div>`;
