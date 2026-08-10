@@ -78,8 +78,8 @@ document.addEventListener('DOMContentLoaded', () => {
           window.App.UI.showSuccess('Login successful');
         }
 
-        // Redirect to dashboard.html on login success
-        setTimeout(() => { window.location.replace('dashboard.html'); }, 800);
+        // Redirect to account.html on login success
+        setTimeout(() => { window.location.replace('account.html'); }, 800);
 
       } catch (err) {
         const msg = err.message || 'Invalid email or password';
@@ -169,8 +169,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
   
-  // Check initial session — redirect to dashboard if already logged in
-  window.App.Auth.requireGuest('dashboard.html').then(isGuest => {
+  // Check initial session — redirect to account if already logged in
+  window.App.Auth.requireGuest('account.html').then(isGuest => {
       if (isGuest) updateAuthUI(null);
   });
 
