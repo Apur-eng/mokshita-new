@@ -99,6 +99,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const { data: { session } } = await sb.auth.getSession();
         if (session && session.access_token) {
           localStorage.setItem('mokshita_token', session.access_token);
+          // Trigger backend sync to ensure local users row exists
+          if (window.apiService && window.apiService.auth && window.apiService.auth.getMe) {
+            try {
+              await window.apiService.auth.getMe();
+            } catch (syncErr) {
+              console.warn('Backend user sync warning:', syncErr);
+            }
+          }
         }
 
         if (typeof window.syncGuestCart === 'function') {
@@ -165,12 +173,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const sb = window.supabaseClient || (window.supabase && window.supabase.auth ? window.supabase : null);
         if (!sb) throw new Error('Supabase client is not initialized.');
 
-        // SignUp directly with Supabase (unchanged from original)
+        // SignUp directly with Supabase
+        const verifyRedirectUrl = window.location.origin + '/verify.html';
         const { data, error } = await sb.auth.signUp({
           email,
           password,
           options: {
-            emailRedirectTo: 'https://www.mokshitahandicrafts.com/verify.html',
+            emailRedirectTo: verifyRedirectUrl,
             data: {
               full_name: name,
               role: 'customer'
