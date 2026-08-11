@@ -40,6 +40,19 @@ document.addEventListener('DOMContentLoaded', () => {
   if (linkToLogin)  linkToLogin.addEventListener('click',  showLogin);
   if (linkToSignup) linkToSignup.addEventListener('click', showSignup);
 
+  // Continue as Guest links
+  document.querySelectorAll('.auth-guest-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (window.App && window.App.Auth && window.App.Auth.setGuestMode) {
+        window.App.Auth.setGuestMode();
+      } else {
+        localStorage.setItem('mokshita_guest', 'true');
+      }
+      window.location.href = 'index.html';
+    });
+  });
+
   /* ── Default tab: Sign Up for new visitors, Log In if ?tab=login ── */
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('tab') === 'login') {
@@ -74,6 +87,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // Authenticate directly with Supabase
         const { data, error } = await sb.auth.signInWithPassword({ email, password });
         if (error) throw error;
+
+        // Clear guest mode since user is now authenticated
+        if (window.App && window.App.Auth && window.App.Auth.clearGuestMode) {
+          window.App.Auth.clearGuestMode();
+        } else {
+          localStorage.removeItem('mokshita_guest');
+        }
 
         // Ensure session persists locally for backend API calls
         const { data: { session } } = await sb.auth.getSession();
@@ -159,6 +179,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (error) throw error;
+
+        if (window.App && window.App.Auth && window.App.Auth.clearGuestMode) {
+          window.App.Auth.clearGuestMode();
+        } else {
+          localStorage.removeItem('mokshita_guest');
+        }
 
         // Email confirmation is required — inform the user
         signupMsg.textContent = 'Check your email to verify your account!';

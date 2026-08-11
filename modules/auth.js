@@ -175,6 +175,7 @@ window.App.Auth = (function() {
 
         logout: async function(redirectUrl = 'index.html') {
             localStorage.removeItem('mokshita_token');
+            localStorage.removeItem('mokshita_guest');
             if (window.supabase) {
                 try {
                     await window.supabase.auth.signOut();
@@ -187,6 +188,18 @@ window.App.Auth = (function() {
             } else {
                 window.location.reload();
             }
+        },
+
+        setGuestMode: function() {
+            localStorage.setItem('mokshita_guest', 'true');
+        },
+
+        isGuestMode: function() {
+            return localStorage.getItem('mokshita_guest') === 'true';
+        },
+
+        clearGuestMode: function() {
+            localStorage.removeItem('mokshita_guest');
         }
     };
 })();

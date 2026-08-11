@@ -11,6 +11,19 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="css/index.css" />
+  <script>
+    /* Entry Gate: First-time unauthenticated visitors land on Sign Up (login.html).
+       If visitor chose "Continue as Guest" or is authenticated, allow website access. */
+    (function () {
+      try {
+        var isGuest = localStorage.getItem('mokshita_guest') === 'true';
+        var hasToken = !!localStorage.getItem('mokshita_token');
+        if (!isGuest && !hasToken) {
+          window.location.replace('login.html');
+        }
+      } catch (e) {}
+    })();
+  </script>
 </head>
 
 <body>
