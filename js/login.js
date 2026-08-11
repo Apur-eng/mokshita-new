@@ -189,6 +189,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (error) throw error;
 
+        // Check if account already exists in Supabase (empty identities array)
+        if (data && data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+          signupMsg.textContent = 'An account with this email address already exists. Please log in.';
+          signupMsg.className = 'auth-message error';
+          if (window.App && window.App.UI) window.App.UI.showError('Account already exists. Please log in.');
+          return;
+        }
+
         if (window.App && window.App.Auth && window.App.Auth.clearGuestMode) {
           window.App.Auth.clearGuestMode();
         } else {
