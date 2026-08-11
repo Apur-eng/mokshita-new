@@ -200,7 +200,7 @@
     const imageSrc = p.mainImage || 'images/artisan_working.png';
     
     return `
-      <article class="home-product-card" data-product-id="${p.id}">
+      <article class="home-product-card" data-product-id="${p.id}" onclick="window.location.href='product.html?slug=${p.id}'" style="cursor:pointer;">
         <div class="home-product-img-wrap">
           <img src="${imageSrc}" alt="${p.title}" loading="lazy" onerror="this.onerror=null;this.src='images/artisan_working.png';" />
           ${p.discount ? `<span class="home-product-badge">${p.discount}</span>` : ''}
@@ -220,7 +220,7 @@
             <span class="home-product-rating">★ ${p.rating} (${p.reviews})</span>
           </div>
           <h3 class="home-product-title">
-            <a href="product-detail.html?id=${p.id}">${p.title}</a>
+            <a href="product.html?slug=${p.id}" onclick="event.stopPropagation();">${p.title}</a>
           </h3>
           <div class="home-product-footer">
             <div class="home-product-price-box">

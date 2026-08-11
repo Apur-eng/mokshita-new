@@ -66,22 +66,63 @@
     <!-- Form side -->
     <div class="auth-form-wrapper">
       <div class="auth-tabs">
-        <button class="auth-tab active" id="tab-login">Log In</button>
+        <!-- Sign Up is tab[0] — will be activated by default for new visitors -->
         <button class="auth-tab" id="tab-signup">Sign Up</button>
+        <button class="auth-tab" id="tab-login">Log In</button>
       </div>
 
-      <!-- Login Form -->
-      <form id="form-login" class="auth-form active">
+      <!-- ── SIGNUP FORM (shown first for new visitors) ── -->
+      <form id="form-signup" class="auth-form">
+        <h3 class="auth-title">Create Account</h3>
+        <p class="auth-subtitle">Join us to explore India's finest arts</p>
+
+        <div class="form-group">
+          <label for="signup-name">Full Name</label>
+          <input type="text" id="signup-name" required placeholder="Your name" autocomplete="name" />
+        </div>
+        <div class="form-group">
+          <label for="signup-email">Email Address</label>
+          <input type="email" id="signup-email" required placeholder="you@example.com" autocomplete="email" />
+        </div>
+        <div class="form-group">
+          <label for="signup-password">Password</label>
+          <input type="password" id="signup-password" required placeholder="Min. 8 characters" autocomplete="new-password" />
+        </div>
+        <div class="form-group">
+          <label for="signup-confirm">Confirm Password</label>
+          <input type="password" id="signup-confirm" required placeholder="Re-enter your password" autocomplete="new-password" />
+        </div>
+
+        <button type="submit" class="btn btn-primary auth-submit" id="btn-signup-submit">Sign Up</button>
+        <div class="auth-message" id="signup-message"></div>
+
+        <div class="auth-switch-row">
+          Already a member?
+          <button type="button" class="auth-switch-link" id="link-to-login">Log In</button>
+        </div>
+
+        <div class="auth-guest-row">
+          <a href="index.html" class="auth-guest-link" id="btn-guest">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+            </svg>
+            Continue as Guest
+          </a>
+        </div>
+      </form>
+
+      <!-- ── LOGIN FORM ── -->
+      <form id="form-login" class="auth-form">
         <h3 class="auth-title">Welcome Back</h3>
         <p class="auth-subtitle">Sign in to access your account</p>
         
         <div class="form-group">
           <label for="login-email">Email Address</label>
-          <input type="email" id="login-email" required placeholder="you@example.com" />
+          <input type="email" id="login-email" required placeholder="you@example.com" autocomplete="email" />
         </div>
         <div class="form-group">
           <label for="login-password">Password</label>
-          <input type="password" id="login-password" required placeholder="••••••••" />
+          <input type="password" id="login-password" required placeholder="••••••••" autocomplete="current-password" />
         </div>
         <div class="form-options">
           <label class="checkbox-container">
@@ -93,27 +134,20 @@
         </div>
         <button type="submit" class="btn btn-primary auth-submit">Sign In</button>
         <div class="auth-message" id="login-message"></div>
-      </form>
 
-      <!-- Signup Form -->
-      <form id="form-signup" class="auth-form">
-        <h3 class="auth-title">Create Account</h3>
-        <p class="auth-subtitle">Join us to explore India's finest arts</p>
-        
-        <div class="form-group">
-          <label for="signup-name">Full Name</label>
-          <input type="text" id="signup-name" required placeholder="Your name" />
+        <div class="auth-switch-row">
+          New here?
+          <button type="button" class="auth-switch-link" id="link-to-signup">Sign Up</button>
         </div>
-        <div class="form-group">
-          <label for="signup-email">Email Address</label>
-          <input type="email" id="signup-email" required placeholder="you@example.com" />
+
+        <div class="auth-guest-row">
+          <a href="index.html" class="auth-guest-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+            </svg>
+            Continue as Guest
+          </a>
         </div>
-        <div class="form-group">
-          <label for="signup-password">Password</label>
-          <input type="password" id="signup-password" required placeholder="•••••••• (Min 6 chars)" minlength="6" />
-        </div>
-        <button type="submit" class="btn btn-primary auth-submit">Create Account</button>
-        <div class="auth-message" id="signup-message"></div>
       </form>
       
       <!-- Logged In State (Hidden by default) -->
@@ -122,6 +156,7 @@
         <p class="auth-subtitle" id="account-email-display"></p>
         
         <div class="account-actions">
+          <a href="account.html" class="btn btn-primary" style="width:100%; justify-content:center; margin-bottom: 15px;">Go to My Dashboard</a>
           <a href="cart.html" class="btn btn-outline" style="width:100%; justify-content:center; margin-bottom: 15px;">View My Cart</a>
           <button id="btn-logout" class="btn btn-primary" style="width:100%; justify-content:center; background: #ab4a3b; border-color: #ab4a3b;">Log Out</button>
         </div>
@@ -143,4 +178,3 @@
 <script src="js/login.js"></script>
 </body>
 </html>
-

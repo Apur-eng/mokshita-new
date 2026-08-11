@@ -664,3 +664,45 @@
 .order-wa-btn svg {
   flex-shrink: 0;
 }
+
+/* ─── ORDER CARD ACTIONS ROW ───────────────────────────────── */
+.order-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--border-soft);
+}
+
+/* ─── CANCEL ORDER BUTTON ──────────────────────────────────── */
+.order-cancel-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 18px;
+  background: transparent;
+  color: #b04040;
+  border: 1.5px solid rgba(176,64,64,0.35);
+  border-radius: var(--r-full);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, color 0.18s, transform 0.15s, box-shadow 0.18s;
+  letter-spacing: 0.01em;
+}
+.order-cancel-btn:hover {
+  background: rgba(176,64,64,0.07);
+  border-color: #b04040;
+  color: #8c2d2d;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(176,64,64,0.15);
+}
+.order-cancel-btn:active {
+  transform: translateY(0);
+}
+.order-cancel-btn svg {
+  flex-shrink: 0;
+}

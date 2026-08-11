@@ -229,3 +229,55 @@
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* ─── FORM SWITCH ROW ("Already a member? Log In") ────────── */
+.auth-switch-row {
+  margin-top: 18px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+.auth-switch-link {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-left: 5px;
+  font-family: inherit;
+  font-size: inherit;
+  color: var(--olive);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.2s;
+}
+.auth-switch-link:hover {
+  color: var(--terracotta);
+}
+
+/* ─── GUEST LINK ROW ("Continue as Guest") ─────────────────── */
+.auth-guest-row {
+  margin-top: 14px;
+  text-align: center;
+}
+.auth-guest-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--text-light);
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(0,0,0,0.12);
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+.auth-guest-link:hover {
+  color: var(--olive);
+  border-color: var(--olive);
+  background: rgba(47,93,80,0.05);
+}
+.auth-guest-link svg {
+  opacity: 0.7;
+  flex-shrink: 0;
+}

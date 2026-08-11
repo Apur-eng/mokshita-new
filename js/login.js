@@ -4,33 +4,51 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   // UI Elements
-  const tabLogin = document.getElementById('tab-login');
+  const tabLogin  = document.getElementById('tab-login');
   const tabSignup = document.getElementById('tab-signup');
-  const formLogin = document.getElementById('form-login');
+  const formLogin  = document.getElementById('form-login');
   const formSignup = document.getElementById('form-signup');
   const authLoggedIn = document.getElementById('auth-logged-in');
-  
-  const loginMsg = document.getElementById('login-message');
+
+  const loginMsg  = document.getElementById('login-message');
   const signupMsg = document.getElementById('signup-message');
 
-  // Tab switching
-  if (tabLogin && tabSignup) {
-    tabLogin.addEventListener('click', () => {
-      tabLogin.classList.add('active');
-      tabSignup.classList.remove('active');
-      formLogin.classList.add('active');
-      formSignup.classList.remove('active');
-    });
-    
-    tabSignup.addEventListener('click', () => {
-      tabSignup.classList.add('active');
-      tabLogin.classList.remove('active');
-      formSignup.classList.add('active');
-      formLogin.classList.remove('active');
-    });
+  /* ── Tab switching helpers ──────────────────────────────── */
+  function showLogin() {
+    tabLogin.classList.add('active');
+    tabSignup.classList.remove('active');
+    formLogin.classList.add('active');
+    formSignup.classList.remove('active');
   }
 
-  // Handle Login
+  function showSignup() {
+    tabSignup.classList.add('active');
+    tabLogin.classList.remove('active');
+    formSignup.classList.add('active');
+    formLogin.classList.remove('active');
+  }
+
+  // Tab button clicks
+  if (tabLogin && tabSignup) {
+    tabLogin.addEventListener('click', showLogin);
+    tabSignup.addEventListener('click', showSignup);
+  }
+
+  // In-form switch links
+  const linkToLogin  = document.getElementById('link-to-login');
+  const linkToSignup = document.getElementById('link-to-signup');
+  if (linkToLogin)  linkToLogin.addEventListener('click',  showLogin);
+  if (linkToSignup) linkToSignup.addEventListener('click', showSignup);
+
+  /* ── Default tab: Sign Up for new visitors, Log In if ?tab=login ── */
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('tab') === 'login') {
+    showLogin();
+  } else {
+    showSignup();
+  }
+
+  /* ── Handle Login ───────────────────────────────────────── */
   if (formLogin) {
     formLogin.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -51,16 +69,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       try {
         const sb = window.supabaseClient || (window.supabase && window.supabase.auth ? window.supabase : null);
-        if (!sb) {
-          throw new Error('Supabase client is not initialized.');
-        }
+        if (!sb) throw new Error('Supabase client is not initialized.');
 
-        // Authenticate directly with Supabase instead of the backend
-        const { data, error } = await sb.auth.signInWithPassword({
-          email,
-          password
-        });
-
+        // Authenticate directly with Supabase
+        const { data, error } = await sb.auth.signInWithPassword({ email, password });
         if (error) throw error;
 
         // Ensure session persists locally for backend API calls
@@ -75,20 +87,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         loginMsg.textContent = 'Login successful';
         loginMsg.className = 'auth-message success';
-        if (window.App && window.App.UI) {
-          window.App.UI.showSuccess('Login successful');
-        }
+        if (window.App && window.App.UI) window.App.UI.showSuccess('Login successful');
 
-        // Redirect to account.html on login success
-        setTimeout(() => { window.location.replace('account.html'); }, 800);
+        // Respect ?redirect= param, else go to account
+        const redirect = urlParams.get('redirect') || 'account.html';
+        setTimeout(() => { window.location.replace(redirect); }, 800);
 
       } catch (err) {
         const msg = err.message || 'Invalid email or password';
         loginMsg.textContent = msg;
         loginMsg.className = 'auth-message error';
-        if (window.App && window.App.UI) {
-          window.App.UI.showError(msg);
-        }
+        if (window.App && window.App.UI) window.App.UI.showError(msg);
       } finally {
         btn.disabled = false;
         btn.textContent = 'Sign In';
@@ -96,24 +105,34 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Handle Signup
+  /* ── Handle Signup ──────────────────────────────────────── */
   if (formSignup) {
     formSignup.addEventListener('submit', async (e) => {
       e.preventDefault();
+      const name     = document.getElementById('signup-name').value.trim();
       const email    = document.getElementById('signup-email').value.trim();
       const password = document.getElementById('signup-password').value;
-      const name     = document.getElementById('signup-name').value.trim();
+      const confirm  = document.getElementById('signup-confirm').value;
       const btn      = formSignup.querySelector('.auth-submit');
 
-      if (!email || !password || !name) {
+      // ── Validation ──────────────────────────────────────
+      if (!name || !email || !password || !confirm) {
         signupMsg.textContent = 'Please fill in all fields.';
         signupMsg.className = 'auth-message error';
         return;
       }
 
       if (password.length < 8) {
-        signupMsg.textContent = 'Password must be at least 8 characters.';
+        signupMsg.textContent = 'Password must be at least 8 characters long.';
         signupMsg.className = 'auth-message error';
+        document.getElementById('signup-password').focus();
+        return;
+      }
+
+      if (password !== confirm) {
+        signupMsg.textContent = 'Passwords do not match. Please re-enter.';
+        signupMsg.className = 'auth-message error';
+        document.getElementById('signup-confirm').focus();
         return;
       }
 
@@ -124,11 +143,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
       try {
         const sb = window.supabaseClient || (window.supabase && window.supabase.auth ? window.supabase : null);
-        if (!sb) {
-          throw new Error('Supabase client is not initialized.');
-        }
+        if (!sb) throw new Error('Supabase client is not initialized.');
 
-        // SignUp directly with Supabase
+        // SignUp directly with Supabase (unchanged from original)
         const { data, error } = await sb.auth.signUp({
           email,
           password,
@@ -143,12 +160,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (error) throw error;
 
-        // Email confirmation is required - inform the user
-        signupMsg.textContent = 'Check your email for verification';
+        // Email confirmation is required — inform the user
+        signupMsg.textContent = 'Check your email to verify your account!';
         signupMsg.className = 'auth-message success';
-        if (window.App && window.App.UI) {
-          window.App.UI.showSuccess('Check your email for verification.');
-        }
+        if (window.App && window.App.UI) window.App.UI.showSuccess('Check your email for verification.');
 
       } catch (err) {
         const msg = err.message || 'Signup failed. Please try again.';
@@ -157,12 +172,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (window.App && window.App.UI) window.App.UI.showError(msg);
       } finally {
         btn.disabled = false;
-        btn.textContent = 'Create Account';
+        btn.textContent = 'Sign Up';
       }
     });
   }
 
-  // Handle Logout
+  /* ── Handle Logout ──────────────────────────────────────── */
   const btnLogout = document.getElementById('btn-logout');
   if (btnLogout) {
     btnLogout.addEventListener('click', async () => {
@@ -170,39 +185,36 @@ document.addEventListener('DOMContentLoaded', () => {
       window.location.reload();
     });
   }
-  
-  // Check initial session — redirect to account if already logged in
+
+  /* ── Check initial session — show logged-in state or default to Signup ── */
   window.App.Auth.requireGuest('account.html').then(isGuest => {
-      if (isGuest) updateAuthUI(null);
+    if (isGuest) {
+      // Not logged in — default already set above (signup first)
+    }
   });
 
   async function updateAuthUI(session) {
     if (!formLogin || !formSignup || !authLoggedIn) return;
-    
+
     const tabsContainer = document.querySelector('.auth-tabs');
-    
+
     if (session) {
-      // User is logged in
+      // User is logged in — hide forms, show account panel
       formLogin.classList.remove('active');
       formSignup.classList.remove('active');
       if (tabsContainer) tabsContainer.style.display = 'none';
-      
+
       authLoggedIn.classList.add('active');
-      
+
       const emailDisplay = document.getElementById('account-email-display');
-      const nameDisplay = document.getElementById('account-name-display');
-      
+      const nameDisplay  = document.getElementById('account-name-display');
+
       if (emailDisplay) emailDisplay.textContent = session.user.email;
       if (nameDisplay && session.user.full_name) {
         nameDisplay.textContent = `Welcome, ${session.user.full_name}`;
       }
     } else {
-      // User is logged out
-      if (tabLogin.classList.contains('active')) {
-        formLogin.classList.add('active');
-      } else {
-        formSignup.classList.add('active');
-      }
+      // Not logged in — respect URL param for which tab to show
       if (tabsContainer) tabsContainer.style.display = 'flex';
       authLoggedIn.classList.remove('active');
     }
