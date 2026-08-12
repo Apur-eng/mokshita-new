@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AutoParts Pro — Premium Car Parts Online</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">⚙</span>
+        AutoParts Pro
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="shop.html?category=brakes">Brakes</a></li>
+        <li><a href="shop.html?category=engine">Engine</a></li>
+      </ul>
+      <div class="header-actions">
+        <form class="search-box" action="shop.html" method="get">
+          <span>🔍</span>
+          <input type="search" name="search" placeholder="Search parts..." />
+        </form>
+        <a href="cart.html" class="icon-btn" aria-label="Cart">
+          🛒
+          <span class="cart-badge" id="cart-badge">0</span>
+        </a>
+        <a href="login.html" class="icon-btn" id="account-link" aria-label="Account">👤</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="container hero-content">
+      <span class="hero-tag">OEM Quality · Fast Shipping</span>
+      <h1>Drive Better With <span>Premium Parts</span></h1>
+      <p>Brakes, engine components, suspension, electrical, and more — sourced for reliability and performance. Free shipping on orders over $75.</p>
+      <div class="hero-actions">
+        <a href="shop.html" class="btn btn-primary">Shop All Parts</a>
+        <a href="shop.html?featured=true" class="btn btn-outline">Featured Deals</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><strong>14+</strong><span>Products in stock</span></div>
+        <div class="hero-stat"><strong>6</strong><span>Categories</span></div>
+        <div class="hero-stat"><strong>24h</strong><span>Fast dispatch</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Shop by Category</h2>
+        <p>Find the right part for your vehicle</p>
+      </div>
+      <div class="category-grid" id="category-grid">
+        <div class="loading">Loading categories...</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--bg-card);">
+    <div class="container">
+      <div class="section-header">
+        <h2>Featured Parts</h2>
+        <p>Top picks from our catalog</p>
+      </div>
+      <div class="product-grid" id="featured-products">
+        <div class="loading">Loading products...</div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="logo" style="margin-bottom:14px;"><span class="logo-icon">⚙</span> AutoParts Pro</div>
+          <p>Your trusted source for quality automotive parts. Secure checkout powered by Stripe.</p>
+        </div>
+        <div>
+          <h4>Shop</h4>
+          <a href="shop.html">All Parts</a><br />
+          <a href="shop.html?category=brakes">Brakes</a><br />
+          <a href="shop.html?category=engine">Engine</a><br />
+          <a href="shop.html?category=suspension">Suspension</a>
+        </div>
+        <div>
+          <h4>Account</h4>
+          <a href="login.html">Sign In</a><br />
+          <a href="account.html">My Orders</a><br />
+          <a href="cart.html">Cart</a>
+        </div>
+        <div>
+          <h4>Support</h4>
+          <p>support@autopartspro.com</p>
+          <p>Mon–Fri 9am–6pm EST</p>
+        </div>
+      </div>
+      <div class="footer-bottom">&copy; 2026 AutoParts Pro. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script>
+    async function initHome() {
+      try {
+        const [categories, featured] = await Promise.all([
+          api.getCategories(),
+          api.getFeatured(8),
+        ]);
+
+        document.getElementById('category-grid').innerHTML = categories.map(c => `
+          <a href="shop.html?category=${c.slug}" class="category-card">
+            <img src="${c.image_url}" alt="${c.name}" loading="lazy" />
+            <div class="category-card-body">
+              <h3>${c.name}</h3>
+              <p>${c.description}</p>
+            </div>
+          </a>
+        `).join('');
+
+        document.getElementById('featured-products').innerHTML = featured.map(renderProductCard).join('');
+        bindAddToCartButtons(featured);
+      } catch (err) {
+        document.getElementById('featured-products').innerHTML = `<p class="alert alert-error">${err.message}</p>`;
+      }
+    }
+    initHome();
+  </script>
+</body>
+</html>

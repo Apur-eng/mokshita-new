@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Account — AutoParts Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo"><span class="logo-icon">⚙</span> AutoParts Pro</a>
+      <div class="header-actions">
+        <a href="cart.html" class="icon-btn">🛒<span class="cart-badge">0</span></a>
+        <button class="btn btn-outline btn-sm" id="logout-btn">Sign Out</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container cart-page">
+    <h1>My Account</h1>
+    <div id="user-info" class="checkout-section" style="margin-bottom:24px;">Loading...</div>
+    <h2 style="font-family:var(--font-display);margin-bottom:20px;">Order History</h2>
+    <div id="orders-list"><div class="loading">Loading orders...</div></div>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    if (!localStorage.getItem('autoparts_token')) location.href = 'login.html';
+
+    document.getElementById('logout-btn').onclick = () => {
+      localStorage.removeItem('autoparts_token');
+      location.href = 'login.html';
+    };
+
+    async function loadAccount() {
+      try {
+        const user = await api.getMe();
+        document.getElementById('user-info').innerHTML = `
+          <h2 style="margin-bottom:12px;">${user.full_name}</h2>
+          <p style="color:var(--text-muted)">${user.email}${user.phone ? ' · ' + user.phone : ''}</p>`;
+
+        const orders = await api.getMyOrders();
+        if (orders.length === 0) {
+          document.getElementById('orders-list').innerHTML = '<div class="empty-state"><p>No orders yet. <a href="shop.html" style="color:var(--accent)">Start shopping</a></p></div>';
+          return;
+        }
+
+        document.getElementById('orders-list').innerHTML = orders.map(o => `
+          <div class="checkout-section" style="margin-bottom:16px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
+              <strong>Order #${o.id.slice(0, 8).toUpperCase()}</strong>
+              <span style="color:${o.status === 'paid' ? 'var(--success)' : 'var(--text-muted)'}">${o.status}</span>
+            </div>
+            <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:12px;">${new Date(o.created_at).toLocaleDateString()}</p>
+            ${o.items.map(i => `<div class="summary-row"><span>${i.product_name} × ${i.quantity}</span><span>${formatPrice(i.line_total)}</span></div>`).join('')}
+            <div class="summary-row total"><span>Total</span><span>${formatPrice(o.total)}</span></div>
+          </div>
+        `).join('');
+      } catch {
+        localStorage.removeItem('autoparts_token');
+        location.href = 'login.html';
+      }
+    }
+
+    loadAccount();
+  </script>
+</body>
+</html>

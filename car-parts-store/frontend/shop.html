@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shop — AutoParts Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo"><span class="logo-icon">⚙</span> AutoParts Pro</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html" class="active">Shop</a></li>
+      </ul>
+      <div class="header-actions">
+        <form class="search-box" id="search-form">
+          <span>🔍</span>
+          <input type="search" id="search-input" placeholder="Search parts..." />
+        </form>
+        <a href="cart.html" class="icon-btn">🛒<span class="cart-badge">0</span></a>
+        <a href="login.html" class="icon-btn" id="account-link">👤</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container shop-layout">
+    <aside class="sidebar">
+      <h3>Categories</h3>
+      <ul class="filter-list" id="category-filters">
+        <li><a href="shop.html" data-slug="">All Parts</a></li>
+      </ul>
+    </aside>
+
+    <main>
+      <div class="shop-toolbar">
+        <h1 id="shop-title">All Parts</h1>
+        <span id="result-count" style="color:var(--text-muted);font-size:0.9rem;"></span>
+      </div>
+      <div class="product-grid" id="product-grid">
+        <div class="loading">Loading products...</div>
+      </div>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <div class="container footer-bottom">&copy; 2026 AutoParts Pro</div>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    let currentCategory = params.get('category') || '';
+    let currentSearch = params.get('search') || '';
+    let allProducts = [];
+
+    async function loadCategories() {
+      const categories = await api.getCategories();
+      const list = document.getElementById('category-filters');
+      categories.forEach(c => {
+        const li = document.createElement('li');
+        li.innerHTML = `<a href="shop.html?category=${c.slug}" data-slug="${c.slug}">${c.name}</a>`;
+        list.appendChild(li);
+      });
+      highlightActiveFilter();
+    }
+
+    function highlightActiveFilter() {
+      document.querySelectorAll('#category-filters a').forEach(a => {
+        a.classList.toggle('active', a.dataset.slug === currentCategory);
+      });
+    }
+
+    async function loadProducts() {
+      const grid = document.getElementById('product-grid');
+      try {
+        const query = {};
+        if (currentCategory) query.category = currentCategory;
+        if (currentSearch) query.search = currentSearch;
+        if (params.get('featured') === 'true') query.featured = 'true';
+
+        allProducts = await api.getProducts(query);
+        document.getElementById('result-count').textContent = `${allProducts.length} products`;
+
+        if (currentCategory) {
+          const cat = await api.getCategory(currentCategory);
+          document.getElementById('shop-title').textContent = cat.name;
+        } else if (currentSearch) {
+          document.getElementById('shop-title').textContent = `Results for "${currentSearch}"`;
+        }
+
+        if (allProducts.length === 0) {
+          grid.innerHTML = '<div class="empty-state"><h2>No products found</h2><p>Try a different search or category.</p></div>';
+          return;
+        }
+
+        grid.innerHTML = allProducts.map(renderProductCard).join('');
+        bindAddToCartButtons(allProducts);
+      } catch (err) {
+        grid.innerHTML = `<p class="alert alert-error">${err.message}</p>`;
+      }
+    }
+
+    document.getElementById('search-form').addEventListener('submit', e => {
+      e.preventDefault();
+      currentSearch = document.getElementById('search-input').value.trim();
+      currentCategory = '';
+      const url = new URL(location.href);
+      url.searchParams.set('search', currentSearch);
+      url.searchParams.delete('category');
+      history.replaceState({}, '', url);
+      loadProducts();
+    });
+
+    if (currentSearch) document.getElementById('search-input').value = currentSearch;
+
+    loadCategories();
+    loadProducts();
+  </script>
+</body>
+</html>

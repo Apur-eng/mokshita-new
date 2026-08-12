@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cart — AutoParts Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo"><span class="logo-icon">⚙</span> AutoParts Pro</a>
+      <ul class="nav-links"><li><a href="shop.html">Continue Shopping</a></li></ul>
+      <div class="header-actions">
+        <a href="cart.html" class="icon-btn">🛒<span class="cart-badge">0</span></a>
+        <a href="login.html" class="icon-btn" id="account-link">👤</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container cart-page">
+    <h1>Your Cart</h1>
+    <div class="cart-layout">
+      <div class="cart-items" id="cart-items"></div>
+      <div class="cart-summary" id="cart-summary" style="display:none;">
+        <h2>Order Summary</h2>
+        <div id="free-shipping"></div>
+        <div class="summary-row"><span>Subtotal</span><span id="sum-subtotal">$0.00</span></div>
+        <div class="summary-row"><span>Shipping</span><span id="sum-shipping">$0.00</span></div>
+        <div class="summary-row"><span>Tax (8%)</span><span id="sum-tax">$0.00</span></div>
+        <div class="summary-row total"><span>Total</span><span id="sum-total">$0.00</span></div>
+        <a href="checkout.html" class="btn btn-primary btn-block" style="margin-top:20px;">Proceed to Checkout</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    async function renderCart() {
+      const cart = getCart();
+      const itemsEl = document.getElementById('cart-items');
+      const summaryEl = document.getElementById('cart-summary');
+
+      if (cart.length === 0) {
+        itemsEl.innerHTML = '<div class="empty-state"><h2>Your cart is empty</h2><p><a href="shop.html" style="color:var(--accent)">Browse our parts catalog</a></p></div>';
+        summaryEl.style.display = 'none';
+        return;
+      }
+
+      itemsEl.innerHTML = cart.map(item => `
+        <div class="cart-item" data-id="${item.product_id}">
+          <img src="${item.image_url}" alt="${item.name}" />
+          <div class="cart-item-info">
+            <h3><a href="product.html?slug=${item.slug}">${item.name}</a></h3>
+            <p>${formatPrice(item.price)} each</p>
+            <div class="qty-control" style="margin-top:8px;width:fit-content;">
+              <button type="button" class="qty-dec">−</button>
+              <input type="number" value="${item.quantity}" min="1" class="qty-val" />
+              <button type="button" class="qty-inc">+</button>
+            </div>
+          </div>
+          <div class="cart-item-price">
+            ${formatPrice(item.price * item.quantity)}
+            <br /><button class="btn btn-outline btn-sm remove-btn" style="margin-top:8px;">Remove</button>
+          </div>
+        </div>
+      `).join('');
+
+      itemsEl.querySelectorAll('.cart-item').forEach(row => {
+        const id = row.dataset.id;
+        row.querySelector('.qty-dec').onclick = () => {
+          const item = getCart().find(i => i.product_id === id);
+          if (item) { updateCartQuantity(id, item.quantity - 1); renderCart(); }
+        };
+        row.querySelector('.qty-inc').onclick = () => {
+          const item = getCart().find(i => i.product_id === id);
+          if (item) { updateCartQuantity(id, item.quantity + 1); renderCart(); }
+        };
+        row.querySelector('.remove-btn').onclick = () => { removeFromCart(id); renderCart(); };
+      });
+
+      try {
+        const validated = await api.validateCart(cart.map(i => ({ product_id: i.product_id, quantity: i.quantity })));
+        summaryEl.style.display = 'block';
+        document.getElementById('sum-subtotal').textContent = formatPrice(validated.subtotal);
+        document.getElementById('sum-shipping').textContent = validated.shipping === 0 ? 'FREE' : formatPrice(validated.shipping);
+        document.getElementById('sum-tax').textContent = formatPrice(validated.tax);
+        document.getElementById('sum-total').textContent = formatPrice(validated.total);
+
+        const freeEl = document.getElementById('free-shipping');
+        if (validated.subtotal < 75) {
+          freeEl.innerHTML = `<div class="free-shipping-note">Add ${formatPrice(75 - validated.subtotal)} more for free shipping!</div>`;
+        } else {
+          freeEl.innerHTML = `<div class="free-shipping-note">✓ You qualify for free shipping!</div>`;
+        }
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    renderCart();
+  </script>
+</body>
+</html>

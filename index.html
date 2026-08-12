@@ -23,6 +23,19 @@
         }
       } catch (e) {}
     })();
+
+    /* ── SCROLL RESTORATION: always start at the top on fresh page load.
+       Only resets when there is no intentional hash anchor in the URL.   */
+    (function () {
+      try {
+        if (history.scrollRestoration) {
+          history.scrollRestoration = 'manual';
+        }
+        if (!window.location.hash) {
+          window.scrollTo(0, 0);
+        }
+      } catch (e) {}
+    })();
   </script>
 </head>
 
@@ -765,6 +778,9 @@
   </script>
   <script>
     /* ── NAV SCROLL ──────────────────────────────────── */
+    /* NOTE: hamburger / mobileMenu are already wired in js/main.js.
+       Do NOT re-declare them here — that causes a duplicate-identifier
+       SyntaxError because both scripts share the same global scope.  */
     (function () {
       const navEl = document.getElementById('main-nav');
       function updateNav() {
@@ -773,14 +789,6 @@
       window.addEventListener('scroll', updateNav, { passive: true });
       updateNav();
     })();
-
-    /* ── HAMBURGER ───────────────────────────────────── */
-    const hamburger = document.getElementById('nav-hamburger');
-    const mobileMenu = document.getElementById('mobile-menu');
-    hamburger.addEventListener('click', () => {
-      const open = mobileMenu.classList.toggle('open');
-      hamburger.setAttribute('aria-expanded', open);
-    });
 
     /* ── HERO SEQUENCE ───────────────────────────────── */
     function triggerHero() {

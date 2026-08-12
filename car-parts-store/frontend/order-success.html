@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order Confirmed — AutoParts Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo"><span class="logo-icon">⚙</span> AutoParts Pro</a>
+    </div>
+  </header>
+
+  <div class="container checkout-page" id="success-content">
+    <div class="loading">Confirming your order...</div>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const orderId = params.get('order_id');
+    const sessionId = params.get('session_id');
+    const isDemo = params.get('demo') === '1';
+
+    localStorage.removeItem('autoparts_cart');
+    updateCartBadge();
+
+    async function showOrder() {
+      if (!orderId) {
+        document.getElementById('success-content').innerHTML = '<p class="alert alert-error">Order not found</p>';
+        return;
+      }
+
+      try {
+        const order = await api.verifyOrder(orderId, sessionId);
+        document.getElementById('success-content').innerHTML = `
+          <div style="text-align:center;margin-bottom:32px;">
+            <div style="font-size:3rem;margin-bottom:12px;">✅</div>
+            <h1>Order Confirmed!</h1>
+            <p style="color:var(--text-muted);margin-top:8px;">${isDemo ? 'Demo payment completed.' : 'Thank you for your purchase.'}</p>
+          </div>
+          <div class="checkout-section">
+            <h2>Order #${order.id.slice(0, 8).toUpperCase()}</h2>
+            <p style="color:var(--text-muted);margin-bottom:16px;">Status: <strong style="color:var(--success)">${order.status}</strong></p>
+            ${order.items.map(i => `<div class="summary-row"><span>${i.product_name} × ${i.quantity}</span><span>${formatPrice(i.line_total)}</span></div>`).join('')}
+            <div class="summary-row total"><span>Total Paid</span><span>${formatPrice(order.total)}</span></div>
+          </div>
+          <div class="checkout-section">
+            <h2>Shipping To</h2>
+            <p>${order.shipping_name}<br />${order.shipping_address}<br />${order.shipping_city}, ${order.shipping_state} ${order.shipping_zip}</p>
+          </div>
+          <a href="shop.html" class="btn btn-primary btn-block">Continue Shopping</a>
+        `;
+      } catch (err) {
+        document.getElementById('success-content').innerHTML = `<p class="alert alert-error">${err.message}</p>`;
+      }
+    }
+
+    showOrder();
+  </script>
+</body>
+</html>

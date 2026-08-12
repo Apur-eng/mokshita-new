@@ -1,0 +1,6 @@
+node_modules/
+.env
+db/autoparts.db
+db/autoparts.db-wal
+db/autoparts.db-shm
+*.log
