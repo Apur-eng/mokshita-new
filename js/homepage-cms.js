@@ -201,9 +201,15 @@
     });
   }
 
-  /* ─── RENDER LAYOUT (Dynamic Section Ordering) ────────────
+  /* ─── RENDER LAYOUT (Dynamic Section Ordering) ──────────
      Reorders DOM sections inside #homepage-main based on the
-     layout array provided by the backend.                     */
+     layout array provided by the backend.
+
+     SCROLL-ANCHOR GUARD: Moving nodes with appendChild() after
+     paint triggers the browser's CSS scroll-anchoring heuristic,
+     which scrolls the viewport down to "keep content stable".
+     We suppress overflow-anchor on the container for the duration
+     of the reorder, then immediately reset scroll to the top.   */
   function renderLayout(layoutArray) {
     if (!Array.isArray(layoutArray) || layoutArray.length === 0) return;
 
@@ -211,7 +217,11 @@
     if (!container) return;
 
     console.log('[CMS] Reordering homepage sections:', layoutArray);
-    
+
+    // Suppress scroll-anchoring while we move nodes
+    const prevAnchor = container.style.overflowAnchor;
+    container.style.overflowAnchor = 'none';
+
     // Iterate through layout array and append each element to the container
     // This moves existing DOM nodes into the correct order without recreating them
     layoutArray.forEach(sectionId => {
@@ -220,6 +230,12 @@
         container.appendChild(el);
       }
     });
+
+    // Restore and snap back to top (only if the user hasn't navigated to an anchor)
+    container.style.overflowAnchor = prevAnchor;
+    if (!window.location.hash) {
+      window.scrollTo(0, 0);
+    }
   }
 
   /* ─── HTML ESCAPE HELPERS ────────────────────────────────*/
@@ -297,6 +313,12 @@
     // Signal completion
     document.dispatchEvent(new CustomEvent('homepageCMSLoaded', { detail: { timestamp: window.App.CMS.timestamp } }));
     console.log('[CMS] Phase 1 enrichment complete.');
+
+    // Final scroll-top safety net: after all async enrichment (text updates,
+    // layout reorder, etc.) ensure the page is at the very top.
+    if (!window.location.hash) {
+      window.scrollTo(0, 0);
+    }
   }
 
   /* ─── INIT TRIGGER ───────────────────────────────────────
