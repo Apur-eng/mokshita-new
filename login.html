@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Account — Mokshita Enterprises</title>
   <meta name="description" content="Sign in or create an account with Mokshita Enterprises." />
@@ -86,11 +87,50 @@
         </div>
         <div class="form-group">
           <label for="signup-password">Password</label>
-          <input type="password" id="signup-password" required placeholder="Min. 8 characters" autocomplete="new-password" />
+          <div class="pw-input-wrap">
+            <input type="password" id="signup-password" required placeholder="Min. 8 characters" autocomplete="new-password" />
+            <button type="button" class="pw-toggle" aria-label="Toggle password visibility" data-target="signup-password">
+              <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+              </svg>
+              <svg class="eye-off-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>
+              </svg>
+            </button>
+          </div>
         </div>
         <div class="form-group">
           <label for="signup-confirm">Confirm Password</label>
-          <input type="password" id="signup-confirm" required placeholder="Re-enter your password" autocomplete="new-password" />
+          <div class="pw-input-wrap">
+            <input type="password" id="signup-confirm" required placeholder="Re-enter your password" autocomplete="new-password" />
+            <button type="button" class="pw-toggle" aria-label="Toggle confirm password visibility" data-target="signup-confirm">
+              <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+              </svg>
+              <svg class="eye-off-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- State & City dropdowns -->
+        <div class="form-group">
+          <label for="signup-state">State</label>
+          <select id="signup-state" class="auth-select">
+            <option value="" disabled selected>Select State</option>
+          </select>
+        </div>
+        <div class="form-group" id="city-select-group">
+          <label for="signup-city">City</label>
+          <select id="signup-city" class="auth-select" disabled>
+            <option value="" disabled selected>Select City</option>
+          </select>
+        </div>
+        <div class="form-group" id="city-manual-group" style="display:none;">
+          <label for="signup-city-manual">Enter Your City</label>
+          <input type="text" id="signup-city-manual" placeholder="Type your city name" autocomplete="address-level2" />
+          <button type="button" class="auth-switch-link" id="btn-back-to-city-select" style="margin-top:6px;font-size:0.82rem;">← Back to city list</button>
         </div>
 
         <button type="submit" class="btn btn-primary auth-submit" id="btn-signup-submit">Sign Up</button>
@@ -122,7 +162,17 @@
         </div>
         <div class="form-group">
           <label for="login-password">Password</label>
-          <input type="password" id="login-password" required placeholder="••••••••" autocomplete="current-password" />
+          <div class="pw-input-wrap">
+            <input type="password" id="login-password" required placeholder="••••••••" autocomplete="current-password" />
+            <button type="button" class="pw-toggle" aria-label="Toggle password visibility" data-target="login-password">
+              <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+              </svg>
+              <svg class="eye-off-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>
+              </svg>
+            </button>
+          </div>
         </div>
         <div class="form-options">
           <label class="checkbox-container">
