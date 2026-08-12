@@ -205,6 +205,11 @@
      Reorders DOM sections inside #homepage-main based on the
      layout array provided by the backend.
 
+     HERO GUARD: #hero is ALWAYS kept as the first child of
+     #homepage-main, regardless of the backend layout order.
+     The backend layout may not include 'hero' at all, or may
+     place it out of position — we enforce hero-first here.
+
      SCROLL-ANCHOR GUARD: Moving nodes with appendChild() after
      paint triggers the browser's CSS scroll-anchoring heuristic,
      which scrolls the viewport down to "keep content stable".
@@ -216,15 +221,22 @@
     const container = document.getElementById('homepage-main');
     if (!container) return;
 
-    console.log('[CMS] Reordering homepage sections:', layoutArray);
+    // Remove 'hero' from the layout array — hero is always first and handled separately
+    const nonHeroLayout = layoutArray.filter(id => id !== 'hero');
+    console.log('[CMS] Reordering homepage sections:', nonHeroLayout);
 
     // Suppress scroll-anchoring while we move nodes
     const prevAnchor = container.style.overflowAnchor;
     container.style.overflowAnchor = 'none';
 
-    // Iterate through layout array and append each element to the container
-    // This moves existing DOM nodes into the correct order without recreating them
-    layoutArray.forEach(sectionId => {
+    // Step 1: Detach hero and re-prepend it first to guarantee correct position
+    const heroEl = document.getElementById('hero');
+    if (heroEl) {
+      container.insertBefore(heroEl, container.firstChild);
+    }
+
+    // Step 2: Reorder only the non-hero sections
+    nonHeroLayout.forEach(sectionId => {
       const el = document.getElementById(sectionId);
       if (el && el.parentElement === container) {
         container.appendChild(el);
@@ -276,6 +288,7 @@
       renderHero(hpData.hero || {});
       renderStats(hpData.stats || []);
       if (hpData.layout && Array.isArray(hpData.layout)) {
+        // Hero-guard applied inside renderLayout — #hero is always kept first.
         renderLayout(hpData.layout);
       }
     } else {
