@@ -760,15 +760,15 @@
 
 .explore-card--travel {
   background: linear-gradient(to top, rgba(15,10,5,0.85) 0%, rgba(15,10,5,0.1) 70%),
-              url('images/travel-experince-5.jpg') center/cover no-repeat; color: #fff;
+              url('../../images/travel-experince-5.webp') center/cover no-repeat; color: #fff;
 }
 .explore-card--shop {
   background: linear-gradient(to top, rgba(15,10,5,0.85) 0%, rgba(15,10,5,0.1) 70%),
-              url('images/travel-experince-6.jpg') center/cover no-repeat; color: #fff;
+              url('../../images/travel-experince-6.webp') center/cover no-repeat; color: #fff;
 }
 .explore-card--connect {
   background: linear-gradient(to top, rgba(15,10,5,0.85) 0%, rgba(15,10,5,0.1) 70%),
-              url('images/travel-experince-7.jpg') center/cover no-repeat; color: #fff;
+              url('../../images/travel-experince-7.webp') center/cover no-repeat; color: #fff;
 }
 .explore-card-content { width: 100%; }
 .explore-card-title {
@@ -792,7 +792,7 @@
 .artisan-shop-section {
   background:
     linear-gradient(rgba(245,241,234,0.88), rgba(245,241,234,0.88)),
-    url('images/floral1_opt.jpg') center/cover no-repeat;
+    url('../../images/floral1_opt.webp') center/cover no-repeat;
   padding: 88px 0 68px;
   position: relative; overflow: hidden;
 }
