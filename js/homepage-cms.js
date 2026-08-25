@@ -22,9 +22,9 @@
      Used when the backend is unreachable.                    */
   const FALLBACK = {
     hero: {
-      eyebrow:  'Real artisans • Real craftsmanship • Real heritage',
-      title:    'Crafted by Hands.\nPreserved Through Generations.',
-      subtitle: 'Every purchase directly supports local artisans and keeps traditional Indian craftsmanship alive.',
+      eyebrow:    'ART • HERITAGE • EXPERIENCES',
+      title_html: "India's Living<br /><em>Heritage</em>",
+      subtitle:   'Discover authentic craftsmanship, artisan stories, and immersive cultural journeys across India.',
     },
     stats: [
       { value: '120+', label: 'Master Artisans' },
@@ -38,7 +38,7 @@
     },
     footer: {
       brand_desc: "Connecting the world to India's living artisan traditions and curating experiences that transform the way you see this ancient civilisation.",
-      copyright:  '© 2025 Mokshita Enterprises. All rights reserved.',
+      copyright:  '© 2026 Mokshita Enterprises. All rights reserved.',
     },
   };
 
@@ -66,9 +66,8 @@
     // Eyebrow line
     const eyebrowEl = document.getElementById('hero-eyebrow');
     if (eyebrowEl && hero.eyebrow) {
-      // Preserve the decorative <span class="hero-eyebrow-line"> inside
       const line = eyebrowEl.querySelector('.hero-eyebrow-line');
-      eyebrowEl.textContent = ' ' + hero.eyebrow;
+      eyebrowEl.textContent = hero.eyebrow;
       if (line) eyebrowEl.insertBefore(line, eyebrowEl.firstChild);
     }
 
@@ -77,16 +76,22 @@
       setHTML('hero-title', hero.title_html);
     } else if (hero.title) {
       setText('hero-title', hero.title);
+    } else if (hero.headline) {
+      setText('hero-title', hero.headline);
     }
 
     // Subtitle
-    setText('hero-subtitle', hero.subtitle);
+    if (hero.subtitle) {
+      setText('hero-subtitle', hero.subtitle);
+    } else if (hero.subheadline) {
+      setText('hero-subtitle', hero.subheadline);
+    }
 
     // CTA buttons (only if backend provides them and elements exist)
     const actionsEl = document.getElementById('hero-actions');
     if (actionsEl && Array.isArray(hero.ctas) && hero.ctas.length) {
-      actionsEl.innerHTML = hero.ctas.map(cta =>
-        `<a href="${escAttr(cta.href || '#')}" class="${escAttr(cta.class || 'btn btn-primary')}">${escText(cta.label || '')}</a>`
+      actionsEl.innerHTML = hero.ctas.map((cta, i) =>
+        `<a href="${escAttr(cta.href || cta.url || '#')}" class="${escAttr(cta.class || (i === 0 ? 'hero-btn-primary' : 'hero-btn-ghost'))}" id="${escAttr(i === 0 ? 'hero-cta-art' : 'hero-cta-exp')}">${escText(cta.label || '')}</a>`
       ).join('');
     }
 
@@ -218,24 +223,24 @@
   function renderLayout(layoutArray) {
     if (!Array.isArray(layoutArray) || layoutArray.length === 0) return;
 
-    const container = document.getElementById('homepage-main');
+    const contentStack = document.getElementById('content-stack');
+    const mainContainer = document.getElementById('homepage-main');
+    const container = contentStack || mainContainer;
     if (!container) return;
 
-    // Remove 'hero' from the layout array — hero is always first and handled separately
     const nonHeroLayout = layoutArray.filter(id => id !== 'hero');
     console.log('[CMS] Reordering homepage sections:', nonHeroLayout);
 
-    // Suppress scroll-anchoring while we move nodes
     const prevAnchor = container.style.overflowAnchor;
     container.style.overflowAnchor = 'none';
 
-    // Step 1: Detach hero and re-prepend it first to guarantee correct position
+    // Ensure hero stays first in homepage-main
     const heroEl = document.getElementById('hero');
-    if (heroEl) {
-      container.insertBefore(heroEl, container.firstChild);
+    if (heroEl && mainContainer && heroEl.parentElement === mainContainer) {
+      mainContainer.insertBefore(heroEl, mainContainer.firstChild);
     }
 
-    // Step 2: Reorder only the non-hero sections
+    // Reorder sections inside content-stack or container
     nonHeroLayout.forEach(sectionId => {
       const el = document.getElementById(sectionId);
       if (el && el.parentElement === container) {
@@ -243,7 +248,6 @@
       }
     });
 
-    // Restore and snap back to top (only if the user hasn't navigated to an anchor)
     container.style.overflowAnchor = prevAnchor;
     if (!window.location.hash) {
       window.scrollTo(0, 0);
